@@ -21,6 +21,7 @@ import static io.realm.internal.SyncObjectServerFacade.getApplicationContext;
 
 public class DialImporto extends DialogFragment{
 
+/*
     public interface MyInterface {
         public void insBeneficiario(String beneficiario);
         public void insImporto(String importo);
@@ -30,6 +31,7 @@ public class DialImporto extends DialogFragment{
     }
 
     MyInterface mCallback;
+*/
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
@@ -43,7 +45,7 @@ public class DialImporto extends DialogFragment{
         final View yourCustomView = inflater.inflate(R.layout.dial_importo, null);
         final EditText importo = (EditText) yourCustomView.findViewById(R.id.inputimporto);
         //beneficiario.addTextChangedListener(new MoneyTextWatcher(beneficiario));
-
+        //Todo implementare
 
         builder.setView(yourCustomView);
 
@@ -81,9 +83,11 @@ public class DialImporto extends DialogFragment{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+/*
         if (context instanceof MyInterface) {
             mCallback = (MyInterface) context;
         }
+*/
     }
     @Override
     public void onDetach() {

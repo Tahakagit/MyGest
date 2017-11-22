@@ -15,11 +15,11 @@ public class Movimento extends RealmObject{
     @PrimaryKey
     private String beneficiario;
     private String importo;
-    private Date scadenza;
+    private String scadenza;
     private String conto;
     private String tipo;
     private long timestamp;
-
+//todo attrs checked, direzione
     public String getConto() {
         return conto;
     }
@@ -45,11 +45,11 @@ public class Movimento extends RealmObject{
         this.importo = importo;
     }
 
-    public Date getScadenza() {
+    public String getScadenza() {
         return scadenza;
     }
 
-    public void setScadenza(Date scadenza) {
+    public void setScadenza(String scadenza) {
         this.scadenza = scadenza;
     }
 

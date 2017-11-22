@@ -2,9 +2,13 @@
     <string name="app_name">MyGest</string>
     <string name="inserisci">Inserisci</string>
     <string name="cancella">Cancella</string>
+
     <string name="beneficiario">Beneficiario</string>
     <string name="scadenza">Scadenza</string>
     <string name="importo">Importo</string>
+    <string name="tipo">Tipo</string>
+    <string name="conto">Conto</string>
+
 
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">CANCEL</string>

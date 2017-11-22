@@ -2,6 +2,7 @@ package com.example.franc.mygest;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
@@ -34,7 +36,7 @@ public class MainActivity extends Activity{
 
     static String beneficiario2 = null;
     static String importo2 = null;
-    String scadenza2;
+    static String scadenza2 = null;
     String conto2;
     String tipo2;
 
@@ -48,28 +50,14 @@ public class MainActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mRealm = Realm.getDefaultInstance();
+        realmSelect = mRealm.where(Movimento.class).findAllAsync();
+        adapter = initUi(mRealm, realmSelect);
 
-/*
-        Realm.init(this);
-*/
-        this.mRealm = Realm.getDefaultInstance();
-        this.realmSelect = mRealm.where(Movimento.class).findAllAsync();
-        this.adapter = initUi(mRealm, realmSelect);
-        //this.adapter.setHasStableIds(true);
-
-
-
-/*
-        final RviewAdapter adapt = initUi(mRealm, realmSelect);
-*/
         realmSelect.addChangeListener(new RealmChangeListener<RealmResults<Movimento>>() {
             @Override
             public void onChange(RealmResults<Movimento> mResults) {
-                //rilevo modifiche al db
                 adapter.notifyDataSetChanged();
-/*
-                changeSet.getInsertions();
-*/
                 Toast.makeText(MainActivity.this, "On change triggered", Toast.LENGTH_SHORT).show();
             }
         });
@@ -79,11 +67,16 @@ public class MainActivity extends Activity{
 
         final DialBeneficiario dbeneficiario = new DialBeneficiario();
         final DialImporto dimporto = new DialImporto();
+        final DialScadenza dscadenza = new DialScadenza();
 
         this.adapter = new RviewAdapter(this, mRealm, realmSelect);
         RecyclerView rview = findViewById(R.id.recyclerview);
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(this.adapter);
+
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(rview);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -92,9 +85,8 @@ public class MainActivity extends Activity{
             {
                 dbeneficiario.show(getFragmentManager(), "dbeneficiario");
                 dimporto.show(getFragmentManager(), "dimporto");
-/*              //Todo qua viene inserito al click del menuzz
-                adapter.setAll(beneficiario2, importo2);
-*/
+                dscadenza.show(getFragmentManager(), "dscadenza");
+
             }
         });
         return adapter;
@@ -111,10 +103,37 @@ public class MainActivity extends Activity{
     // imposto le variabili locali con i dati in arrivo
     public void getImporto(String string) {
 
-        this.importo2 = string;
+        importo2 = string;
 
         Log.i("FragmentAlertDialog", "Positive click!");
     }
+    public void getScadenza(String string) {
+
+        scadenza2 = string;
+
+        Log.i("FragmentAlertDialog", "Positive click!");
+    }
+
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT ) {
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            Toast.makeText(MainActivity.this, "on Move", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            Toast.makeText(MainActivity.this, "Elemento rimosso ", Toast.LENGTH_SHORT).show();
+            //Remove swiped item from list and notify the RecyclerView
+            int position = viewHolder.getAdapterPosition();
+            Movimento item = realmSelect.get(position);
+            mRealm.beginTransaction();
+            item.deleteFromRealm();
+            mRealm.commitTransaction();
+            adapter.notifyItemRemoved(position);
+        }
+    };
 
 
     //passo i dati ricevuti dai dialog all'adapter per il salvataggio
@@ -122,7 +141,7 @@ public class MainActivity extends Activity{
 /*
         RviewAdapter adapter = new RviewAdapter();
 */
-        adapter.setAll(beneficiario2, importo2);
+        adapter.setAll(beneficiario2, importo2, scadenza2);
 
     }
     protected void onResume()
