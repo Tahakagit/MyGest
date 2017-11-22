@@ -10,8 +10,10 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
 import android.util.Log;
@@ -23,7 +25,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.DialogFragment;
-
+import android.support.v7.app.ActionBar;
 import java.util.Date;
 
 import io.realm.OrderedCollectionChangeSet;
@@ -34,7 +36,7 @@ import io.realm.RealmResults;
 
 import static io.realm.internal.SyncObjectServerFacade.getApplicationContext;
 
-public class MainActivity extends Activity{
+public class MainActivity extends AppCompatActivity{
 
 
     static String beneficiario2 = null;
@@ -52,10 +54,12 @@ public class MainActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.navigation_drawer);
         mRealm = Realm.getDefaultInstance();
         realmSelect = mRealm.where(Movimento.class).findAllAsync();
         adapter = initUi(mRealm, realmSelect);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         realmSelect.addChangeListener(new RealmChangeListener<RealmResults<Movimento>>() {
             @Override
@@ -71,6 +75,9 @@ public class MainActivity extends Activity{
         final DialBeneficiario dbeneficiario = new DialBeneficiario();
         final DialImporto dimporto = new DialImporto();
         final DialScadenza dscadenza = new DialScadenza();
+
+
+
 
         this.adapter = new RviewAdapter(this, mRealm, realmSelect);
         RecyclerView rview = findViewById(R.id.recyclerview);
