@@ -5,8 +5,10 @@ import android.app.Application;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -93,7 +96,37 @@ public class MainActivity extends Activity{
 
     }
 
+    public void startNavDrawer(){
+        final DrawerLayout mDrawerLayout;
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(
+                    new NavigationView.OnNavigationItemSelectedListener() {
+                        @Override
+                        public boolean onNavigationItemSelected(MenuItem menuItem) {
+                            switch (menuItem.getItemId())
+                            {
+                                case R.id.action_category_1:
+                                    //tabLayout.getTabAt(0).select();
+                                    break;
+                                case R.id.action_category_2:
+                                    //tabLayout.getTabAt(1).select();
+                                    break;
+                                case R.id.action_category_3:
+                                    //tabLayout.getTabAt(2).select();
+                            }
+
+                            mDrawerLayout.closeDrawers();
+                            return true;
+                        }
+                    });
+        }
+
+
+    }
     public void getBeneficiario(String string) {
 // imposto le variabili locali con i dati in arrivo
         this.beneficiario2 = string;
