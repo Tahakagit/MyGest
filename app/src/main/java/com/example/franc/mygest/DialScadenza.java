@@ -3,21 +3,15 @@ package com.example.franc.mygest;
 /**
  * Created by franc on 21/11/2017.
  */
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import android.app.Activity;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TextView;
-import java.lang.*;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 
 public class DialScadenza extends DialogFragment
