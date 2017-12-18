@@ -1,6 +1,7 @@
 package com.example.franc.mygest;
 
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -40,8 +41,9 @@ public class MainActivity extends AppCompatActivity{
         mRealm = Realm.getDefaultInstance();
         realmSelect = mRealm.where(Movimento.class).findAllAsync();
         adapter = initUi(mRealm, realmSelect);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+
 
         realmSelect.addChangeListener(new RealmChangeListener<RealmResults<Movimento>>() {
             @Override
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity{
         final DialBeneficiario dbeneficiario = new DialBeneficiario();
         final DialImporto dimporto = new DialImporto();
         final DialScadenza dscadenza = new DialScadenza();
-
+        CollapsingToolbarLayout collapsingToolbar;
 
 
 
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity{
         RecyclerView rview = findViewById(R.id.recyclerview);
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(this.adapter);
-
+        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(rview);
