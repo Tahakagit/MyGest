@@ -1,5 +1,6 @@
 package com.example.franc.mygest;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -21,9 +22,11 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity{
 
 
+/*
     static String beneficiario2 = null;
     static String importo2 = null;
     static String scadenza2 = null;
+*/
     String conto2;
     String tipo2;
 
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity{
         final DialScadenza dscadenza = new DialScadenza();
 
 
+        final Intent intent = new Intent(this, DialogActivity.class);
 
 
         this.adapter = new RviewAdapter(this, mRealm, realmSelect);
@@ -75,9 +79,12 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view)
             {
+/*
                 dbeneficiario.show(getFragmentManager(), "dbeneficiario");
                 dimporto.show(getFragmentManager(), "dimporto");
                 dscadenza.show(getFragmentManager(), "dscadenza");
+*/
+                startActivity(intent);
 
             }
         });
@@ -116,6 +123,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     }
+/*
     public void getBeneficiario(String string) {
 // imposto le variabili locali con i dati in arrivo
         this.beneficiario2 = string;
@@ -135,6 +143,7 @@ public class MainActivity extends AppCompatActivity{
 
         Log.i("FragmentAlertDialog", "Positive click!");
     }
+*/
 
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT ) {
 
@@ -159,7 +168,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     //passo i dati ricevuti dai dialog all'adapter per il salvataggio
-    public void saveData(){
+    public void saveData(String beneficiario2, String importo2, String scadenza2){
 /*
         RviewAdapter adapter = new RviewAdapter();
 */

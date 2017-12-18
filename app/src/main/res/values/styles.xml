@@ -11,14 +11,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="text_style_importo" parent="@android:style/TextAppearance.Medium">
-    </style>
+    <style name="text_style_importo" parent="@android:style/TextAppearance.Medium"></style>
 
-    <style name="text_style_scadenza" parent="@android:style/TextAppearance.Medium">
-    </style>
+    <style name="text_style_scadenza" parent="@android:style/TextAppearance.Medium"></style>
 
-    <style name="text_style_conto" parent="@android:style/TextAppearance.Medium">
-    </style>
+    <style name="text_style_conto" parent="@android:style/TextAppearance.Medium"></style>
 
     <style name="text_style_tipo" parent="@android:style/TextAppearance.Medium">
         <item name="android:textStyle">italic</item>
@@ -29,6 +26,18 @@
     <style name="text_style_beneficiario" parent="@android:style/TextAppearance.Medium">
         <item name="android:textStyle">bold</item>
 
+    </style>
+
+<!--
+    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+-->
+
+    <style name="MaterialButton" parent="Theme.AppCompat.Light">
+
+        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
     </style>
 
 

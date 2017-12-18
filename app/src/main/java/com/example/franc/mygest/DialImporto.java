@@ -53,7 +53,9 @@ public class DialImporto extends DialogFragment{
                 .setPositiveButton(R.string.alert_dialog_ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
+/*
                                 ((MainActivity)getActivity()).getImporto(importo.getText().toString());
+*/
 
                             }
                         }
