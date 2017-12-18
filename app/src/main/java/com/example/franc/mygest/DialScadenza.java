@@ -36,7 +36,9 @@ public class DialScadenza extends DialogFragment
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
         String formattedDate = sdf.format(c.getTime());
+/*
         ((MainActivity) getActivity()).getScadenza(formattedDate);
+*/
 
     }
 }

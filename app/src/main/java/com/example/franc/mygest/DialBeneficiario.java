@@ -57,8 +57,10 @@ public class DialBeneficiario extends DialogFragment{
                 .setPositiveButton(R.string.alert_dialog_ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
+/*
                                 ((MainActivity)getActivity()).getBeneficiario(beneficiario.getText().toString());
                                 ((MainActivity)getActivity()).saveData();
+*/
 
                             }
                         }
