@@ -29,14 +29,6 @@ public class DialogFragmentImporto extends Fragment {
         importo = view.findViewById(R.id.inputimporto);
         next.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-            /*
-            *
-            *       salva il dato
-            *
-            *
-            *
-            *
-            * */
 
                 ((DialogActivity)getActivity()).getImporto(importo.getText().toString());
 

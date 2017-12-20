@@ -30,7 +30,9 @@ public class DialogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dialog);
 
         fragments.add(new DialogFragmentBeneficiario());
+        fragments.add(new DialogFragmentScadenza());
         fragments.add(new DialogFragmentImporto());
+
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.add(R.id.fragmentcontainer, fragments.get(i));
@@ -92,7 +94,7 @@ public class DialogActivity extends AppCompatActivity {
     }
     public void getImporto(String importo) {
         importo2 = importo;
-        MainActivity.adapter.setAll(beneficiario2, importo2);
+        MainActivity.adapter.setAll(beneficiario2, importo2, scadenza2);
         i = 0;
         finish();
 

@@ -60,13 +60,11 @@ public class RviewAdapter extends RecyclerView.Adapter<RviewAdapter.DataObjectHo
     }
 
 
-    public void setAll(String beneficiario, String importo){
+    public void setAll(String beneficiario, String importo, String scadenza){
         Movimento movimento = new Movimento();
         movimento.setBeneficiario(beneficiario);
         movimento.setImporto(importo);
-/*
         movimento.setScadenza(scadenza);
-*/
         movimento.setTimestamp(System.currentTimeMillis());
 
         mRealm.beginTransaction();
