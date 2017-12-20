@@ -16,6 +16,8 @@ import android.widget.EditText;
 public class DialogFragmentBeneficiario extends Fragment {
 
     static Button next;
+    static Button prev;
+
     static EditText beneficiario;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -26,6 +28,7 @@ public class DialogFragmentBeneficiario extends Fragment {
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         next = view.findViewById(R.id.next);
+        prev = view.findViewById(R.id.prev);
         beneficiario = view.findViewById(R.id.inputBeneficiario);
         // or  (ImageView) view.findViewById(R.id.foo);
         next.setOnClickListener(new View.OnClickListener(){
@@ -43,6 +46,16 @@ public class DialogFragmentBeneficiario extends Fragment {
 
             }
         } );
+
+        prev.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+
+                ((DialogActivity)getActivity()).goBack();
+
+            }
+        } );
+
+
 
     }
 }

@@ -81,17 +81,10 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view)
             {
-/*
-                dbeneficiario.show(getFragmentManager(), "dbeneficiario");
-                dimporto.show(getFragmentManager(), "dimporto");
-                dscadenza.show(getFragmentManager(), "dscadenza");
-*/
                 startActivity(intent);
-
             }
         });
         return adapter;
-
     }
 
     public void startNavDrawer(){
@@ -174,7 +167,9 @@ public class MainActivity extends AppCompatActivity{
 /*
         RviewAdapter adapter = new RviewAdapter();
 */
+/*
         adapter.setAll(beneficiario2, importo2, scadenza2);
+*/
 
     }
     protected void onResume()

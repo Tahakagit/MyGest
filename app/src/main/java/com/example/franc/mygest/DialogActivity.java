@@ -72,6 +72,15 @@ public class DialogActivity extends AppCompatActivity {
 
     }
 
+    public void goBack(){
+
+        --i;
+        FragmentTransaction ft2 = fragmentManager.beginTransaction();
+        ft2.replace(R.id.fragmentcontainer, fragments.get(i));
+        ft2.addToBackStack(null);
+        ft2.commit();
+
+    }
     public void getBeneficiario(String beneficiario){
         beneficiario2 = beneficiario;
         ++i;
@@ -82,13 +91,18 @@ public class DialogActivity extends AppCompatActivity {
 
     }
     public void getImporto(String importo) {
-
         importo2 = importo;
+        MainActivity.adapter.setAll(beneficiario2, importo2);
+        i = 0;
+        finish();
+
+/*
         ++i;
         FragmentTransaction ft2 = fragmentManager.beginTransaction();
         ft2.replace(R.id.fragmentcontainer, fragments.get(i));
         ft2.addToBackStack(null);
         ft2.commit();
+*/
     }
     public void getScadenza(String scadenza) {
 
