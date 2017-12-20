@@ -1,9 +1,5 @@
 package com.example.franc.mygest;
 
-/**
- * Created by franc on 28/10/2017.
- */
-
 import android.content.Context;
 import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,19 +19,22 @@ import java.util.Date;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class RviewAdapter extends RecyclerView.Adapter<RviewAdapter.DataObjectHolder> {
+/**
+ * Created by franc on 20/12/2017.
+ */
 
+public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.DataObjectHolder> {
     private LayoutInflater mInflater;
-    private Realm mRealm;
-    private RealmResults<Movimento> mResults;
+    private Realm contiRealm;
+    private RealmResults<Conto> mResults;
 
-    public RviewAdapter(Context context, Realm realm, RealmResults<Movimento> results) {
-        this.mRealm = realm;
+    public RviewAdapterConto(Context context, Realm realm, RealmResults<Conto> results) {
+        this.contiRealm = realm;
         this.mInflater = LayoutInflater.from(context);
         setResults(results);
     }
 
-    public RviewAdapter(){
+    public RviewAdapterConto(){
 
     }
     public static class DataObjectHolder extends RecyclerView.ViewHolder{
@@ -60,19 +59,18 @@ public class RviewAdapter extends RecyclerView.Adapter<RviewAdapter.DataObjectHo
     }
 
 
-    public void setAll(String beneficiario, String importo, String scadenza){
-        Movimento movimento = new Movimento();
-        movimento.setBeneficiario(beneficiario);
-        movimento.setImporto(importo);
-        movimento.setScadenza(scadenza);
-        movimento.setTimestamp(System.currentTimeMillis());
+    public void setAll(String nome, String saldo, String colore){
+        Conto conto = new Conto();
+        conto.setNomeConto(nome);
+        conto.setSaldoConto(saldo);
+        conto.setColoreConto(colore);
 
-        mRealm.beginTransaction();
-        mRealm.copyToRealmOrUpdate(movimento);
-        mRealm.commitTransaction();
+        contiRealm.beginTransaction();
+        contiRealm.copyToRealmOrUpdate(conto);
+        contiRealm.commitTransaction();
         notifyDataSetChanged();
     }
-    private void setResults(RealmResults<Movimento> results){
+    private void setResults(RealmResults<Conto> results){
         mResults = results;
         notifyDataSetChanged();
 
@@ -82,21 +80,22 @@ public class RviewAdapter extends RecyclerView.Adapter<RviewAdapter.DataObjectHo
     public int getItemCount() {
         return mResults.size();
     }
-    @Override
+/*
     public long getItemId(int position){ return  mResults.get(position).getTimestamp();}
-    @Override
-    public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+*/
+    public RviewAdapterConto.DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_movimenti, parent, false);
-        DataObjectHolder dataOHolder = new DataObjectHolder(view);
-        return dataOHolder;
+        RviewAdapterConto.DataObjectHolder dataHolder = new RviewAdapterConto.DataObjectHolder(view);
+        return dataHolder;
     }
+
     @Override
-    public void onBindViewHolder(final DataObjectHolder holder, int position) {
+    public void onBindViewHolder(final RviewAdapterConto.DataObjectHolder holder, int position) {
         holder.hiddenlayout.setVisibility(View.GONE);
 
-        Movimento movimento = mResults.get(position);
-        if(movimento.getBeneficiario() != null) {
-            holder.setData(movimento.getBeneficiario(), movimento.getImporto(), movimento.getScadenza());
+        Conto conto = mResults.get(position);
+        if(conto.getNomeConto() != null) {
+            holder.setData(conto.getNomeConto(), conto.getSaldoConto(), conto.getColoreConto());
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -112,7 +111,5 @@ public class RviewAdapter extends RecyclerView.Adapter<RviewAdapter.DataObjectHo
         });
 
     }
-
-
 
 }

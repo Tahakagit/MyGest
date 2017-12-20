@@ -20,7 +20,11 @@
         <activity
             android:name=".DialogActivity"
             android:label="@string/new_record"
-            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"></activity>
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity
+            android:name=".CreaContoActivity"
+            android:label="@string/title_activity_crea_conto"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -5,59 +5,59 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity{
+public class CreaContoActivity extends AppCompatActivity {
 
-
-/*
-    static String beneficiario2 = null;
-    static String importo2 = null;
-    static String scadenza2 = null;
-*/
     String conto2;
     String tipo2;
 
     static Realm mRealm;
-    static RealmResults<Movimento> realmSelect;
+    static RealmResults<Conto> realmSelect;
 
-    static RviewAdapterMovimento adapter;
+    static RviewAdapterConto adapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.navigation_drawer);
+        setContentView(R.layout.navigation_drawer_listview);
         mRealm = Realm.getDefaultInstance();
-        realmSelect = mRealm.where(Movimento.class).findAllAsync();
+        realmSelect = mRealm.where(Conto.class).findAllAsync();
         adapter = initUi(mRealm, realmSelect);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
 
-        realmSelect.addChangeListener(new RealmChangeListener<RealmResults<Movimento>>() {
+        realmSelect.addChangeListener(new RealmChangeListener<RealmResults<Conto>>() {
             @Override
-            public void onChange(RealmResults<Movimento> mResults) {
+            public void onChange(RealmResults<Conto> mResults) {
                 adapter.notifyDataSetChanged();
-                Toast.makeText(MainActivity.this, "On change triggered", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreaContoActivity.this, "On change triggered", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
-    private RviewAdapterMovimento initUi(Realm mRealm, RealmResults<Movimento> realmSelect){
+    private RviewAdapterConto initUi(Realm mRealm, RealmResults<Conto> realmSelect){
 
         final DialBeneficiario dbeneficiario = new DialBeneficiario();
         final DialImporto dimporto = new DialImporto();
@@ -67,14 +67,11 @@ public class MainActivity extends AppCompatActivity{
         final Intent intent = new Intent(this, DialogActivity.class);
 
 
-        this.adapter = new RviewAdapterMovimento(this, mRealm, realmSelect);
-        RecyclerView rview = findViewById(R.id.recyclerview);
-        rview.setLayoutManager(new LinearLayoutManager(this));
+        this.adapter = new RviewAdapterConto(this, mRealm, realmSelect);
+        ListView rview = findViewById(R.id.recyclerview);
+        rview.set(new LinearLayoutManager(this));
         rview.setAdapter(this.adapter);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(rview);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -118,51 +115,9 @@ public class MainActivity extends AppCompatActivity{
 
 
     }
-/*
-    public void getBeneficiario(String string) {
-// imposto le variabili locali con i dati in arrivo
-        this.beneficiario2 = string;
-        Log.i("FragmentAlertDialog", "Positive click!");
-    }
-
-    // imposto le variabili locali con i dati in arrivo
-    public void getImporto(String string) {
-
-        importo2 = string;
-
-        Log.i("FragmentAlertDialog", "Positive click!");
-    }
-    public void getScadenza(String string) {
-
-        scadenza2 = string;
-
-        Log.i("FragmentAlertDialog", "Positive click!");
-    }
-*/
-
-    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT ) {
-
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            Toast.makeText(MainActivity.this, "on Move", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-            Toast.makeText(MainActivity.this, "Elemento rimosso ", Toast.LENGTH_SHORT).show();
-            //Remove swiped item from list and notify the RecyclerView
-            int position = viewHolder.getAdapterPosition();
-            Movimento item = realmSelect.get(position);
-            mRealm.beginTransaction();
-            item.deleteFromRealm();
-            mRealm.commitTransaction();
-            adapter.notifyItemRemoved(position);
-        }
-    };
 
 
-    //passo i dati ricevuti dai dialog all'adapter per il salvataggio
+
     public void saveData(String beneficiario2, String importo2, String scadenza2){
 /*
         RviewAdapter adapter = new RviewAdapter();
@@ -175,14 +130,10 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume()
     {
         super.onResume();
-        Toast.makeText(MainActivity.this, "On resume triggered", Toast.LENGTH_SHORT).show();
+        Toast.makeText(CreaContoActivity.this, "On resume triggered", Toast.LENGTH_SHORT).show();
 
     }
     protected void onPause(){
         super.onPause();
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 }
