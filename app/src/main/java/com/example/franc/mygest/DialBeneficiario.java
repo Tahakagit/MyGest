@@ -48,7 +48,7 @@ public class DialBeneficiario extends DialogFragment{
         final LayoutInflater inflater = getActivity().getLayoutInflater();
         final View yourCustomView = inflater.inflate(R.layout.new_record, null);
         final EditText beneficiario = (EditText) yourCustomView.findViewById(R.id.inputBeneficiario);
-        //beneficiario.addTextChangedListener(new MoneyTextWatcher(beneficiario));
+        //nome.addTextChangedListener(new MoneyTextWatcher(nome));
 
 
         builder.setView(yourCustomView);
@@ -58,7 +58,7 @@ public class DialBeneficiario extends DialogFragment{
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
 /*
-                                ((MainActivity)getActivity()).getBeneficiario(beneficiario.getText().toString());
+                                ((MainActivity)getActivity()).getBeneficiario(nome.getText().toString());
                                 ((MainActivity)getActivity()).saveData();
 */
 
@@ -80,7 +80,7 @@ public class DialBeneficiario extends DialogFragment{
 
 
 
-                String input = beneficiario.getText().toString();
+                String input = nome.getText().toString();
                 mCallback.insBeneficiario(input);
             }
         })
@@ -102,9 +102,6 @@ public class DialBeneficiario extends DialogFragment{
         final Activity activity = getActivity();
         if (activity instanceof DialogInterface.OnDismissListener) {
             ((DialogInterface.OnDismissListener) activity).onDismiss(dialog);
-            //Todo sembra la strada giusta ma bisogna trovare il modo di farlo eseguire dopo il dialog
-            //((MainActivity)getActivity()).sendData((String) ((MainActivity) getActivity()).beneficiario2,(String) ((MainActivity) getActivity()).importo2);
-
         }
     }
 

@@ -1,20 +1,12 @@
 package com.example.franc.mygest;
 
 import android.content.Context;
-import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.support.v7.widget.CardView;
-
-import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -38,36 +30,31 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
 
     }
     public static class DataObjectHolder extends RecyclerView.ViewHolder{
-        TextView beneficiario;
-        TextView importo;
-        TextView scadenza;
+        TextView nome;
+        TextView saldo;
         LinearLayout hiddenlayout;
         public DataObjectHolder(View itemView) {
             super(itemView);
-            beneficiario = (TextView) itemView.findViewById(R.id.beneficiario);
-            importo = (TextView) itemView.findViewById(R.id.importo);
-            scadenza = (TextView) itemView.findViewById(R.id.scadenza);
+            nome = (TextView) itemView.findViewById(R.id.cardNomeconto);
+            saldo = (TextView) itemView.findViewById(R.id.cardSaldoconto);
 
             hiddenlayout = (LinearLayout) itemView.findViewById(R.id.hiddenlayout);
 
         }
-        public void setData(String textbeneficiario, String textimporto, String textscadenza){
-            beneficiario.setText(textbeneficiario);
-            importo.setText(textimporto);
-            scadenza.setText(textscadenza);
+        public void setData(String textbeneficiario, String textimporto){
+            nome.setText(textbeneficiario);
+            saldo.setText(textimporto);
         }
     }
 
 
-    public void setAll(String nome, String saldo, String colore){
-        Conto conto = new Conto();
-        conto.setNomeConto(nome);
-        conto.setSaldoConto(saldo);
-        conto.setColoreConto(colore);
-
-        contiRealm.beginTransaction();
-        contiRealm.copyToRealmOrUpdate(conto);
-        contiRealm.commitTransaction();
+    public void setConto(final Conto conto){
+        contiRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Conto s=realm.copyToRealm(conto);
+            }
+        });
         notifyDataSetChanged();
     }
     private void setResults(RealmResults<Conto> results){
@@ -84,7 +71,7 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
     public long getItemId(int position){ return  mResults.get(position).getTimestamp();}
 */
     public RviewAdapterConto.DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_movimenti, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_conti, parent, false);
         RviewAdapterConto.DataObjectHolder dataHolder = new RviewAdapterConto.DataObjectHolder(view);
         return dataHolder;
     }
@@ -95,7 +82,7 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
 
         Conto conto = mResults.get(position);
         if(conto.getNomeConto() != null) {
-            holder.setData(conto.getNomeConto(), conto.getSaldoConto(), conto.getColoreConto());
+            holder.setData(conto.getNomeConto(), conto.getSaldoConto());
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 

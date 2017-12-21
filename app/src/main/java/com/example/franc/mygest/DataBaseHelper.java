@@ -42,7 +42,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MOVIMENTI + ";");
         onCreate(db);
     }
-//Todo: il db salva solamente l'ultimo record
     //Inserisci nel db
     public void addMovimento(String movimento){
         ContentValues values = new ContentValues();

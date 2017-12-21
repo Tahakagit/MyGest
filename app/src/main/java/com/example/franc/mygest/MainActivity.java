@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity{
         mRealm = Realm.getDefaultInstance();
         realmSelect = mRealm.where(Movimento.class).findAllAsync();
         adapter = initUi(mRealm, realmSelect);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
 
 
         realmSelect.addChangeListener(new RealmChangeListener<RealmResults<Movimento>>() {
@@ -57,12 +55,15 @@ public class MainActivity extends AppCompatActivity{
         });
 
     }
+
+    //START USER INTERFACE
     private RviewAdapterMovimento initUi(Realm mRealm, RealmResults<Movimento> realmSelect){
 
         final DialBeneficiario dbeneficiario = new DialBeneficiario();
         final DialImporto dimporto = new DialImporto();
         final DialScadenza dscadenza = new DialScadenza();
-        CollapsingToolbarLayout collapsingToolbar;
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
 
         final Intent intent = new Intent(this, DialogActivity.class);
 
@@ -71,7 +72,6 @@ public class MainActivity extends AppCompatActivity{
         RecyclerView rview = findViewById(R.id.recyclerview);
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(this.adapter);
-        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(rview);
@@ -84,15 +84,23 @@ public class MainActivity extends AppCompatActivity{
                 startActivity(intent);
             }
         });
+
+
+
+
+        startNavDrawer();
+
         return adapter;
     }
 
+    //NAVIGATION DRAWER
     public void startNavDrawer(){
         final DrawerLayout mDrawerLayout;
+        final Intent creaConto = new Intent(this, CreaContoActivity.class);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
@@ -101,7 +109,7 @@ public class MainActivity extends AppCompatActivity{
                             switch (menuItem.getItemId())
                             {
                                 case R.id.action_category_1:
-                                    //tabLayout.getTabAt(0).select();
+                                    startActivity(creaConto);
                                     break;
                                 case R.id.action_category_2:
                                     //tabLayout.getTabAt(1).select();
@@ -118,28 +126,9 @@ public class MainActivity extends AppCompatActivity{
 
 
     }
-/*
-    public void getBeneficiario(String string) {
-// imposto le variabili locali con i dati in arrivo
-        this.beneficiario2 = string;
-        Log.i("FragmentAlertDialog", "Positive click!");
-    }
 
-    // imposto le variabili locali con i dati in arrivo
-    public void getImporto(String string) {
 
-        importo2 = string;
-
-        Log.i("FragmentAlertDialog", "Positive click!");
-    }
-    public void getScadenza(String string) {
-
-        scadenza2 = string;
-
-        Log.i("FragmentAlertDialog", "Positive click!");
-    }
-*/
-
+    //RIGHT SWIPE
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT ) {
 
         @Override
@@ -162,16 +151,6 @@ public class MainActivity extends AppCompatActivity{
     };
 
 
-    //passo i dati ricevuti dai dialog all'adapter per il salvataggio
-    public void saveData(String beneficiario2, String importo2, String scadenza2){
-/*
-        RviewAdapter adapter = new RviewAdapter();
-*/
-/*
-        adapter.setAll(beneficiario2, importo2, scadenza2);
-*/
-
-    }
     protected void onResume()
     {
         super.onResume();

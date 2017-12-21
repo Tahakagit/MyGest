@@ -8,11 +8,24 @@
     tools:context="com.example.franc.mygest.CreaContoActivity"
     tools:showIn="@layout/activity_crea_conto">
 
-    <LinearLayout
+
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/rv">
 
+    </android.support.v7.widget.RecyclerView>
 
+    <include
+        android:id="@+id/include"
+        layout="@layout/fab_menu"
+        android:layout_width="match_parent"
 
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+         />
+
 </android.support.constraint.ConstraintLayout>

@@ -19,8 +19,8 @@ public class DialConto extends DialogFragment{
 
 /*
     public interface MyInterface {
-        public void insBeneficiario(String beneficiario);
-        public void insImporto(String importo);
+        public void insBeneficiario(String nome);
+        public void insImporto(String saldo);
         public void insScadenza(Date scadenza);
         public void insConto(String conto);
         public void insTipo(String tipo);
@@ -40,8 +40,7 @@ public class DialConto extends DialogFragment{
         final LayoutInflater inflater = getActivity().getLayoutInflater();
         final View yourCustomView = inflater.inflate(R.layout.dial_importo, null);
         final EditText importo = (EditText) yourCustomView.findViewById(R.id.inputimporto);
-        //beneficiario.addTextChangedListener(new MoneyTextWatcher(beneficiario));
-        //Todo implementare
+        //nome.addTextChangedListener(new MoneyTextWatcher(nome));
 
         builder.setView(yourCustomView);
 
@@ -50,7 +49,7 @@ public class DialConto extends DialogFragment{
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
 /*
-                                ((MainActivity)getActivity()).getImporto(importo.getText().toString());
+                                ((MainActivity)getActivity()).getImporto(saldo.getText().toString());
 */
 
                             }
