@@ -1,11 +1,8 @@
 package com.example.franc.mygest;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +28,6 @@ public class DialogFragmentBeneficiario extends Fragment {
         next = view.findViewById(R.id.next);
         prev = view.findViewById(R.id.prev);
         beneficiario = view.findViewById(R.id.inputBeneficiario);
-        // or  (ImageView) view.findViewById(R.id.foo);
         next.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 

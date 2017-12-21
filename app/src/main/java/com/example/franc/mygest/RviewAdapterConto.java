@@ -35,10 +35,10 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
         LinearLayout hiddenlayout;
         public DataObjectHolder(View itemView) {
             super(itemView);
-            nome = (TextView) itemView.findViewById(R.id.cardNomeconto);
-            saldo = (TextView) itemView.findViewById(R.id.cardSaldoconto);
+            nome = itemView.findViewById(R.id.cardNomeconto);
+            saldo = itemView.findViewById(R.id.cardSaldoconto);
 
-            hiddenlayout = (LinearLayout) itemView.findViewById(R.id.hiddenlayout);
+            hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
 
         }
         public void setData(String textbeneficiario, String textimporto){

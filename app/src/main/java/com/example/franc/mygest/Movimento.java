@@ -1,10 +1,7 @@
 package com.example.franc.mygest;
-    import java.util.ArrayList;
-    import java.util.Currency;
-    import java.util.Date;
 
-    import io.realm.RealmObject;
-    import io.realm.annotations.PrimaryKey;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Pasticceria Duomo on 28/07/2017.

@@ -5,20 +5,12 @@ package com.example.franc.mygest;
  */
 
 import android.content.Context;
-import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.support.v7.widget.CardView;
-
-import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -45,11 +37,11 @@ public class RviewAdapterMovimento extends RecyclerView.Adapter<RviewAdapterMovi
         LinearLayout hiddenlayout;
         public DataObjectHolder(View itemView) {
             super(itemView);
-            beneficiario = (TextView) itemView.findViewById(R.id.beneficiario);
-            importo = (TextView) itemView.findViewById(R.id.importo);
-            scadenza = (TextView) itemView.findViewById(R.id.scadenza);
+            beneficiario = itemView.findViewById(R.id.beneficiario);
+            importo = itemView.findViewById(R.id.importo);
+            scadenza = itemView.findViewById(R.id.scadenza);
 
-            hiddenlayout = (LinearLayout) itemView.findViewById(R.id.hiddenlayout);
+            hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
 
         }
         public void setData(String textbeneficiario, String textimporto, String textscadenza){
