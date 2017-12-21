@@ -1,9 +1,6 @@
 package com.example.franc.mygest;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;

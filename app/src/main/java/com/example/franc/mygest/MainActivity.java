@@ -2,7 +2,6 @@ package com.example.franc.mygest;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -11,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -22,16 +20,7 @@ import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity{
 
-
-/*
-    static String beneficiario2 = null;
-    static String importo2 = null;
-    static String scadenza2 = null;
-*/
-    String conto2;
-    String tipo2;
-
-    static Realm mRealm;
+    Realm mRealm;
     static RealmResults<Movimento> realmSelect;
 
     static RviewAdapterMovimento adapter;
@@ -40,7 +29,9 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.navigation_drawer);
+
         mRealm = Realm.getDefaultInstance();
         realmSelect = mRealm.where(Movimento.class).findAllAsync();
         adapter = initUi(mRealm, realmSelect);
@@ -59,24 +50,21 @@ public class MainActivity extends AppCompatActivity{
     //START USER INTERFACE
     private RviewAdapterMovimento initUi(Realm mRealm, RealmResults<Movimento> realmSelect){
 
-        final DialBeneficiario dbeneficiario = new DialBeneficiario();
-        final DialImporto dimporto = new DialImporto();
-        final DialScadenza dscadenza = new DialScadenza();
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        RecyclerView rview = findViewById(R.id.recyclerview);
+        Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
         final Intent intent = new Intent(this, DialogActivity.class);
 
 
-        this.adapter = new RviewAdapterMovimento(this, mRealm, realmSelect);
-        RecyclerView rview = findViewById(R.id.recyclerview);
+        adapter = new RviewAdapterMovimento(this, mRealm, realmSelect);
         rview.setLayoutManager(new LinearLayoutManager(this));
-        rview.setAdapter(this.adapter);
+        rview.setAdapter(adapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(rview);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -98,8 +86,8 @@ public class MainActivity extends AppCompatActivity{
         final DrawerLayout mDrawerLayout;
         final Intent creaConto = new Intent(this, CreaContoActivity.class);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
 
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(
