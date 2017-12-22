@@ -13,15 +13,15 @@ public class Movimento extends RealmObject{
     private String beneficiario;
     private String importo;
     private String scadenza;
-    private String conto;
+    private Conto conto;
     private String tipo;
     private long timestamp;
 //todo attrs checked, direzione
-    public String getConto() {
+    public Conto getConto() {
         return conto;
     }
 
-    public void setConto(String conto) {
+    public void setConto(Conto conto) {
         this.conto = conto;
     }
 

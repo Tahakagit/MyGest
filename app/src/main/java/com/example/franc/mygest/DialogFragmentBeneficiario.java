@@ -27,7 +27,9 @@ public class DialogFragmentBeneficiario extends Fragment {
 
         next = view.findViewById(R.id.next);
         prev = view.findViewById(R.id.prev);
+
         beneficiario = view.findViewById(R.id.inputBeneficiario);
+
         next.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 

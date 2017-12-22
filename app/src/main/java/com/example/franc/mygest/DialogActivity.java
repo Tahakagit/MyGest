@@ -21,6 +21,9 @@ public class DialogActivity extends AppCompatActivity {
     static String beneficiario2 = null;
     static String importo2 = null;
     static String scadenza2 = null;
+    static String conto2 = null;
+    static String tipo2 = null;
+    static String direzione2 = null;
 
 
     @Override
@@ -36,6 +39,7 @@ public class DialogActivity extends AppCompatActivity {
         fragments.add(new DialogFragmentBeneficiario());
         fragments.add(new DialogFragmentScadenza());
         fragments.add(new DialogFragmentImporto());
+        fragments.add(new DialogFragmentConto());
 
         fragmentTransaction.add(R.id.fragmentcontainer, fragments.get(i));
         fragmentTransaction.addToBackStack(null);
@@ -67,9 +71,12 @@ public class DialogActivity extends AppCompatActivity {
 
     public void getImporto(String importo) {
         importo2 = importo;
-        MainActivity.adapter.setAll(beneficiario2, importo2, scadenza2);
-        i = 0;
-        finish();
+
+        ++i;
+        FragmentTransaction ft2 = fragmentManager.beginTransaction();
+        ft2.replace(R.id.fragmentcontainer, fragments.get(i));
+        ft2.addToBackStack(null);
+        ft2.commit();
     }
 
     public void getScadenza(String scadenza) {
@@ -81,7 +88,24 @@ public class DialogActivity extends AppCompatActivity {
         ft2.commit();
     }
 
+    public void getConto(String conto) {
+        conto2 = conto;
+        ++i;
+        FragmentTransaction ft2 = fragmentManager.beginTransaction();
+        ft2.replace(R.id.fragmentcontainer, fragments.get(i));
+        ft2.addToBackStack(null);
+        ft2.commit();
 
+        EndDialogActivity();
+    }
+
+    public void EndDialogActivity(){
+//todo adapter.setall aggiungere conto
+        MainActivity.adapter.setAll(beneficiario2, importo2, scadenza2, conto2);
+        i = 0;
+        finish();
+
+    }
     @Override
     protected void onResume() {
         super.onResume();

@@ -14,6 +14,10 @@ public class Conto extends RealmObject {
     private String saldoConto;
     private String coloreConto;
 
+    @Override
+    public String toString(){
+        return this.nomeConto;
+    }
     public String getNomeConto() {
         return nomeConto;
     }
