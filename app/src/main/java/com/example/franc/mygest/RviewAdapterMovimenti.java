@@ -1,9 +1,8 @@
 package com.example.franc.mygest;
 
 /**
- * Created by franc on 28/10/2017.
+ * Created by franc on 24/12/2017.
  */
-
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,22 +11,25 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
-
-public class RviewAdapterMovimento extends RecyclerView.Adapter<RviewAdapterMovimento.DataObjectHolder> {
+//questo adapter fornisce i dati alla recyclerview all'interno del dataholder della rv dei giorni con
+//transazioni
+public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovimenti.DataObjectHolder> {
 
     private LayoutInflater mInflater;
     private Realm movimentiRealm;
     private RealmResults<Movimento> mResults;
 
-    public RviewAdapterMovimento(Context context, Realm realm, RealmResults<Movimento> results) {
+    public RviewAdapterMovimenti(Context context, Realm realm, RealmResults<Movimento> results) {
         this.movimentiRealm = realm;
         this.mInflater = LayoutInflater.from(context);
         setResults(results);
     }
 
-    public RviewAdapterMovimento(){
+    public RviewAdapterMovimenti(){
 
     }
     public static class DataObjectHolder extends RecyclerView.ViewHolder{
@@ -44,10 +46,10 @@ public class RviewAdapterMovimento extends RecyclerView.Adapter<RviewAdapterMovi
             hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
 
         }
-        public void setData(String textbeneficiario, String textimporto, String textscadenza){
+
+        public void setData(String textbeneficiario, String textimporto){
             beneficiario.setText(textbeneficiario);
             importo.setText(textimporto);
-            scadenza.setText(textscadenza);
         }
     }
 
@@ -88,7 +90,7 @@ public class RviewAdapterMovimento extends RecyclerView.Adapter<RviewAdapterMovi
 
         Movimento movimento = mResults.get(position);
         if(movimento.getBeneficiario() != null) {
-            holder.setData(movimento.getBeneficiario(), movimento.getImporto(), movimento.getScadenza());
+            holder.setData(movimento.getBeneficiario(), movimento.getImporto());
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 

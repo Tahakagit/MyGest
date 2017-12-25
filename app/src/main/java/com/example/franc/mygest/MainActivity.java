@@ -21,9 +21,9 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity{
 
     Realm mRealm;
-    static RealmResults<Movimento> realmSelect;
+    static RealmResults<DailyTransaction> realmSelect;
 
-    static RviewAdapterMovimento adapter;
+    static RviewAdapterDailyTransaction adapter;
 
 
     @Override
@@ -33,13 +33,13 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.navigation_drawer);
 
         mRealm = Realm.getDefaultInstance();
-        realmSelect = mRealm.where(Movimento.class).findAllAsync();
+        realmSelect = mRealm.where(DailyTransaction.class).findAllAsync();
         adapter = initUi(mRealm, realmSelect);
 
 
-        realmSelect.addChangeListener(new RealmChangeListener<RealmResults<Movimento>>() {
+        realmSelect.addChangeListener(new RealmChangeListener<RealmResults<DailyTransaction>>() {
             @Override
-            public void onChange(RealmResults<Movimento> mResults) {
+            public void onChange(RealmResults<DailyTransaction> mResults) {
                 adapter.notifyDataSetChanged();
                 Toast.makeText(MainActivity.this, "On change triggered", Toast.LENGTH_SHORT).show();
             }
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     //START USER INTERFACE
-    private RviewAdapterMovimento initUi(Realm mRealm, RealmResults<Movimento> realmSelect){
+    private RviewAdapterDailyTransaction initUi(Realm mRealm, RealmResults<DailyTransaction> realmSelect){
 
         RecyclerView rview = findViewById(R.id.recyclerview);
         Toolbar myToolbar = findViewById(R.id.toolbar);
@@ -57,12 +57,14 @@ public class MainActivity extends AppCompatActivity{
         final Intent intent = new Intent(this, DialogActivity.class);
 
 
-        adapter = new RviewAdapterMovimento(this, mRealm, realmSelect);
+        adapter = new RviewAdapterDailyTransaction(this, mRealm, realmSelect);
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapter);
 
+/*
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(rview);
+*/
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +118,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
+/*
     //RIGHT SWIPE
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT ) {
 
@@ -137,6 +140,7 @@ public class MainActivity extends AppCompatActivity{
             adapter.notifyItemRemoved(position);
         }
     };
+*/
 
 
     protected void onResume()

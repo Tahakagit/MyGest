@@ -15,6 +15,7 @@ public class DialogActivity extends AppCompatActivity {
     static int i = 0;
     final FragmentManager fragmentManager = getSupportFragmentManager();
     final ArrayList<Fragment> fragments = new ArrayList <>();
+    static RviewAdapterMovimenti adapter;
 
     static Button next;
     static Button prev;
@@ -90,18 +91,20 @@ public class DialogActivity extends AppCompatActivity {
 
     public void getConto(String conto) {
         conto2 = conto;
+/*
         ++i;
         FragmentTransaction ft2 = fragmentManager.beginTransaction();
         ft2.replace(R.id.fragmentcontainer, fragments.get(i));
         ft2.addToBackStack(null);
         ft2.commit();
+*/
 
         EndDialogActivity();
     }
 
     public void EndDialogActivity(){
 //todo adapter.setall aggiungere conto
-        MainActivity.adapter.setAll(beneficiario2, importo2, scadenza2, conto2);
+        adapter.setAll(beneficiario2, importo2, scadenza2);
         i = 0;
         finish();
 
