@@ -95,7 +95,9 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     }
     @Override
     public void onBindViewHolder(final DataObjectHolder holder, int position) {
+/*
         holder.hiddenlayout.setVisibility(View.GONE);
+*/
 
         DailyTransaction dailyTransaction = mResults.get(position);
         if(dailyTransaction.getDayOfYear() != null) {

@@ -3,6 +3,7 @@ package com.example.franc.mygest;
 import java.util.List;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by franc on 24/12/2017.
@@ -11,8 +12,8 @@ import io.realm.RealmObject;
 public class DailyTransaction extends RealmObject {
 
     private long timestamp;
-
-    String dayOfYear = null;
+    @PrimaryKey
+    private String dayOfYear = null;
 /*
     List<Movimento> transactions = null;
 */

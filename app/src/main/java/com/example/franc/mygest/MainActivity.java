@@ -21,9 +21,11 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity{
 
     Realm mRealm;
-    static RealmResults<DailyTransaction> realmSelect;
+    static RealmResults<DailyTransaction> realmSelectDaysWithTransactions;
+    static RealmResults<Movimento> realmSelectMovimenti;
 
-    static RviewAdapterDailyTransaction adapter;
+    static RviewAdapterDailyTransaction adapterDailyTransaction;
+    static RviewAdapterMovimenti adapterMovimenti;
 
 
     @Override
@@ -33,14 +35,14 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.navigation_drawer);
 
         mRealm = Realm.getDefaultInstance();
-        realmSelect = mRealm.where(DailyTransaction.class).findAllAsync();
-        adapter = initUi(mRealm, realmSelect);
+        realmSelectDaysWithTransactions = mRealm.where(DailyTransaction.class).findAllAsync();
+        adapterDailyTransaction = initUi(mRealm, realmSelectDaysWithTransactions);
+//todo non mostra risultati DailyTransactionss
 
-
-        realmSelect.addChangeListener(new RealmChangeListener<RealmResults<DailyTransaction>>() {
+        realmSelectDaysWithTransactions.addChangeListener(new RealmChangeListener<RealmResults<DailyTransaction>>() {
             @Override
             public void onChange(RealmResults<DailyTransaction> mResults) {
-                adapter.notifyDataSetChanged();
+                adapterDailyTransaction.notifyDataSetChanged();
                 Toast.makeText(MainActivity.this, "On change triggered", Toast.LENGTH_SHORT).show();
             }
         });
@@ -56,10 +58,10 @@ public class MainActivity extends AppCompatActivity{
 
         final Intent intent = new Intent(this, DialogActivity.class);
 
-
-        adapter = new RviewAdapterDailyTransaction(this, mRealm, realmSelect);
+        adapterMovimenti = new RviewAdapterMovimenti(this, mRealm, realmSelectMovimenti);
+        adapterDailyTransaction = new RviewAdapterDailyTransaction(this, mRealm, realmSelectDaysWithTransactions);
         rview.setLayoutManager(new LinearLayoutManager(this));
-        rview.setAdapter(adapter);
+        rview.setAdapter(adapterDailyTransaction);
 
 /*
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity{
 
         startNavDrawer();
 
-        return adapter;
+        return adapterDailyTransaction;
     }
 
     //NAVIGATION DRAWER

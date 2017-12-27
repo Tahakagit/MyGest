@@ -10,12 +10,17 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class DialogActivity extends AppCompatActivity {
 
     static int i = 0;
     final FragmentManager fragmentManager = getSupportFragmentManager();
     final ArrayList<Fragment> fragments = new ArrayList <>();
     static RviewAdapterMovimenti adapter;
+    Realm mRealm;
+    static RealmResults<Movimento> realmSelect;
 
     static Button next;
     static Button prev;
@@ -98,15 +103,16 @@ public class DialogActivity extends AppCompatActivity {
         ft2.addToBackStack(null);
         ft2.commit();
 */
-
-        EndDialogActivity();
+/*
+        adapter = new RviewAdapterMovimenti(this, mRealm, realmSelect);
+*/
+        MainActivity.adapterMovimenti.setAll(beneficiario2, importo2, scadenza2);
+        i = 0;
+        finish();
     }
 
     public void EndDialogActivity(){
 //todo adapter.setall aggiungere conto
-        adapter.setAll(beneficiario2, importo2, scadenza2);
-        i = 0;
-        finish();
 
     }
     @Override
