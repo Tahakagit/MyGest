@@ -5,6 +5,7 @@ package com.example.franc.mygest;
  */
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     private Realm movimentiRealm;
     private RealmResults<DailyTransaction> mResults;
     private RealmResults<Movimento> movimentiResults;
+    static RviewAdapterMovimenti adapterMovimenti;
 
     public RviewAdapterDailyTransaction(Context context, Realm realm, RealmResults<DailyTransaction> results) {
         this.movimentiRealm = realm;
@@ -45,9 +47,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             super(itemView);
             scadenza = itemView.findViewById(R.id.scadenza);
 
-/*
             hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
-*/
 
         }
 
@@ -91,13 +91,21 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dailytransaction, parent, false);
         DataObjectHolder dataOHolder = new DataObjectHolder(view);
+
         return dataOHolder;
     }
     @Override
     public void onBindViewHolder(final DataObjectHolder holder, int position) {
+
+        RecyclerView rviewMovimenti = holder.itemView.findViewById(R.id.rv_transaction);
+
 /*
         holder.hiddenlayout.setVisibility(View.GONE);
 */
+        RealmHelper helper = new RealmHelper();
+        adapterMovimenti = new RviewAdapterMovimenti(helper.getTransactionByDay(mResults.get(position).getDayOfYear().toString()));
+        rviewMovimenti.setLayoutManager(new LinearLayoutManager(MainActivity.context));
+        rviewMovimenti.setAdapter(adapterMovimenti);
 
         DailyTransaction dailyTransaction = mResults.get(position);
         if(dailyTransaction.getDayOfYear() != null) {

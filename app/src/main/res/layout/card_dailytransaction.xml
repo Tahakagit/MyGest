@@ -40,7 +40,6 @@
                     />
 
             </LinearLayout>
-<!--
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -48,6 +47,7 @@
                 android:id="@+id/hiddenlayout"
                 android:padding="5dp"
                 android:visibility="gone">
+<!--
                 <TextView
                     style="@style/text_style_conto"
 
@@ -67,9 +67,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tipo"/>
-
-            </LinearLayout>
 -->
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/rv_transaction"
+                    >
+
+                </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
 
 
         </LinearLayout>

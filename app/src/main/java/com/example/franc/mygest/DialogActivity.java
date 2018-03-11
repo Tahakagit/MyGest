@@ -106,7 +106,7 @@ public class DialogActivity extends AppCompatActivity {
 /*
         adapter = new RviewAdapterMovimenti(this, mRealm, realmSelect);
 */
-        MainActivity.adapterMovimenti.setAll(beneficiario2, importo2, scadenza2);
+        RviewAdapterDailyTransaction.adapterMovimenti.setAll(beneficiario2, importo2, scadenza2);
         i = 0;
         finish();
     }

@@ -1,5 +1,6 @@
 package com.example.franc.mygest;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -25,13 +26,14 @@ public class MainActivity extends AppCompatActivity{
     static RealmResults<Movimento> realmSelectMovimenti;
 
     static RviewAdapterDailyTransaction adapterDailyTransaction;
-    static RviewAdapterMovimenti adapterMovimenti;
 
+    static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        context = this;
         setContentView(R.layout.navigation_drawer);
 
         mRealm = Realm.getDefaultInstance();
@@ -58,7 +60,6 @@ public class MainActivity extends AppCompatActivity{
 
         final Intent intent = new Intent(this, DialogActivity.class);
 
-        adapterMovimenti = new RviewAdapterMovimenti(this, mRealm, realmSelectMovimenti);
         adapterDailyTransaction = new RviewAdapterDailyTransaction(this, mRealm, realmSelectDaysWithTransactions);
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapterDailyTransaction);

@@ -19,13 +19,9 @@ import io.realm.RealmResults;
 //transazioni
 public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovimenti.DataObjectHolder> {
 
-    private LayoutInflater mInflater;
-    private Realm mRealm;
     private RealmResults<Movimento> mResults;
 
-    public RviewAdapterMovimenti(Context context, Realm realm, RealmResults<Movimento> results) {
-        this.mRealm = realm;
-        this.mInflater = LayoutInflater.from(context);
+    public RviewAdapterMovimenti(RealmResults<Movimento> results) {
         setResults(results);
     }
 
@@ -61,14 +57,15 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         movimento.setScadenza(scadenza);
         movimento.setTimestamp(System.currentTimeMillis());
 //todo inserire scadenza in DailyTransaction realm
-        DailyTransaction dailyTransaction = new DailyTransaction();
-        dailyTransaction.setDayOfYear(scadenza);
-        dailyTransaction.setTimestamp(System.currentTimeMillis());
 
+        RealmHelper helper = new RealmHelper();
+        helper.saveMovimento(movimento);
+/*
         mRealm.beginTransaction();
         mRealm.copyToRealmOrUpdate(dailyTransaction);
         mRealm.copyToRealmOrUpdate(movimento);
         mRealm.commitTransaction();
+*/
         notifyDataSetChanged();
     }
     private void setResults(RealmResults<Movimento> results){
