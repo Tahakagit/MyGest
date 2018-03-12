@@ -1,5 +1,6 @@
 package com.example.franc.mygest;
 
+import java.util.Date;
 import java.util.List;
 
 import io.realm.RealmObject;
@@ -10,19 +11,19 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class DailyTransaction extends RealmObject {
+    @PrimaryKey
 
     private long timestamp;
-    @PrimaryKey
-    private String dayOfYear = null;
+    private Date dayOfYear = null;
 /*
     List<Movimento> transactions = null;
 */
 
-    public String getDayOfYear() {
+    public Date getDayOfYear() {
         return dayOfYear;
     }
 
-    public void setDayOfYear(String dayOfYear) {
+    public void setDayOfYear(Date dayOfYear) {
         this.dayOfYear = dayOfYear;
     }
 

@@ -8,7 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -26,7 +28,7 @@ public class DialogActivity extends AppCompatActivity {
     static Button prev;
     static String beneficiario2 = null;
     static String importo2 = null;
-    static String scadenza2 = null;
+    static Date scadenza2 = null;
     static String conto2 = null;
     static String tipo2 = null;
     static String direzione2 = null;
@@ -85,7 +87,7 @@ public class DialogActivity extends AppCompatActivity {
         ft2.commit();
     }
 
-    public void getScadenza(String scadenza) {
+    public void getScadenza(Date scadenza) {
         scadenza2 = scadenza;
         ++i;
         FragmentTransaction ft2 = fragmentManager.beginTransaction();
@@ -106,7 +108,12 @@ public class DialogActivity extends AppCompatActivity {
 /*
         adapter = new RviewAdapterMovimenti(this, mRealm, realmSelect);
 */
+/*
         RviewAdapterDailyTransaction.adapterMovimenti.setAll(beneficiario2, importo2, scadenza2);
+*/
+        RealmHelper helper = new RealmHelper();
+        helper.saveMovimento(beneficiario2, importo2, scadenza2, conto2);
+        MainActivity.adapterDailyTransaction.updateData();
         i = 0;
         finish();
     }

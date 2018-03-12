@@ -62,7 +62,7 @@ public class DialogFragmentConto extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                contos = view.toString();
+                contos = parent.getItemAtPosition(position).toString();
 
             }
             @Override

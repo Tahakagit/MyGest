@@ -15,6 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity{
     static RviewAdapterDailyTransaction adapterDailyTransaction;
 
     static Context context;
+    static Calendar weekRange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +40,23 @@ public class MainActivity extends AppCompatActivity{
         context = this;
         setContentView(R.layout.navigation_drawer);
 
+        weekRange = Calendar.getInstance();
+        weekRange.add(Calendar.DAY_OF_MONTH, 7);
+
         mRealm = Realm.getDefaultInstance();
+
+        RealmHelper helper = new RealmHelper();
+        RealmResults<Movimento> allTransaction = helper.getTransactionsUntil(weekRange.getTime());
+
+        // cerco i conti con transazioni in scadenza nel range todo fix this
+        RealmResults<Movimento> conti = allTransaction.where().distinct("conto");
+        ArrayList<String> listConti = new ArrayList<>();
+
+        for (Movimento mov:conti) {
+            listConti.add(mov.getConto().toString());
+        }
         realmSelectDaysWithTransactions = mRealm.where(DailyTransaction.class).findAllAsync();
-        adapterDailyTransaction = initUi(mRealm, realmSelectDaysWithTransactions);
+        adapterDailyTransaction = initUi(mRealm, listConti);
 //todo non mostra risultati DailyTransactionss
 
         realmSelectDaysWithTransactions.addChangeListener(new RealmChangeListener<RealmResults<DailyTransaction>>() {
@@ -52,7 +70,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     //START USER INTERFACE
-    private RviewAdapterDailyTransaction initUi(Realm mRealm, RealmResults<DailyTransaction> realmSelect){
+    private RviewAdapterDailyTransaction initUi(Realm mRealm, ArrayList<String> conti){
 
         RecyclerView rview = findViewById(R.id.recyclerview);
         Toolbar myToolbar = findViewById(R.id.toolbar);
@@ -60,15 +78,9 @@ public class MainActivity extends AppCompatActivity{
 
         final Intent intent = new Intent(this, DialogActivity.class);
 
-        adapterDailyTransaction = new RviewAdapterDailyTransaction(this, mRealm, realmSelectDaysWithTransactions);
+        adapterDailyTransaction = new RviewAdapterDailyTransaction(this, mRealm, conti);
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapterDailyTransaction);
-
-/*
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(rview);
-*/
-
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

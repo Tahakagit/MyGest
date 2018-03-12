@@ -12,11 +12,13 @@ import android.widget.EditText;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class DialogFragmentScadenza extends Fragment{
 
     EditText edittext;
+    Date dateToSend;
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
     }
@@ -47,7 +49,7 @@ public class DialogFragmentScadenza extends Fragment{
         next.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
-                ((DialogActivity)getActivity()).getScadenza(edittext.getText().toString());
+                ((DialogActivity)getActivity()).getScadenza(dateToSend);
 
             }
         } );
@@ -89,7 +91,9 @@ public class DialogFragmentScadenza extends Fragment{
             c.set(year, monthOfYear, dayOfMonth);
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
+            dateToSend = c.getTime();
             String formattedDate = sdf.format(c.getTime());
+
 
 
             edittext.setText(formattedDate);

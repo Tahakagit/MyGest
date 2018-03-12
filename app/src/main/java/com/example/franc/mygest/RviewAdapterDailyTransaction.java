@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -25,11 +26,11 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
     private LayoutInflater mInflater;
     private Realm movimentiRealm;
-    private RealmResults<DailyTransaction> mResults;
+    private ArrayList<String> mResults;
     private RealmResults<Movimento> movimentiResults;
     static RviewAdapterMovimenti adapterMovimenti;
 
-    public RviewAdapterDailyTransaction(Context context, Realm realm, RealmResults<DailyTransaction> results) {
+    public RviewAdapterDailyTransaction(Context context, Realm realm, ArrayList<String> results) {
         this.movimentiRealm = realm;
         this.mInflater = LayoutInflater.from(context);
         setResults(results);
@@ -75,7 +76,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         notifyDataSetChanged();
     }
 */
-    private void setResults(RealmResults<DailyTransaction> results){
+    private void setResults(ArrayList<String> results){
         mResults = results;
         notifyDataSetChanged();
 
@@ -86,7 +87,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         return mResults.size();
     }
     @Override
-    public long getItemId(int position){ return  mResults.get(position).getTimestamp();}
+    public long getItemId(int position){ return  0;}
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dailytransaction, parent, false);
@@ -103,13 +104,17 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         holder.hiddenlayout.setVisibility(View.GONE);
 */
         RealmHelper helper = new RealmHelper();
-        adapterMovimenti = new RviewAdapterMovimenti(helper.getTransactionByDay(mResults.get(position).getDayOfYear().toString()));
+        RealmResults<Movimento> movs = helper.getTransactionsUntil(MainActivity.weekRange.getTime());
+
+        adapterMovimenti = new RviewAdapterMovimenti(movs.where().equalTo("conto", mResults.get(position)).findAll());
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(MainActivity.context));
         rviewMovimenti.setAdapter(adapterMovimenti);
 
+/*
         DailyTransaction dailyTransaction = mResults.get(position);
-        if(dailyTransaction.getDayOfYear() != null) {
-            holder.setData(dailyTransaction.getDayOfYear());
+*/
+        if(mResults.get(position) != null) {
+            holder.setData(mResults.get(position));
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -126,6 +131,9 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
     }
 
+    public void updateData(){
+        notifyDataSetChanged();
+    }
 
 
 }

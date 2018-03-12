@@ -1,6 +1,10 @@
 package com.example.franc.mygest;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import io.realm.RealmObject;
+import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -12,16 +16,16 @@ public class Movimento extends RealmObject{
     @PrimaryKey
     private String beneficiario;
     private String importo;
-    private String scadenza;
-    private Conto conto;
+    private Date scadenza;
+    private String conto;
     private String tipo;
     private long timestamp;
 //todo attrs checked, direzione
-    public Conto getConto() {
+    public String getConto() {
         return conto;
     }
 
-    public void setConto(Conto conto) {
+    public void setConto(String conto) {
         this.conto = conto;
     }
 
@@ -42,11 +46,11 @@ public class Movimento extends RealmObject{
         this.importo = importo;
     }
 
-    public String getScadenza() {
+    public Date getScadenza() {
         return scadenza;
     }
 
-    public void setScadenza(String scadenza) {
+    public void setScadenza(Date scadenza) {
         this.scadenza = scadenza;
     }
 

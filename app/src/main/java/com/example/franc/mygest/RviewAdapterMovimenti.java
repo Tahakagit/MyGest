@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
@@ -50,7 +52,7 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
     }
 
 
-    public void setAll(String beneficiario, String importo, String scadenza){
+    public void setAll(String beneficiario, String importo, Date scadenza){
         Movimento movimento = new Movimento();
         movimento.setBeneficiario(beneficiario);
         movimento.setImporto(importo);
@@ -59,7 +61,9 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
 //todo inserire scadenza in DailyTransaction realm
 
         RealmHelper helper = new RealmHelper();
+/*
         helper.saveMovimento(movimento);
+*/
 /*
         mRealm.beginTransaction();
         mRealm.copyToRealmOrUpdate(dailyTransaction);

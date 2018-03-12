@@ -56,7 +56,7 @@ public class CreaContoActivity extends AppCompatActivity {
         });
     }
 
-    //DISPLAY INPUT DIALOG
+    //DISPLAY INPUT DIALOG AND SAVE ACCOUNT
     private void displayInputDialog()    {
         final Dialog d=new Dialog(this);
         d.setTitle("Save to Realm");
@@ -67,32 +67,26 @@ public class CreaContoActivity extends AppCompatActivity {
         final EditText saldoConto= d.findViewById(R.id.saldoconto);
 
         Button saveBtn= d.findViewById(R.id.saveconto);
+
+        d.show();
+
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //GET DATA
-                Conto s=new Conto();
-                s.setNomeConto(nomeConto.getText().toString());
-                s.setSaldoConto(saldoConto.getText().toString());
                 //SAVE
-/*
-                ContoRealmHelper helper=new ContoRealmHelper(realm);
-*/
-                adapter.setConto(s);
+                RealmHelper helper = new RealmHelper();
+                helper.saveConto(nomeConto.getText().toString(), saldoConto.getText().toString());
+
+                //REFRESH ADAPTER
+                adapter.notifyDataSetChanged();
+
+                //CLEAN FORM FIELDS
                 nomeConto.setText("");
                 saldoConto.setText("");
-                d.dismiss();
-                //RETRIEVE
-/*
 
-                conti=helper.retrieve();
-*/
-/*
-                adapter.notifyDataSetChanged();
-                rv.setAdapter(adapter);
-*/
+                //CLOSE DIALOG
+                d.dismiss();
             }
         });
-        d.show();
     }
 }
