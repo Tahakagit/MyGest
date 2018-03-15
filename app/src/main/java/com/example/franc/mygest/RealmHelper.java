@@ -1,5 +1,6 @@
 package com.example.franc.mygest;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import io.realm.Realm;
@@ -30,6 +31,47 @@ public class RealmHelper {
 
     }
 
+
+    public ArrayList<String> getTransactionsUntilGroupedByAccount(Date dateTo){
+
+        mRealm = Realm.getDefaultInstance();
+        RealmResults<Movimento> allTransaction = getTransactionsUntil(dateTo);
+
+        // cerco i conti con transazioni in scadenza nel range todo fix this
+        RealmResults<Movimento> conti = allTransaction.where().distinct("conto");
+        ArrayList<String> listConti = new ArrayList<>();
+
+        for (Movimento mov:conti) {
+            listConti.add(mov.getConto().toString());
+        }
+
+        mRealm.close();
+        return listConti;
+
+    }
+
+    public RealmResults<Movimento> getTransactionsUntilGroupedBySingleAccount(Date dateTo, String account){
+
+        mRealm = Realm.getDefaultInstance();
+        RealmResults<Movimento> allTransaction = getTransactionsUntil(dateTo);
+
+        // cerco i conti con transazioni in scadenza nel range todo fix this
+        RealmResults<Movimento> accountTransaction = allTransaction.where().equalTo("conto", account).findAll();
+
+
+        mRealm.close();
+        return accountTransaction;
+
+    }
+
+    public RealmResults<Movimento> getTransactionsAll(){
+
+        mRealm = Realm.getDefaultInstance();
+        RealmResults<Movimento> transactionInDay = mRealm.where(Movimento.class).findAll();
+        mRealm.close();
+        return transactionInDay;
+
+    }
 
 
     public void saveMovimento(final String beneficiario, final String importo, final Date scadenza, final String conto){

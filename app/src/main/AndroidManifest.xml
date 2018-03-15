@@ -18,6 +18,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".AllTransactionActivity"
+            android:label="@string/new_record"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity
             android:name=".DialogActivity"
             android:label="@string/new_record"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />

@@ -24,19 +24,11 @@ public class DialogFragmentScadenza extends Fragment{
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragment_dialog_fragment_scadenza, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_dialog_fragment_scadenza, container, false);
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        edittext = view.findViewById(R.id.selectdate);
-        edittext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePicker();
-            }
-        });
 
 
 
@@ -62,11 +54,18 @@ public class DialogFragmentScadenza extends Fragment{
             }
         } );
 
+        showDatePicker(view);
 
     }
 
-    private void showDatePicker() {
-        DatePickerFragment date = new DatePickerFragment();
+    /**
+     * Starts date selection, waits for user choice and gets back selected date
+     * todo trasformare editext in button?
+     */
+    private void showDatePicker(View view) {
+        edittext = view.findViewById(R.id.selectdate);
+
+        final DatePickerFragment date = new DatePickerFragment();
         /**
          * Set Up Current Date Into dialog
          */
@@ -79,24 +78,37 @@ public class DialogFragmentScadenza extends Fragment{
         /**
          * Set Call back to capture selected date
          */
+
+        DatePickerDialog.OnDateSetListener ondate = new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar c = Calendar.getInstance();
+                c.set(year, monthOfYear, dayOfMonth);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
+
+                //date object from spinner
+                dateToSend = c.getTime();
+                //formatted date string from spinner
+                String formattedDate = sdf.format(c.getTime());
+
+
+
+                edittext.setText(formattedDate);
+            }
+        };
         date.setCallBack(ondate);
+
+        edittext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                date.show(getFragmentManager(), "Date Picker");
+            }
+        });
+
+/*
         date.show(getFragmentManager(), "Date Picker");
+*/
     }
 
-    DatePickerDialog.OnDateSetListener ondate = new DatePickerDialog.OnDateSetListener() {
-
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-            Calendar c = Calendar.getInstance();
-            c.set(year, monthOfYear, dayOfMonth);
-
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
-            dateToSend = c.getTime();
-            String formattedDate = sdf.format(c.getTime());
-
-
-
-            edittext.setText(formattedDate);
-        }
-    };
 }

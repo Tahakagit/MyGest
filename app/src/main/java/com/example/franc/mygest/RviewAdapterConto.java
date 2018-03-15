@@ -16,13 +16,11 @@ import io.realm.RealmResults;
  */
 
 public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.DataObjectHolder> {
-    private LayoutInflater mInflater;
     private Realm contiRealm;
     private RealmResults<Conto> mResults;
 
     public RviewAdapterConto(Context context, Realm realm, RealmResults<Conto> results) {
         this.contiRealm = realm;
-        this.mInflater = LayoutInflater.from(context);
         setResults(results);
     }
 
@@ -72,8 +70,7 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
 */
     public RviewAdapterConto.DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_conti, parent, false);
-        RviewAdapterConto.DataObjectHolder dataHolder = new RviewAdapterConto.DataObjectHolder(view);
-        return dataHolder;
+        return new RviewAdapterConto.DataObjectHolder(view);
     }
 
     @Override

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import io.realm.RealmResults;
 public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovimenti.DataObjectHolder> {
 
     private RealmResults<Movimento> mResults;
+    Realm mRealm;
 
     public RviewAdapterMovimenti(RealmResults<Movimento> results) {
         setResults(results);
@@ -52,26 +54,6 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
     }
 
 
-    public void setAll(String beneficiario, String importo, Date scadenza){
-        Movimento movimento = new Movimento();
-        movimento.setBeneficiario(beneficiario);
-        movimento.setImporto(importo);
-        movimento.setScadenza(scadenza);
-        movimento.setTimestamp(System.currentTimeMillis());
-//todo inserire scadenza in DailyTransaction realm
-
-        RealmHelper helper = new RealmHelper();
-/*
-        helper.saveMovimento(movimento);
-*/
-/*
-        mRealm.beginTransaction();
-        mRealm.copyToRealmOrUpdate(dailyTransaction);
-        mRealm.copyToRealmOrUpdate(movimento);
-        mRealm.commitTransaction();
-*/
-        notifyDataSetChanged();
-    }
     private void setResults(RealmResults<Movimento> results){
         mResults = results;
         notifyDataSetChanged();
@@ -83,12 +65,11 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         return mResults.size();
     }
     @Override
-    public long getItemId(int position){ return  mResults.get(position).getTimestamp();}
+    public long getItemId(int position){ return  0;}
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_movimenti, parent, false);
-        DataObjectHolder dataOHolder = new DataObjectHolder(view);
-        return dataOHolder;
+        return new DataObjectHolder(view);
     }
     @Override
     public void onBindViewHolder(final DataObjectHolder holder, int position) {

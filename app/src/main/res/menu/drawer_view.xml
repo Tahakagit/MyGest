@@ -16,7 +16,7 @@
                 android:title="Crea conto"
                 android:id="@+id/action_category_1"/>
             <item
-                android:title="Green"
+                android:title="Tutti i movimenti"
                 android:id="@+id/action_category_2"/>
             <item
                 android:title="Tech"

@@ -98,19 +98,6 @@ public class DialogActivity extends AppCompatActivity {
 
     public void getConto(String conto) {
         conto2 = conto;
-/*
-        ++i;
-        FragmentTransaction ft2 = fragmentManager.beginTransaction();
-        ft2.replace(R.id.fragmentcontainer, fragments.get(i));
-        ft2.addToBackStack(null);
-        ft2.commit();
-*/
-/*
-        adapter = new RviewAdapterMovimenti(this, mRealm, realmSelect);
-*/
-/*
-        RviewAdapterDailyTransaction.adapterMovimenti.setAll(beneficiario2, importo2, scadenza2);
-*/
         RealmHelper helper = new RealmHelper();
         helper.saveMovimento(beneficiario2, importo2, scadenza2, conto2);
         MainActivity.adapterDailyTransaction.updateData();
@@ -118,10 +105,6 @@ public class DialogActivity extends AppCompatActivity {
         finish();
     }
 
-    public void EndDialogActivity(){
-//todo adapter.setall aggiungere conto
-
-    }
     @Override
     protected void onResume() {
         super.onResume();

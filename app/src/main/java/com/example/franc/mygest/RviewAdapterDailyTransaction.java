@@ -24,21 +24,22 @@ import io.realm.RealmResults;
 
 public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdapterDailyTransaction.DataObjectHolder> {
 
-    private LayoutInflater mInflater;
-    private Realm movimentiRealm;
     private ArrayList<String> mResults;
-    private RealmResults<Movimento> movimentiResults;
-    static RviewAdapterMovimenti adapterMovimenti;
+    RealmResults<Movimento> realmResults;
 
-    public RviewAdapterDailyTransaction(Context context, Realm realm, ArrayList<String> results) {
-        this.movimentiRealm = realm;
-        this.mInflater = LayoutInflater.from(context);
+    static RviewAdapterMovimenti adapterMovimenti;
+    final Realm mRealm = Realm.getDefaultInstance();
+
+
+    RviewAdapterDailyTransaction(ArrayList<String> results) {
         setResults(results);
     }
 
-    public RviewAdapterDailyTransaction(){
 
+    RviewAdapterDailyTransaction(RealmResults<Movimento> realmResults) {
+        setResultsRealm(realmResults);
     }
+
     public static class DataObjectHolder extends RecyclerView.ViewHolder{
         TextView beneficiario;
         TextView importo;
@@ -62,24 +63,14 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     }
 
 
-/*
-    public void setAll(String beneficiario, String importo, String scadenza){
-        Movimento movimento = new Movimento();
-        movimento.setBeneficiario(beneficiario);
-        movimento.setImporto(importo);
-        movimento.setScadenza(scadenza);
-        movimento.setTimestamp(System.currentTimeMillis());
-
-        movimentiRealm.beginTransaction();
-        movimentiRealm.copyToRealmOrUpdate(movimento);
-        movimentiRealm.commitTransaction();
-        notifyDataSetChanged();
-    }
-*/
-    private void setResults(ArrayList<String> results){
+    void setResults(ArrayList<String> results){
         mResults = results;
         notifyDataSetChanged();
+    }
 
+    void setResultsRealm(RealmResults<Movimento> results){
+        realmResults = results;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -91,28 +82,28 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dailytransaction, parent, false);
-        DataObjectHolder dataOHolder = new DataObjectHolder(view);
-
-        return dataOHolder;
+        return new DataObjectHolder(view);
     }
     @Override
     public void onBindViewHolder(final DataObjectHolder holder, int position) {
 
         RecyclerView rviewMovimenti = holder.itemView.findViewById(R.id.rv_transaction);
 
-/*
-        holder.hiddenlayout.setVisibility(View.GONE);
-*/
         RealmHelper helper = new RealmHelper();
-        RealmResults<Movimento> movs = helper.getTransactionsUntil(MainActivity.weekRange.getTime());
 
-        adapterMovimenti = new RviewAdapterMovimenti(movs.where().equalTo("conto", mResults.get(position)).findAll());
+        String account = mResults.get(position);
+
+        RealmResults<Movimento> movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.weekRange.getTime(), account);
+
+        adapterMovimenti = new RviewAdapterMovimenti(movs);
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(MainActivity.context));
         rviewMovimenti.setAdapter(adapterMovimenti);
+/**
+ *
+ *
+ *todo foreach movs somma gli importi, ritrova il saldo e sottrai gli importi
+ */
 
-/*
-        DailyTransaction dailyTransaction = mResults.get(position);
-*/
         if(mResults.get(position) != null) {
             holder.setData(mResults.get(position));
         }
@@ -125,6 +116,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                 }
                 else {
                     holder.hiddenlayout.setVisibility(View.GONE);
+
                 }
             }
         });
@@ -135,5 +127,10 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         notifyDataSetChanged();
     }
 
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        mRealm.close();
 
+    }
 }

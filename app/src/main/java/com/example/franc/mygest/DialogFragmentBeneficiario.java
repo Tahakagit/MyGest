@@ -13,7 +13,7 @@ import android.widget.EditText;
 public class DialogFragmentBeneficiario extends Fragment {
 
 
-    static EditText beneficiario;
+    EditText beneficiario;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.fragment_dialog_fragment_beneficiario, container, false);
@@ -32,17 +32,13 @@ public class DialogFragmentBeneficiario extends Fragment {
 
         next.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-
                 ((DialogActivity)getActivity()).getBeneficiario(beneficiario.getText().toString());
-
             }
         } );
 
         prev.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-
                 ((DialogActivity)getActivity()).goBack();
-
             }
         } );
 
