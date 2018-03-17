@@ -4,7 +4,6 @@ package com.example.franc.mygest;
  * Created by franc on 28/10/2017.
  */
 
-import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,49 +12,51 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmObject;
 import io.realm.RealmResults;
 //questo diventa il recycler view dei giorni con transazioni all'interno del quale ogni viewholer
 //avra la sua recycler view popolata dai singoli movimenti
 
 public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdapterDailyTransaction.DataObjectHolder> {
 
-    private ArrayList<String> mResults;
-    RealmResults<Movimento> realmResults;
+    ArrayList<ContoObj> mResults;
 
     static RviewAdapterMovimenti adapterMovimenti;
     final Realm mRealm = Realm.getDefaultInstance();
 
 
+/*
     RviewAdapterDailyTransaction(ArrayList<String> results) {
         setResults(results);
     }
+*/
 
 
-    RviewAdapterDailyTransaction(RealmResults<Movimento> realmResults) {
-        setResultsRealm(realmResults);
+    RviewAdapterDailyTransaction(ArrayList<ContoObj> mResults) {
+        setResultsRealm(mResults);
     }
 
     public static class DataObjectHolder extends RecyclerView.ViewHolder{
-        TextView beneficiario;
-        TextView importo;
-        TextView scadenza;
+        TextView accountBalance;
+        TextView accountName;
         LinearLayout hiddenlayout;
+
         public DataObjectHolder(View itemView) {
             super(itemView);
-            scadenza = itemView.findViewById(R.id.scadenza);
+            accountName = itemView.findViewById(R.id.id_account_name);
+            accountBalance = itemView.findViewById(R.id.id_account_balance);
 
             hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
 
         }
 
         //todo forse qua dentro popolo il recyclerview2
-        public void setData(String textscadenza){
-            scadenza.setText(textscadenza);
+        public void setData(String textscadenza, String balance){
+            accountName.setText(textscadenza);
+            accountBalance.setText(balance);
 
 
         }
@@ -63,13 +64,8 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     }
 
 
-    void setResults(ArrayList<String> results){
+    void setResultsRealm(ArrayList<ContoObj> results){
         mResults = results;
-        notifyDataSetChanged();
-    }
-
-    void setResultsRealm(RealmResults<Movimento> results){
-        realmResults = results;
         notifyDataSetChanged();
     }
 
@@ -91,7 +87,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
         RealmHelper helper = new RealmHelper();
 
-        String account = mResults.get(position);
+        String account = mResults.get(position).getNomeConto();
 
         RealmResults<Movimento> movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.weekRange.getTime(), account);
 
@@ -105,7 +101,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
  */
 
         if(mResults.get(position) != null) {
-            holder.setData(mResults.get(position));
+            holder.setData(mResults.get(position).getNomeConto(), NumberFormat.getCurrencyInstance().format(mResults.get(position).getSaldoConto()));
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -116,7 +112,6 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                 }
                 else {
                     holder.hiddenlayout.setVisibility(View.GONE);
-
                 }
             }
         });

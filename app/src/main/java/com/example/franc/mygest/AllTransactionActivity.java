@@ -54,7 +54,10 @@ public class AllTransactionActivity extends AppCompatActivity{
 
         final Intent intent = new Intent(this, DialogActivity.class);
 
+        //todo fix this
+/*
         adapterDailyTransaction = new RviewAdapterDailyTransaction(content);
+*/
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapterDailyTransaction);
         FloatingActionButton fab = findViewById(R.id.fab);

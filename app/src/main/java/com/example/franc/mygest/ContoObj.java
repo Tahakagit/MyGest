@@ -12,15 +12,20 @@ import io.realm.annotations.PrimaryKey;
  */
 
 
-public class Conto extends RealmObject {
+public class ContoObj{
 
 
 
-    @PrimaryKey
     private String nomeConto;
     private String saldoConto;
     private String coloreConto;
     private int transactionNumber = 0;
+
+    public ContoObj(String nomeConto, String saldoConto, String coloreConto) {
+        this.nomeConto = nomeConto;
+        this.saldoConto = saldoConto;
+        this.coloreConto = coloreConto;
+    }
 
     @Override
     public String toString(){

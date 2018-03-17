@@ -2,6 +2,8 @@ package com.example.franc.mygest;
 
 import android.app.Application;
 
+import java.math.BigDecimal;
+
 import io.realm.Realm;
 
 /**
@@ -10,6 +12,7 @@ import io.realm.Realm;
 
 public class MyApplication extends Application {
 
+    public static final BigDecimal MONEY_PRECISION = new BigDecimal(1000);
 
     @Override
     public void onCreate() {

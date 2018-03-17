@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
+
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -75,7 +77,7 @@ public class CreaContoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //SAVE
                 RealmHelper helper = new RealmHelper();
-                helper.saveConto(nomeConto.getText().toString(), saldoConto.getText().toString());
+                helper.saveConto(nomeConto.getText().toString(), new BigDecimal(saldoConto.getText().toString()));
 
                 //REFRESH ADAPTER
                 adapter.notifyDataSetChanged();

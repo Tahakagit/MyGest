@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +20,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,13 +54,17 @@ public class MainActivity extends AppCompatActivity{
         weekRange.add(Calendar.DAY_OF_MONTH, 7);
 
         dateToSend = weekRange.getTime();
-        initUi(helper.getTransactionsUntilGroupedByAccount(dateToSend));
+        ArrayList<ContoObj> conti = new ArrayList<>();
+        conti = helper.getTransactionsUntilGroupedByAccount(dateToSend);
+        initUi(conti);
         showDatePicker();
 
+        showCurrentBalances();
     }
 
     //START USER INTERFACE
-    private void initUi(ArrayList<String> conti){
+    private void initUi(ArrayList<ContoObj> conti2){
+
 
         // todo remove expanding toolbar
         RecyclerView rview = findViewById(R.id.recyclerview_filter);
@@ -65,7 +73,7 @@ public class MainActivity extends AppCompatActivity{
 
         final Intent intent = new Intent(this, DialogActivity.class);
 
-        adapterDailyTransaction = new RviewAdapterDailyTransaction(conti);
+        adapterDailyTransaction = new RviewAdapterDailyTransaction(conti2);
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapterDailyTransaction);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -127,7 +135,7 @@ public class MainActivity extends AppCompatActivity{
 
 
                 edittext.setText(formattedDate);
-                adapterDailyTransaction.setResults(helper.getTransactionsUntilGroupedByAccount(dateToSend));
+                adapterDailyTransaction.setResultsRealm(helper.getTransactionsUntilGroupedByAccount(dateToSend));
             }
         };
         date.setCallBack(ondate);
@@ -136,6 +144,27 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+
+    private void showCurrentBalances(){
+
+        final EditText c1Balance = findViewById(R.id.id_c1_balance);
+        EditText c2Balance = findViewById(R.id.id_c2_balance);
+
+        c1Balance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                c1Balance.setText("");
+                c1Balance.addTextChangedListener(new MoneyTextWatcher(c1Balance));
+
+            }
+        });
+        String c1BalanceFormatted = NumberFormat.getCurrencyInstance().format(helper.getAccountBalance("c1"));
+        String c2BalanceFormatted = NumberFormat.getCurrencyInstance().format(helper.getAccountBalance("c2"));
+
+        c1Balance.setText(c1BalanceFormatted);
+        c2Balance.setText(c2BalanceFormatted);
+
+    }
     //NAVIGATION DRAWER
     public void startNavDrawer(){
         final DrawerLayout mDrawerLayout;

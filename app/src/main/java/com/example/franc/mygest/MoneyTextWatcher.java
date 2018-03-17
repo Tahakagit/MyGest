@@ -10,6 +10,8 @@ import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
+import io.realm.RealmResults;
+
 import static io.realm.internal.SyncObjectServerFacade.getApplicationContext;
 
 /**
@@ -34,7 +36,6 @@ public class MoneyTextWatcher implements TextWatcher {
     @Override
     public void afterTextChanged(Editable editable) {
         Context context = getApplicationContext();
-        Toast.makeText(context, "Edittext.settext triggered", Toast.LENGTH_SHORT).show();
 
         EditText editText = editTextWeakReference.get();
         if (editText == null) return;
@@ -47,5 +48,9 @@ public class MoneyTextWatcher implements TextWatcher {
 
         editText.setSelection(formatted.length());
         editText.addTextChangedListener(this);
+
+        RealmHelper helper = new RealmHelper();
+        helper.updateBalance("c1", parsed);
+
     }
 }

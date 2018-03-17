@@ -100,7 +100,7 @@ public class DialogActivity extends AppCompatActivity {
         conto2 = conto;
         RealmHelper helper = new RealmHelper();
         helper.saveMovimento(beneficiario2, importo2, scadenza2, conto2);
-        MainActivity.adapterDailyTransaction.updateData();
+        MainActivity.adapterDailyTransaction.setResultsRealm(helper.getTransactionsUntilGroupedByAccount(MainActivity.dateToSend));
         i = 0;
         finish();
     }

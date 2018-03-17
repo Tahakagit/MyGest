@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -18,6 +20,7 @@ import io.realm.RealmResults;
 public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.DataObjectHolder> {
     private Realm contiRealm;
     private RealmResults<Conto> mResults;
+    RealmHelper helper = new RealmHelper();
 
     public RviewAdapterConto(Context context, Realm realm, RealmResults<Conto> results) {
         this.contiRealm = realm;
@@ -79,7 +82,7 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
 
         Conto conto = mResults.get(position);
         if(conto.getNomeConto() != null) {
-            holder.setData(conto.getNomeConto(), conto.getSaldoConto());
+            holder.setData(conto.getNomeConto(), NumberFormat.getCurrencyInstance().format(helper.getAccountBalance(conto.getNomeConto())));
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
