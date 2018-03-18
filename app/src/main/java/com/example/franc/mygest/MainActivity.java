@@ -148,16 +148,37 @@ public class MainActivity extends AppCompatActivity{
     private void showCurrentBalances(){
 
         final EditText c1Balance = findViewById(R.id.id_c1_balance);
-        EditText c2Balance = findViewById(R.id.id_c2_balance);
+        final EditText c2Balance = findViewById(R.id.id_c2_balance);
 
         c1Balance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 c1Balance.setText("");
                 c1Balance.addTextChangedListener(new MoneyTextWatcher(c1Balance));
-
             }
         });
+        c1Balance.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                String cleanString = c1Balance.getText().toString().replaceAll("[ €,.\\s]", "");
+                helper.updateBalance("c1", new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
+            }
+        });
+        c2Balance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                c2Balance.setText("");
+                c2Balance.addTextChangedListener(new MoneyTextWatcher(c2Balance));
+            }
+        });
+        c2Balance.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                String cleanString = c2Balance.getText().toString().toString().replaceAll("[ €,.\\s]", "");
+                helper.updateBalance("c2", new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
+            }
+        });
+
         String c1BalanceFormatted = NumberFormat.getCurrencyInstance().format(helper.getAccountBalance("c1"));
         String c2BalanceFormatted = NumberFormat.getCurrencyInstance().format(helper.getAccountBalance("c2"));
 
@@ -165,6 +186,7 @@ public class MainActivity extends AppCompatActivity{
         c2Balance.setText(c2BalanceFormatted);
 
     }
+
     //NAVIGATION DRAWER
     public void startNavDrawer(){
         final DrawerLayout mDrawerLayout;
@@ -200,12 +222,6 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    protected void onResume()
-    {
-        super.onResume();
-        Toast.makeText(MainActivity.this, "On resume triggered", Toast.LENGTH_SHORT).show();
-
-    }
     protected void onPause(){
         super.onPause();
     }

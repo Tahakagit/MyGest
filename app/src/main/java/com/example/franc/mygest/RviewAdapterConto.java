@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 
 import io.realm.Realm;
@@ -82,7 +83,9 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
 
         Conto conto = mResults.get(position);
         if(conto.getNomeConto() != null) {
-            holder.setData(conto.getNomeConto(), NumberFormat.getCurrencyInstance().format(helper.getAccountBalance(conto.getNomeConto())));
+            BigDecimal rawBalanceFromDb = helper.getAccountBalance(conto.getNomeConto());
+            String balance = NumberFormat.getCurrencyInstance().format(rawBalanceFromDb);
+            holder.setData(conto.getNomeConto(), balance);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 

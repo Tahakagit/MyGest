@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.math.BigDecimal;
+
 
 public class DialogFragmentImporto extends Fragment {
     static Button next;
@@ -25,10 +27,14 @@ public class DialogFragmentImporto extends Fragment {
         next = view.findViewById(R.id.next);
         prev = view.findViewById(R.id.prev);
         importo = view.findViewById(R.id.inputimporto);
+
+        importo.addTextChangedListener(new MoneyTextWatcher(importo));
         next.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
-                ((DialogActivity)getActivity()).getImporto(importo.getText().toString());
+                String cleanString = importo.getText().toString().replaceAll("[ €,.\\s]", "");
+
+                ((DialogActivity)getActivity()).getImporto(new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
 
             }
         } );

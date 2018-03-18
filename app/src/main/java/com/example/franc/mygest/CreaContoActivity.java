@@ -72,19 +72,24 @@ public class CreaContoActivity extends AppCompatActivity {
 
         d.show();
 
+        saldoConto.addTextChangedListener(new MoneyTextWatcher(saldoConto));
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //SAVE
                 RealmHelper helper = new RealmHelper();
-                helper.saveConto(nomeConto.getText().toString(), new BigDecimal(saldoConto.getText().toString()));
+
+                String cleanString = saldoConto.getText().toString().toString().replaceAll("[ €,.\\s]", "");
+                helper.saveConto(nomeConto.getText().toString(), new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
 
                 //REFRESH ADAPTER
                 adapter.notifyDataSetChanged();
 
                 //CLEAN FORM FIELDS
+/*
                 nomeConto.setText("");
                 saldoConto.setText("");
+*/
 
                 //CLOSE DIALOG
                 d.dismiss();

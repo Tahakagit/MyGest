@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.annotation.Nonnull;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -122,7 +124,7 @@ public class RealmHelper {
     }
 
 
-    public void saveMovimento(final String beneficiario, final String importo, final Date scadenza, final String conto){
+    public void saveMovimento(final String beneficiario, final BigDecimal importo, final Date scadenza, final String conto){
 
 
         final Movimento movimento = new Movimento();
@@ -149,6 +151,20 @@ public class RealmHelper {
             }
         });
     }
+
+    // REMOVE WEAPON ON SWIPED
+    void removeMovimento(@Nonnull final int index){
+        mRealm = Realm.getDefaultInstance();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<Movimento> resultWeapon = mRealm.where(Movimento.class).findAll();
+                final Movimento mov = resultWeapon.get(index);
+                mov.deleteFromRealm();
+            }
+        });
+    }
+
 
     public void saveConto(final String nomeConto, final BigDecimal saldoConto){
 

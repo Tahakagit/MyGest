@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,7 +28,7 @@ public class DialogActivity extends AppCompatActivity {
     static Button next;
     static Button prev;
     static String beneficiario2 = null;
-    static String importo2 = null;
+    static BigDecimal importo2 = null;
     static Date scadenza2 = null;
     static String conto2 = null;
     static String tipo2 = null;
@@ -77,7 +78,7 @@ public class DialogActivity extends AppCompatActivity {
         ft2.commit();
     }
 
-    public void getImporto(String importo) {
+    public void getImporto(BigDecimal importo) {
         importo2 = importo;
 
         ++i;

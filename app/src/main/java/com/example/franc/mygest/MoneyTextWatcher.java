@@ -3,6 +3,7 @@ package com.example.franc.mygest;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -50,7 +51,13 @@ public class MoneyTextWatcher implements TextWatcher {
         editText.addTextChangedListener(this);
 
         RealmHelper helper = new RealmHelper();
-        helper.updateBalance("c1", parsed);
+        try {
+/*
+            helper.updateBalance("c1", parsed);
+*/
+        } catch (NullPointerException e) {
+            Log.w("accountBalance", "Account balance not changed");
+        }
 
     }
 }

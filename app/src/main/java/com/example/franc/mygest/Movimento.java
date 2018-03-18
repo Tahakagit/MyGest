@@ -1,5 +1,6 @@
 package com.example.franc.mygest;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -38,12 +39,12 @@ public class Movimento extends RealmObject{
     }
 
 
-    public String getImporto() {
-        return importo;
+    public BigDecimal getImporto() {
+        return new BigDecimal(importo);
     }
 
-    public void setImporto(String importo) {
-        this.importo = importo;
+    public void setImporto(BigDecimal importo) {
+        this.importo = importo.toString();
     }
 
     public Date getScadenza() {

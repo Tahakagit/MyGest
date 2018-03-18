@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,7 +79,10 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
 
         Movimento movimento = mResults.get(position);
         if(movimento.getBeneficiario() != null) {
-            holder.setData(movimento.getBeneficiario(), movimento.getImporto());
+            BigDecimal raw = movimento.getImporto();
+            String importoFormatted = NumberFormat.getCurrencyInstance().format(raw);
+
+            holder.setData(movimento.getBeneficiario(), importoFormatted);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -91,6 +96,17 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
                 }
             }
         });
+
+    }
+    public void deleteItemAt(int position){
+
+        RealmHelper helper = new RealmHelper();
+        //ho la posizione della lista
+        helper.removeMovimento(position);
+
+        notifyItemRangeRemoved(position, 1);
+        //query realm results alla posizione
+        //ritornare
 
     }
 
