@@ -1,9 +1,11 @@
 package com.example.franc.mygest;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -32,48 +35,43 @@ import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity{
 
-    Realm mRealm;
-    static RealmResults<DailyTransaction> realmSelectDaysWithTransactions;
-    static RealmResults<Movimento> realmSelectMovimenti;
     RealmHelper helper = new RealmHelper();
-
-    static RviewAdapterDailyTransaction adapterDailyTransaction;
-
-    static Context context;
+    RviewAdapterDailyTransaction adapterDailyTransaction;
     static Calendar weekRange;
     static Date dateToSend;
+    static ArrayList<ContoObj> conti = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        context = this;
         setContentView(R.layout.navigation_drawer_main);
 
         weekRange = Calendar.getInstance();
         weekRange.add(Calendar.DAY_OF_MONTH, 7);
 
         dateToSend = weekRange.getTime();
-        ArrayList<ContoObj> conti = new ArrayList<>();
         conti = helper.getTransactionsUntilGroupedByAccount(dateToSend);
         initUi(conti);
         showDatePicker();
 
-        showCurrentBalances();
+        showCurrentBalances(conti);
     }
 
-    //START USER INTERFACE
+    /**
+     * Starts UI
+     * @param conti2 Arraylist of accounts with pending transactions
+     */
     private void initUi(ArrayList<ContoObj> conti2){
 
 
-        // todo remove expanding toolbar
         RecyclerView rview = findViewById(R.id.recyclerview_filter);
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
         final Intent intent = new Intent(this, DialogActivity.class);
 
-        adapterDailyTransaction = new RviewAdapterDailyTransaction(conti2);
+        adapterDailyTransaction = new RviewAdapterDailyTransaction(this, conti2);
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapterDailyTransaction);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -81,7 +79,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view)
             {
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -91,7 +89,6 @@ public class MainActivity extends AppCompatActivity{
         startNavDrawer();
 
     }
-
     /**
      * Starts date selection, waits for user choice and gets back selected date
      * todo trasformare editext in button?
@@ -143,20 +140,49 @@ public class MainActivity extends AppCompatActivity{
 
 
     }
-
-
-    private void showCurrentBalances(){
+    /**
+     * show accounts balances and let modify it
+     */
+    private void showCurrentBalances(final ArrayList<ContoObj> conti2){
 
         final EditText c1Balance = findViewById(R.id.id_c1_balance);
         final EditText c2Balance = findViewById(R.id.id_c2_balance);
+        final Button c1Set = findViewById(R.id.id_btn_set_c1);
+        final Button c2Set = findViewById(R.id.id_btn_set_c2);
 
+        c1Set.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String cleanString = c1Balance.getText().toString().replaceAll("[ €,.\\s]", "");
+                BigDecimal newBalance = new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
+                helper.updateBalance("c1", newBalance);
+                conti2.get(0).setSaldoConto(newBalance);
+                adapterDailyTransaction.updateResults();
+
+            }
+        });
+        c2Set.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String cleanString = c2Balance.getText().toString().replaceAll("[ €,.\\s]", "");
+                BigDecimal newBalance = new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
+
+                helper.updateBalance("c2", new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
+                conti2.get(1).setSaldoConto(newBalance);
+
+                adapterDailyTransaction.notifyDataSetChanged();
+
+            }
+        });
         c1Balance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 c1Balance.setText("");
                 c1Balance.addTextChangedListener(new MoneyTextWatcher(c1Balance));
+
             }
         });
+/*
         c1Balance.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -164,6 +190,7 @@ public class MainActivity extends AppCompatActivity{
                 helper.updateBalance("c1", new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
             }
         });
+*/
         c2Balance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -171,14 +198,17 @@ public class MainActivity extends AppCompatActivity{
                 c2Balance.addTextChangedListener(new MoneyTextWatcher(c2Balance));
             }
         });
+/*
         c2Balance.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                String cleanString = c2Balance.getText().toString().toString().replaceAll("[ €,.\\s]", "");
+                String cleanString = c2Balance.getText().toString().replaceAll("[ €,.\\s]", "");
                 helper.updateBalance("c2", new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
+                adapterDailyTransaction.notifyDataSetChanged();
             }
         });
 
+*/
         String c1BalanceFormatted = NumberFormat.getCurrencyInstance().format(helper.getAccountBalance("c1"));
         String c2BalanceFormatted = NumberFormat.getCurrencyInstance().format(helper.getAccountBalance("c2"));
 
@@ -186,9 +216,10 @@ public class MainActivity extends AppCompatActivity{
         c2Balance.setText(c2BalanceFormatted);
 
     }
-
-    //NAVIGATION DRAWER
-    public void startNavDrawer(){
+    /**
+     * Starts navigationdrawer
+     */
+    private void startNavDrawer(){
         final DrawerLayout mDrawerLayout;
         final Intent creaConto = new Intent(this, CreaContoActivity.class);
         final Intent allTransaction = new Intent(this, AllTransactionActivity.class);
@@ -222,11 +253,17 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    protected void onPause(){
-        super.onPause();
-    }
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                String result=data.getStringExtra("result");
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                adapterDailyTransaction.notifyDataSetChanged();
+                adapterDailyTransaction.updateResults();
+            }
+        }
+
     }
 }

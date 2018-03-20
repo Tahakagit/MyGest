@@ -20,7 +20,7 @@
         <activity
             android:name=".AllTransactionActivity"
             android:label="@string/new_record"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".DialogActivity"
             android:label="@string/new_record"

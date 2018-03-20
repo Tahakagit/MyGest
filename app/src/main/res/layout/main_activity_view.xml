@@ -22,11 +22,20 @@
                 android:text="c1"
                 android:id="@+id/id_text_c1"/>
             <EditText
-                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
                 android:id="@+id/id_c1_balance"
                 />
+
+            <Button
+                android:id="@+id/id_btn_set_c1"
+                style="@style/Widget.AppCompat.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SET"
+                android:background="@android:color/transparent"/>
 
         </LinearLayout>
         <LinearLayout
@@ -40,11 +49,18 @@
                 android:id="@+id/id_text_c2"
                 android:inputType="numberDecimal"/>
             <EditText
-                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_c2_balance"
                 android:inputType="numberDecimal"
                 />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SET"
+                android:id="@+id/id_btn_set_c2"
+                android:background="@android:color/transparent"/>
 
         </LinearLayout>
 
@@ -53,7 +69,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/selectdate"
-            android:hint="Seleziona intervallo di tempo"/>
+            android:hint="Seleziona intervallo di tempo"
+            android:background="@android:color/transparent"/>
         <android.support.v7.widget.RecyclerView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"

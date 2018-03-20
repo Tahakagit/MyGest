@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by franc on 11/03/2018.
@@ -20,7 +21,7 @@ public class RealmHelper {
     public RealmResults<Movimento> getTransactionByDay(String day){
 
         mRealm = Realm.getDefaultInstance();
-        RealmResults<Movimento> transactionInDay = mRealm.where(Movimento.class).equalTo("accountName", day).findAll();
+        RealmResults<Movimento> transactionInDay = mRealm.where(Movimento.class).equalTo("textImporto", day).findAll();
         mRealm.close();
         return transactionInDay;
     }
@@ -38,11 +39,23 @@ public class RealmHelper {
     public Conto getAccountByName(String accountName){
         mRealm = Realm.getDefaultInstance();
 
-        // cerco i conti con transazioni in accountName nel range todo fix this
+        // cerco i conti con transazioni in textImporto nel range todo fix this
 
         Conto conto = mRealm.where(Conto.class).equalTo("nomeConto", accountName).findFirst();
         mRealm.close();
         return conto;
+
+
+    }
+    public ContoObj getAccountObjectByName(String accountName){
+        mRealm = Realm.getDefaultInstance();
+
+        // cerco i conti con transazioni in textImporto nel range todo fix this
+
+        Conto conto = mRealm.where(Conto.class).equalTo("nomeConto", accountName).findFirst();
+        ContoObj contoBj = new ContoObj(conto.getNomeConto(), conto.getSaldoConto().toString(), conto.getColoreConto());
+        mRealm.close();
+        return contoBj;
 
 
     }
@@ -56,7 +69,7 @@ public class RealmHelper {
         mRealm = Realm.getDefaultInstance();
         RealmResults<Movimento> allTransaction = getTransactionsUntil(dateTo);
 
-        // cerco i conti con transazioni in accountName nel range todo fix this
+        // cerco i conti con transazioni in textImporto nel range todo fix this
         RealmResults<Movimento> conti = allTransaction.where().distinct("conto");
         ArrayList<ContoObj> listConti = new ArrayList<>();
 
@@ -84,7 +97,7 @@ public class RealmHelper {
         mRealm = Realm.getDefaultInstance();
         RealmResults<Movimento> allTransaction = getTransactionsUntil(dateTo);
 
-        // cerco i conti con transazioni in accountName nel range todo fix this
+        // cerco i conti con transazioni in textImporto nel range todo fix this
         RealmResults<Movimento> accountTransaction = allTransaction.where().equalTo("conto", account).findAll();
 
 
@@ -96,7 +109,7 @@ public class RealmHelper {
     public RealmResults<Movimento> getTransactionsAll(){
 
         mRealm = Realm.getDefaultInstance();
-        RealmResults<Movimento> transactionInDay = mRealm.where(Movimento.class).findAll();
+        RealmResults<Movimento> transactionInDay = mRealm.where(Movimento.class).findAllSorted("scadenza", Sort.ASCENDING);
         mRealm.close();
         return transactionInDay;
 
@@ -110,7 +123,7 @@ public class RealmHelper {
 
 
     }
-    public void updateBalance(String accountName, final BigDecimal newBalance){
+    void updateBalance(String accountName, final BigDecimal newBalance){
         mRealm = Realm.getDefaultInstance();
         final Conto conto = mRealm.where(Conto.class).equalTo("nomeConto", accountName).findFirst();
 
@@ -124,7 +137,7 @@ public class RealmHelper {
     }
 
 
-    public void saveMovimento(final String beneficiario, final BigDecimal importo, final Date scadenza, final String conto){
+    void saveMovimento(final String beneficiario, final BigDecimal importo, final Date scadenza, final String conto){
 
 
         final Movimento movimento = new Movimento();
@@ -152,7 +165,7 @@ public class RealmHelper {
         });
     }
 
-    // REMOVE WEAPON ON SWIPED
+    // REMOVE TRNSACTION ON SWIPED
     void removeMovimento(@Nonnull final int index){
         mRealm = Realm.getDefaultInstance();
         mRealm.executeTransaction(new Realm.Transaction() {
@@ -166,7 +179,7 @@ public class RealmHelper {
     }
 
 
-    public void saveConto(final String nomeConto, final BigDecimal saldoConto){
+    void saveConto(final String nomeConto, final BigDecimal saldoConto){
 
 
         final Conto s=new Conto();

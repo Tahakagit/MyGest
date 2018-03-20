@@ -25,54 +25,13 @@ import io.realm.RealmResults;
 public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovimenti.DataObjectHolder> {
 
     private RealmResults<Movimento> mResults;
-    Realm mRealm;
-
     public RviewAdapterMovimenti(RealmResults<Movimento> results) {
         setResults(results);
     }
-
     public RviewAdapterMovimenti(){
 
     }
-    public static class DataObjectHolder extends RecyclerView.ViewHolder{
-        TextView beneficiario;
-        TextView importo;
-        TextView scadenza;
-        LinearLayout hiddenlayout;
-        public DataObjectHolder(View itemView) {
-            super(itemView);
-            beneficiario = itemView.findViewById(R.id.beneficiario);
-            importo = itemView.findViewById(R.id.importo);
-            scadenza = itemView.findViewById(R.id.scadenza);
 
-            hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
-
-        }
-
-        public void setData(String textbeneficiario, String textimporto){
-            beneficiario.setText(textbeneficiario);
-            importo.setText(textimporto);
-        }
-    }
-
-
-    private void setResults(RealmResults<Movimento> results){
-        mResults = results;
-        notifyDataSetChanged();
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return mResults.size();
-    }
-    @Override
-    public long getItemId(int position){ return  0;}
-    @Override
-    public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_movimenti, parent, false);
-        return new DataObjectHolder(view);
-    }
     @Override
     public void onBindViewHolder(final DataObjectHolder holder, int position) {
         holder.hiddenlayout.setVisibility(View.GONE);
@@ -98,18 +57,48 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         });
 
     }
-    public void deleteItemAt(int position){
-
-        RealmHelper helper = new RealmHelper();
-        //ho la posizione della lista
-        helper.removeMovimento(position);
-
-        notifyItemRangeRemoved(position, 1);
-        //query realm results alla posizione
-        //ritornare
-
+    @Override
+    public int getItemCount() {
+        return mResults.size();
+    }
+    @Override
+    public long getItemId(int position){ return  0;}
+    @Override
+    public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_movimenti, parent, false);
+        return new DataObjectHolder(view);
     }
 
+    private void setResults(RealmResults<Movimento> results){
+        mResults = results;
+        notifyDataSetChanged();
 
+    }
+    public void deleteItemAt(int position){
+        RealmHelper helper = new RealmHelper();
+        helper.removeMovimento(position);
+        notifyItemRemoved(position);
+    }
+
+    public static class DataObjectHolder extends RecyclerView.ViewHolder{
+        TextView beneficiario;
+        TextView importo;
+        TextView scadenza;
+        LinearLayout hiddenlayout;
+        public DataObjectHolder(View itemView) {
+            super(itemView);
+            beneficiario = itemView.findViewById(R.id.id_card_beneficiario);
+            importo = itemView.findViewById(R.id.id_card_importo);
+            scadenza = itemView.findViewById(R.id.id_card_scadenza);
+
+            hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
+
+        }
+
+        public void setData(String textbeneficiario, String textimporto){
+            beneficiario.setText(textbeneficiario);
+            importo.setText(textimporto);
+        }
+    }
 
 }

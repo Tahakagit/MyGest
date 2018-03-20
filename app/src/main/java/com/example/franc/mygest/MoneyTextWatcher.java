@@ -56,7 +56,7 @@ public class MoneyTextWatcher implements TextWatcher {
             helper.updateBalance("c1", parsed);
 */
         } catch (NullPointerException e) {
-            Log.w("accountBalance", "Account balance not changed");
+            Log.w("textBeneficiario", "Account balance not changed");
         }
 
     }

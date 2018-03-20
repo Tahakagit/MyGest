@@ -1,5 +1,7 @@
 package com.example.franc.mygest;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -101,10 +103,16 @@ public class DialogActivity extends AppCompatActivity {
         conto2 = conto;
         RealmHelper helper = new RealmHelper();
         helper.saveMovimento(beneficiario2, importo2, scadenza2, conto2);
-        MainActivity.adapterDailyTransaction.setResultsRealm(helper.getTransactionsUntilGroupedByAccount(MainActivity.dateToSend));
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnIntent);
+
+
+        MainActivity.conti.add(helper.getAccountObjectByName(conto2));
         i = 0;
         finish();
+
     }
+
 
     @Override
     protected void onResume() {

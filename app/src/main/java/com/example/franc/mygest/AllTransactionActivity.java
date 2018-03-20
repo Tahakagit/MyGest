@@ -20,12 +20,7 @@ import io.realm.RealmResults;
 
 public class AllTransactionActivity extends AppCompatActivity{
 
-    Realm mRealm;
-    static RealmResults<DailyTransaction> realmSelectDaysWithTransactions;
-    static RealmResults<Movimento> realmSelectMovimenti;
-
-    private static RviewAdapterDailyTransaction adapterDailyTransaction;
-
+    private static RviewAdapterAllTransactions adapterAllTransactions;
     private static Context context;
     private static Calendar weekRange;
 
@@ -34,10 +29,8 @@ public class AllTransactionActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         context = this;
-        setContentView(R.layout.navigation_drawer_main);
+        setContentView(R.layout.navigation_drawer_filter);
 
-        weekRange = Calendar.getInstance();
-        weekRange.add(Calendar.DAY_OF_MONTH, 7);
 
         RealmHelper helper = new RealmHelper();
         initUi(helper.getTransactionsAll());
@@ -47,19 +40,16 @@ public class AllTransactionActivity extends AppCompatActivity{
     //START USER INTERFACE
     private void initUi(RealmResults<Movimento> content){
 
-        //todo riferisce allo stesso recycler dell'altra activity
-        RecyclerView rview = findViewById(R.id.recyclerview_filter);
+        RecyclerView rview = findViewById(R.id.recyclerview);
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
         final Intent intent = new Intent(this, DialogActivity.class);
 
         //todo fix this
-/*
-        adapterDailyTransaction = new RviewAdapterDailyTransaction(content);
-*/
+        adapterAllTransactions = new RviewAdapterAllTransactions(this, content);
         rview.setLayoutManager(new LinearLayoutManager(this));
-        rview.setAdapter(adapterDailyTransaction);
+        rview.setAdapter(adapterAllTransactions);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,13 +65,12 @@ public class AllTransactionActivity extends AppCompatActivity{
         startNavDrawer();
 
     }
-
     //NAVIGATION DRAWER
     private void startNavDrawer(){
         final DrawerLayout mDrawerLayout;
         final Intent creaConto = new Intent(this, CreaContoActivity.class);
 
-        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout_filter);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
         if (navigationView != null) {
@@ -110,11 +99,4 @@ public class AllTransactionActivity extends AppCompatActivity{
 
     }
 
-    protected void onPause(){
-        super.onPause();
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }

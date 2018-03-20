@@ -5,6 +5,7 @@ package com.example.franc.mygest;
  */
 
 import android.content.ClipData;
+import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -27,41 +28,15 @@ import io.realm.RealmResults;
 public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdapterDailyTransaction.DataObjectHolder> {
 
     ArrayList<ContoObj> mResults;
+    private Context context;
     static RviewAdapterMovimenti adapterMovimenti;
     final Realm mRealm = Realm.getDefaultInstance();
 
-    RviewAdapterDailyTransaction(ArrayList<ContoObj> mResults) {
+    RviewAdapterDailyTransaction(Context context, ArrayList<ContoObj> mResults) {
         setResultsRealm(mResults);
+        this.context = context;
     }
 
-    public static class DataObjectHolder extends RecyclerView.ViewHolder{
-        TextView accountBalance;
-        TextView accountName;
-        LinearLayout hiddenlayout;
-
-        public DataObjectHolder(View itemView) {
-            super(itemView);
-            accountName = itemView.findViewById(R.id.id_account_name);
-            accountBalance = itemView.findViewById(R.id.id_account_balance);
-
-            hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
-
-        }
-
-        public void setData(String textscadenza, String balance){
-            accountName.setText(textscadenza);
-            accountBalance.setText(balance);
-
-
-        }
-
-    }
-
-
-    void setResultsRealm(ArrayList<ContoObj> results){
-        mResults = results;
-        notifyDataSetChanged();
-    }
 
     @Override
     public int getItemCount() {
@@ -82,23 +57,28 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         RecyclerView rviewMovimenti = holder.itemView.findViewById(R.id.rv_transaction);
         RealmHelper helper = new RealmHelper();
 
-        RealmResults<Movimento> movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.weekRange.getTime(), mResults.get(position).getNomeConto());
+        final RealmResults<Movimento> movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.weekRange.getTime(), mResults.get(position).getNomeConto());
         adapterMovimenti = new RviewAdapterMovimenti(movs);
-        rviewMovimenti.setLayoutManager(new LinearLayoutManager(MainActivity.context));
+        rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
         rviewMovimenti.setAdapter(adapterMovimenti);
-        // END NESTED RECYCLERVIEW
 
 
+/*
         // NO TRANSACTION LEFT TO WAIT
         movs.addChangeListener(new RealmChangeListener<RealmResults<Movimento>>() {
             @Override
             public void onChange(RealmResults<Movimento> realmResults) {
                 if (realmResults.size() == 0){
-                    mResults.remove(mResults.get(position));
-                    notifyItemRemoved(position);
+                    try {
+                        mResults.remove(mResults.get(position));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
+                notifyDataSetChanged();
             }
         });
+*/
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
@@ -109,7 +89,10 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 adapterMovimenti.deleteItemAt(viewHolder.getAdapterPosition());
-                MainActivity.adapterDailyTransaction.notifyDataSetChanged();
+                notifyDataSetChanged();
+                if (movs.size() == 0)
+                    mResults.remove(mResults.get(position));
+
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
@@ -140,11 +123,42 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         });
 
     }
-
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
         mRealm.close();
 
     }
+
+    void setResultsRealm(ArrayList<ContoObj> results){
+        mResults = results;
+        notifyDataSetChanged();
+    }
+    void updateResults(){
+        notifyDataSetChanged();
+    }
+
+    public static class DataObjectHolder extends RecyclerView.ViewHolder{
+        TextView accountBalance;
+        TextView accountName;
+        LinearLayout hiddenlayout;
+
+        public DataObjectHolder(View itemView) {
+            super(itemView);
+            accountName = itemView.findViewById(R.id.id_account_name);
+            accountBalance = itemView.findViewById(R.id.id_account_balance);
+
+            hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
+
+        }
+
+        public void setData(String textscadenza, String balance){
+            accountName.setText(textscadenza);
+            accountBalance.setText(balance);
+
+
+        }
+
+    }
+
 }

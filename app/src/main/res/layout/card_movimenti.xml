@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layout_width="match_parent" android:layout_height="match_parent"
     android:layout_margin="1dp"
     >
 
@@ -30,7 +30,7 @@
             android:padding="5dp">
 
             <TextView
-                android:id="@+id/scadenza"
+                android:id="@+id/id_card_scadenza"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -40,7 +40,7 @@
                 />
 
             <TextView
-                android:id="@+id/importo"
+                android:id="@+id/id_card_importo"
                 android:layout_width="155dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -64,19 +64,20 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/app_name"/>
+                android:id="@+id/id_card_conto"/>
 
             <TextView
                 style="@style/text_style_beneficiario"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/beneficiario"/>
+                android:id="@+id/id_card_beneficiario"/>
 
             <TextView
                 style="@style/text_style_tipo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/id_card_tipo"
                 android:text="@string/tipo"/>
 
         </LinearLayout>
