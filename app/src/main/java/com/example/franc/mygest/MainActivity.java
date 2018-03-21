@@ -260,6 +260,7 @@ public class MainActivity extends AppCompatActivity{
                 String result=data.getStringExtra("result");
             }
             if (resultCode == Activity.RESULT_CANCELED) {
+                adapterDailyTransaction.setResultsRealm(helper.getTransactionsUntilGroupedByAccount(dateToSend));
                 adapterDailyTransaction.notifyDataSetChanged();
                 adapterDailyTransaction.updateResults();
             }

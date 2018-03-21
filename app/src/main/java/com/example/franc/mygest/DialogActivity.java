@@ -107,7 +107,9 @@ public class DialogActivity extends AppCompatActivity {
         setResult(Activity.RESULT_CANCELED, returnIntent);
 
 
+/*
         MainActivity.conti.add(helper.getAccountObjectByName(conto2));
+*/
         i = 0;
         finish();
 
