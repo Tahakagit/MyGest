@@ -55,9 +55,9 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
         // START NESTED TRANSACTIONS RECYCLERVIEW
         RecyclerView rviewMovimenti = holder.itemView.findViewById(R.id.rv_transaction);
-        RealmHelper helper = new RealmHelper();
+        final RealmHelper helper = new RealmHelper();
 
-        final RealmResults<Movimento> movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.weekRange.getTime(), mResults.get(position).getNomeConto());
+        RealmResults<Movimento> movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.weekRange.getTime(), mResults.get(position).getNomeConto());
         adapterMovimenti = new RviewAdapterMovimenti(movs);
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
         rviewMovimenti.setAdapter(adapterMovimenti);
@@ -89,10 +89,14 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 adapterMovimenti.deleteItemAt(viewHolder.getAdapterPosition());
-                notifyDataSetChanged();
-                if (movs.size() == 0)
-                    mResults.remove(mResults.get(position));
 
+
+                RealmResults<Movimento> kk = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend, mResults.get(position).getNomeConto());
+                if (kk.size() == 0) {
+
+                    mResults.remove(position);
+                    notifyItemRemoved(position);
+                }
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
+import java.security.Timestamp;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
     }
     public void deleteItemAt(int position){
         RealmHelper helper = new RealmHelper();
-        helper.removeMovimento(position);
+        helper.removeMovimento(mResults.get(position).getTimestamp());
         notifyItemRemoved(position);
     }
 

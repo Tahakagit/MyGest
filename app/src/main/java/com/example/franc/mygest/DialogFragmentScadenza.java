@@ -6,19 +6,30 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
 
 public class DialogFragmentScadenza extends Fragment{
 
-    EditText edittext;
-    Date dateToSend;
+    EditText startDateText;
+    EditText endDateText;
+    Spinner spinner;
+
+    String recurrence;
+    Date startDateToSend;
+    Date endDateToSend;
+
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
     }
@@ -41,7 +52,7 @@ public class DialogFragmentScadenza extends Fragment{
         next.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
-                ((DialogActivity)getActivity()).getScadenza(dateToSend);
+                ((DialogActivity)getActivity()).getScadenza(startDateToSend, endDateToSend, recurrence);
 
             }
         } );
@@ -54,7 +65,9 @@ public class DialogFragmentScadenza extends Fragment{
             }
         } );
 
-        showDatePicker(view);
+        showStartDatePicker(view);
+        showEndDatePicker(view);
+        getRecurrenceFromSpinner(view);
 
     }
 
@@ -62,8 +75,8 @@ public class DialogFragmentScadenza extends Fragment{
      * Starts date selection, waits for user choice and gets back selected date
      * todo trasformare editext in button?
      */
-    private void showDatePicker(View view) {
-        edittext = view.findViewById(R.id.selectdate);
+    private void showStartDatePicker(View view) {
+        startDateText = view.findViewById(R.id.select_date);
 
         final DatePickerFragment date = new DatePickerFragment();
         /**
@@ -88,18 +101,18 @@ public class DialogFragmentScadenza extends Fragment{
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
 
                 //date object from spinner
-                dateToSend = c.getTime();
+                startDateToSend = c.getTime();
                 //formatted date string from spinner
                 String formattedDate = sdf.format(c.getTime());
 
 
 
-                edittext.setText(formattedDate);
+                startDateText.setText(formattedDate);
             }
         };
         date.setCallBack(ondate);
 
-        edittext.setOnClickListener(new View.OnClickListener() {
+        startDateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 date.show(getFragmentManager(), "Date Picker");
@@ -109,6 +122,75 @@ public class DialogFragmentScadenza extends Fragment{
 /*
         date.show(getFragmentManager(), "Date Picker");
 */
+    }
+    /**
+     * Starts date selection, waits for user choice and gets back selected date
+     * todo trasformare editext in button?
+     */
+    private void showEndDatePicker(View view) {
+        endDateText = view.findViewById(R.id.select_end_date);
+
+        final DatePickerFragment date = new DatePickerFragment();
+        /**
+         * Set Up Current Date Into dialog
+         */
+        Calendar calender = Calendar.getInstance();
+        Bundle args = new Bundle();
+        args.putInt("year", calender.get(Calendar.YEAR));
+        args.putInt("month", calender.get(Calendar.MONTH));
+        args.putInt("day", calender.get(Calendar.DAY_OF_MONTH));
+        date.setArguments(args);
+        /**
+         * Set Call back to capture selected date
+         */
+
+        DatePickerDialog.OnDateSetListener ondate = new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar c = Calendar.getInstance();
+                c.set(year, monthOfYear, dayOfMonth);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
+
+                //date object from spinner
+                endDateToSend = c.getTime();
+                //formatted date string from spinner
+                String formattedDate = sdf.format(c.getTime());
+
+
+
+                endDateText.setText(formattedDate);
+            }
+        };
+        date.setCallBack(ondate);
+
+        endDateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                date.show(getFragmentManager(), "Date Picker");
+            }
+        });
+
+/*
+        date.show(getFragmentManager(), "Date Picker");
+*/
+    }
+    public void getRecurrenceFromSpinner(View view){
+        final String[] recurrenceType = {"NESSUNA", "DAILY", "WEEKLY", "MONTHLY", "YEARLY"};
+        ArrayList<String> listRec = new ArrayList<>();
+        listRec.addAll(Arrays.asList(recurrenceType));
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, listRec);
+        spinner = view.findViewById(R.id.spinner_recurrence);
+        spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                recurrence =  parent.getItemAtPosition(position).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
 }

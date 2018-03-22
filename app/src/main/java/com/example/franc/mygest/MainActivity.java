@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity{
     RviewAdapterDailyTransaction adapterDailyTransaction;
     static Calendar weekRange;
     static Date dateToSend;
-    static ArrayList<ContoObj> conti = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +50,10 @@ public class MainActivity extends AppCompatActivity{
         weekRange.add(Calendar.DAY_OF_MONTH, 7);
 
         dateToSend = weekRange.getTime();
-        conti = helper.getTransactionsUntilGroupedByAccount(dateToSend);
-        initUi(conti);
+        initUi(helper.getTransactionsUntilGroupedByAccount(dateToSend));
         showDatePicker();
 
-        showCurrentBalances(conti);
+        showCurrentBalances(helper.getTransactionsUntilGroupedByAccount(dateToSend));
     }
 
     /**
@@ -182,15 +180,6 @@ public class MainActivity extends AppCompatActivity{
 
             }
         });
-/*
-        c1Balance.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                String cleanString = c1Balance.getText().toString().replaceAll("[ €,.\\s]", "");
-                helper.updateBalance("c1", new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
-            }
-        });
-*/
         c2Balance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -198,17 +187,6 @@ public class MainActivity extends AppCompatActivity{
                 c2Balance.addTextChangedListener(new MoneyTextWatcher(c2Balance));
             }
         });
-/*
-        c2Balance.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                String cleanString = c2Balance.getText().toString().replaceAll("[ €,.\\s]", "");
-                helper.updateBalance("c2", new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
-                adapterDailyTransaction.notifyDataSetChanged();
-            }
-        });
-
-*/
         String c1BalanceFormatted = NumberFormat.getCurrencyInstance().format(helper.getAccountBalance("c1"));
         String c2BalanceFormatted = NumberFormat.getCurrencyInstance().format(helper.getAccountBalance("c2"));
 

@@ -32,7 +32,9 @@ public class DialogActivity extends AppCompatActivity {
     static String beneficiario2 = null;
     static BigDecimal importo2 = null;
     static Date scadenza2 = null;
+    static Date endDate2 = null;
     static String conto2 = null;
+    static String recurrence2 = null;
     static String tipo2 = null;
     static String direzione2 = null;
 
@@ -90,8 +92,10 @@ public class DialogActivity extends AppCompatActivity {
         ft2.commit();
     }
 
-    public void getScadenza(Date scadenza) {
+    public void getScadenza(Date scadenza, Date endDate, String recurrence) {
         scadenza2 = scadenza;
+        endDate2 = endDate;
+        recurrence2 = recurrence;
         ++i;
         FragmentTransaction ft2 = fragmentManager.beginTransaction();
         ft2.replace(R.id.fragmentcontainer, fragments.get(i));
@@ -102,7 +106,7 @@ public class DialogActivity extends AppCompatActivity {
     public void getConto(String conto) {
         conto2 = conto;
         RealmHelper helper = new RealmHelper();
-        helper.saveMovimento(beneficiario2, importo2, scadenza2, conto2);
+        helper.saveMovimento(beneficiario2, importo2, scadenza2, conto2, endDate2, recurrence2);
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
 
