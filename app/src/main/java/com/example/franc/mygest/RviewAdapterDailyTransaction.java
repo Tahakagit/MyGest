@@ -88,7 +88,9 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                     Log.w("OnSwipe", "Skip timestamp cause ther's no result");
                 }
                 if (movs.size() == 0) {
+/*
                     Log.d("delete on swipe", "posizione adapter dailytransactions" + String.valueOf(position));
+*/
                     mResults.remove(position);
                     notifyDataSetChanged();//is necessary?
                     notifyItemRemoved(position);
@@ -113,11 +115,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         // FUTURE ACCOUNT BALANCE
         BigDecimal newBalance = mResults.get(position).getSaldoConto().subtract(totExpences);
         if(mResults.get(position) != null) {
-/*
             holder.setData(mResults.get(position).getNomeConto(), NumberFormat.getCurrencyInstance().format(newBalance));
-*/
-            holder.setData(mResults.get(position).getNomeConto(), String.valueOf(position));
-
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
