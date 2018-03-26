@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 //questo diventa il recycler view dei giorni con transazioni all'interno del quale ogni viewholer
@@ -45,7 +47,9 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
     public void onBindViewHolder(final DataObjectHolder holder, final int position) {
 
         if(mResults.get(position) != null) {
-            holder.setData(mResults.get(position).getImporto().toString(), mResults.get(position).getBeneficiario());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
+
+            holder.setData(mResults.get(position).getImporto().toString(), mResults.get(position).getBeneficiario(), sdf.format(mResults.get(position).getScadenza()));
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -79,6 +83,7 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
     public static class DataObjectHolder extends RecyclerView.ViewHolder{
         TextView textBeneficiario;
         TextView textImporto;
+        TextView textScadenza;
         LinearLayout hiddenlayout;
 
         public DataObjectHolder(View itemView) {
@@ -90,8 +95,9 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
 
         }
 
-        public void setData(String importo, String beneficiario){
+        public void setData(String importo, String beneficiario, String scadenza){
             textImporto.setText(importo);
+            textScadenza.setText(scadenza);
             textBeneficiario.setText(beneficiario);
 
 

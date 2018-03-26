@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 //questo adapter fornisce i dati alla recyclerview all'interno del dataholder della rv dei giorni con
@@ -41,8 +43,9 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         if(movimento.getBeneficiario() != null) {
             BigDecimal raw = movimento.getImporto();
             String importoFormatted = NumberFormat.getCurrencyInstance().format(raw);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
 
-            holder.setData(movimento.getBeneficiario(), importoFormatted);
+            holder.setData(movimento.getBeneficiario(), importoFormatted, sdf.format(movimento.getScadenza()));
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -63,7 +66,7 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         return mResults.size();
     }
     @Override
-    public long getItemId(int position){ return  0;}
+    public long getItemId(@Nonnull int position){ return  mResults.get(position).getTimestamp();}
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_movimenti, parent, false);
@@ -75,10 +78,9 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         notifyDataSetChanged();
 
     }
-    public void deleteItemAt(int position){
+    public void deleteItemAt(long timestamp){
         RealmHelper helper = new RealmHelper();
-        helper.removeMovimento(mResults.get(position).getTimestamp());
-        notifyItemRemoved(position);
+        helper.removeMovimento(timestamp);
     }
 
     public static class DataObjectHolder extends RecyclerView.ViewHolder{
@@ -95,10 +97,10 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
             hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
 
         }
-
-        public void setData(String textbeneficiario, String textimporto){
+        public void setData(String textbeneficiario, String textimporto, String textscadenza){
             beneficiario.setText(textbeneficiario);
             importo.setText(textimporto);
+            scadenza.setText(textscadenza);
         }
     }
 

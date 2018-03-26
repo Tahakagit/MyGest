@@ -36,7 +36,7 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity{
 
     RealmHelper helper = new RealmHelper();
-    RviewAdapterDailyTransaction adapterDailyTransaction;
+    private RviewAdapterDailyTransaction adapterDailyTransaction;
     static Calendar weekRange;
     static Date dateToSend;
 

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +28,8 @@ import io.realm.RealmResults;
 
 public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdapterDailyTransaction.DataObjectHolder> {
 
-    ArrayList<ContoObj> mResults;
+    private ArrayList<ContoObj> mResults;
     private Context context;
-    static RviewAdapterMovimenti adapterMovimenti;
     final Realm mRealm = Realm.getDefaultInstance();
 
     RviewAdapterDailyTransaction(Context context, ArrayList<ContoObj> mResults) {
@@ -49,54 +49,56 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dailytransaction, parent, false);
         return new DataObjectHolder(view);
     }
+
+    String nomeConto = null;
+    RealmResults<Movimento> movs;
+
+    RealmHelper helper = new RealmHelper();
+
     @Override
     public void onBindViewHolder(final DataObjectHolder holder, final int position) {
+
+        movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.weekRange.getTime(), mResults.get(position).getNomeConto());
+        nomeConto = mResults.get(position).getNomeConto();
 
 
         // START NESTED TRANSACTIONS RECYCLERVIEW
         RecyclerView rviewMovimenti = holder.itemView.findViewById(R.id.rv_transaction);
-        final RealmHelper helper = new RealmHelper();
 
-        RealmResults<Movimento> movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.weekRange.getTime(), mResults.get(position).getNomeConto());
-        adapterMovimenti = new RviewAdapterMovimenti(movs);
+        final RviewAdapterMovimenti adapterMovimenti = new RviewAdapterMovimenti(movs);
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
         rviewMovimenti.setAdapter(adapterMovimenti);
 
-
-/*
-        // NO TRANSACTION LEFT TO WAIT
-        movs.addChangeListener(new RealmChangeListener<RealmResults<Movimento>>() {
-            @Override
-            public void onChange(RealmResults<Movimento> realmResults) {
-                if (realmResults.size() == 0){
-                    try {
-                        mResults.remove(mResults.get(position));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                notifyDataSetChanged();
-            }
-        });
-*/
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
             }
+            RealmResults<Movimento> movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend, mResults.get(position).getNomeConto());
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                adapterMovimenti.deleteItemAt(viewHolder.getAdapterPosition());
+                long timestamp = 0;
+                try {
+                    timestamp = movs.get(viewHolder.getAdapterPosition()).getTimestamp();
+                    adapterMovimenti.deleteItemAt(timestamp);
 
-
-                RealmResults<Movimento> kk = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend, mResults.get(position).getNomeConto());
-                if (kk.size() == 0) {
-
-                    mResults.remove(position);
-                    notifyItemRemoved(position);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Log.w("OnSwipe", "Skip timestamp cause ther's no result");
                 }
+                if (movs.size() == 0) {
+                    Log.d("delete on swipe", "posizione adapter dailytransactions" + String.valueOf(position));
+                    mResults.remove(position);
+                    notifyDataSetChanged();//is necessary?
+                    notifyItemRemoved(position);
+                }else {
+                    adapterMovimenti.notifyItemRemoved(viewHolder.getAdapterPosition());
+                    notifyDataSetChanged();
+                }
+/*
+                movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend, mResults.get(position).getNomeConto());
+*/
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
@@ -111,7 +113,11 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         // FUTURE ACCOUNT BALANCE
         BigDecimal newBalance = mResults.get(position).getSaldoConto().subtract(totExpences);
         if(mResults.get(position) != null) {
+/*
             holder.setData(mResults.get(position).getNomeConto(), NumberFormat.getCurrencyInstance().format(newBalance));
+*/
+            holder.setData(mResults.get(position).getNomeConto(), String.valueOf(position));
+
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -125,6 +131,8 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                 }
             }
         });
+
+
 
     }
     @Override
