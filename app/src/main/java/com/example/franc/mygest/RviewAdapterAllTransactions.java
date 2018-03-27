@@ -90,7 +90,7 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
             super(itemView);
             textImporto = itemView.findViewById(R.id.id_card_importo);
             textBeneficiario = itemView.findViewById(R.id.id_card_beneficiario);
-
+            textScadenza = itemView.findViewById(R.id.id_card_scadenza);
             hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
 
         }

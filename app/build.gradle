@@ -3,17 +3,33 @@ apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 26
+    def versionMajor = 0
+    def versionMinor = 21
+    def versionPatch = 1
+
     defaultConfig {
         applicationId "com.example.franc.mygest"
         minSdkVersion 23
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode versionMajor * 10000
+        + versionMinor * 100
+        + versionPatch
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            versionNameSuffix ".debug"
+            resValue "string", "app_version",
+                    "${defaultConfig.versionName}${versionNameSuffix}"
+        }
+
         release {
             minifyEnabled false
+            resValue "string", "app_version",
+            "${defaultConfig.versionName}"
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

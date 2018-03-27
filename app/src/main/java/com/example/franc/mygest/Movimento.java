@@ -14,12 +14,13 @@ import io.realm.annotations.PrimaryKey;
 
 public class Movimento extends RealmObject{
 
-    @PrimaryKey
     private String beneficiario;
     private String importo;
+    @Index
     private Date scadenza;
     private String conto;
     private String tipo;
+    @PrimaryKey
     private long timestamp;
 //todo attrs checked, direzione
     public String getConto() {
