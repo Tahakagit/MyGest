@@ -19,6 +19,7 @@ import android.widget.TextView;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -57,9 +58,9 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
     @Override
     public void onBindViewHolder(final DataObjectHolder holder, final int position) {
-
-        movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.weekRange.getTime(), mResults.get(position).getNomeConto());
         nomeConto = mResults.get(position).getNomeConto();
+
+        movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend.getTime(), nomeConto);
 
 
         // START NESTED TRANSACTIONS RECYCLERVIEW
@@ -75,11 +76,14 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
             }
-            RealmResults<Movimento> movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend, mResults.get(position).getNomeConto());
+/*
+            this.movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend, mResults.get(position).getNomeConto());
+*/
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 long timestamp = 0;
+                movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend.getTime(), mResults.get(position).getNomeConto());
                 try {
                     timestamp = movs.get(viewHolder.getAdapterPosition()).getTimestamp();
                     adapterMovimenti.deleteItemAt(timestamp);
@@ -88,11 +92,9 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                     Log.w("OnSwipe", "Skip timestamp cause ther's no result");
                 }
                 if (movs.size() == 0) {
-/*
                     Log.d("delete on swipe", "posizione adapter dailytransactions" + String.valueOf(position));
-*/
                     mResults.remove(position);
-                    notifyDataSetChanged();//is necessary?
+                    notifyDataSetChanged();
                     notifyItemRemoved(position);
                 }else {
                     adapterMovimenti.notifyItemRemoved(viewHolder.getAdapterPosition());
@@ -141,10 +143,16 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     }
 
     void setResultsRealm(ArrayList<ContoObj> results){
+        movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend.getTime(), nomeConto);
+
         mResults = results;
         notifyDataSetChanged();
     }
     void updateResults(){
+/*
+        movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.weekRange.getTime(), mResults.get(position).getNomeConto());
+*/
+
         notifyDataSetChanged();
     }
 

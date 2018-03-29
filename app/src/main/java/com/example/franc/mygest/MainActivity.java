@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity{
     RealmHelper helper = new RealmHelper();
     private RviewAdapterDailyTransaction adapterDailyTransaction;
     static Calendar weekRange;
-    static Date dateToSend;
+    static Calendar dateToSend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +49,11 @@ public class MainActivity extends AppCompatActivity{
         weekRange = Calendar.getInstance();
         weekRange.add(Calendar.DAY_OF_MONTH, 7);
 
-        dateToSend = weekRange.getTime();
-        initUi(helper.getTransactionsUntilGroupedByAccount(dateToSend));
+        dateToSend = Calendar.getInstance();
+        initUi(helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime()));
         showDatePicker();
 
-        showCurrentBalances(helper.getTransactionsUntilGroupedByAccount(dateToSend));
+        showCurrentBalances(helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime()));
     }
 
     /**
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity{
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
 
                 //date object from spinner
-                dateToSend = c.getTime();
+                dateToSend.setTime(c.getTime());
                 //formatted date string from spinner
                 String formattedDate = sdf.format(c.getTime());
 
@@ -130,7 +130,8 @@ public class MainActivity extends AppCompatActivity{
 
 
                 edittext.setText(formattedDate);
-                adapterDailyTransaction.setResultsRealm(helper.getTransactionsUntilGroupedByAccount(dateToSend));
+                //in set resultRealm deve rifare la query movs
+                adapterDailyTransaction.setResultsRealm(helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime()));
             }
         };
         date.setCallBack(ondate);
@@ -238,7 +239,7 @@ public class MainActivity extends AppCompatActivity{
                 String result=data.getStringExtra("result");
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                adapterDailyTransaction.setResultsRealm(helper.getTransactionsUntilGroupedByAccount(dateToSend));
+                adapterDailyTransaction.setResultsRealm(helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime()));
                 adapterDailyTransaction.notifyDataSetChanged();
                 adapterDailyTransaction.updateResults();
             }

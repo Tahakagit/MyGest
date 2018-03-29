@@ -46,6 +46,10 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
 
             holder.setData(movimento.getBeneficiario(), importoFormatted, sdf.format(movimento.getScadenza()));
+/*
+            holder.setData(movimento.getBeneficiario(), String.valueOf(movimento.getTimestamp()), sdf.format(movimento.getScadenza()));
+*/
+
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 

@@ -2,8 +2,11 @@ package com.example.franc.mygest;
 
 import java.math.BigDecimal;
 import java.security.Timestamp;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -100,7 +103,7 @@ public class RealmHelper {
         RealmResults<Movimento> allTransaction = getTransactionsUntil(dateTo);
 
         // cerco i conti con transazioni in textImporto nel range todo fix this
-        RealmResults<Movimento> accountTransaction = allTransaction.where().equalTo("conto", account).findAll();
+        RealmResults<Movimento> accountTransaction = allTransaction.where().equalTo("conto", account).findAllSorted("scadenza", Sort.ASCENDING);
 
 
         mRealm.close();
@@ -141,6 +144,8 @@ public class RealmHelper {
 
     void saveMovimento(final String beneficiario, final BigDecimal importo, final Date scadenza, final String conto, @Nullable final Date endDate, @Nullable final String recurrence){
 
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(scadenza);
 
         if(recurrence.equalsIgnoreCase("NESSUNA")){
             final Movimento movimento = new Movimento();
@@ -156,6 +161,7 @@ public class RealmHelper {
                 @Override
                 public void execute(Realm realm) {
                     realm.copyToRealmOrUpdate(movimento);
+/*
                     if(realm.where(DailyTransaction.class).equalTo("dayOfYear", movimento.getScadenza()).findAll() == null ){
                         DailyTransaction dailyTransaction = new DailyTransaction();
                         dailyTransaction.setDayOfYear(movimento.getScadenza());
@@ -163,11 +169,118 @@ public class RealmHelper {
                         realm.copyToRealmOrUpdate(dailyTransaction);
 
                     }
+*/
 
                 }
             });
 
         }
+        else if(recurrence.equalsIgnoreCase("DAILY")){
+            while (cal.getTime().before(endDate)){
+                final Movimento movimento = new Movimento();
+                movimento.setBeneficiario(beneficiario);
+                movimento.setImporto(importo);
+                movimento.setScadenza(cal.getTime());
+                movimento.setConto(conto);
+                movimento.setTimestamp(System.currentTimeMillis());
+                mRealm = Realm.getDefaultInstance();
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealmOrUpdate(movimento);
+/*
+                        if(realm.where(DailyTransaction.class).equalTo("dayOfYear", movimento.getScadenza()).findAll() == null ){
+                            DailyTransaction dailyTransaction = new DailyTransaction();
+                            dailyTransaction.setDayOfYear(movimento.getScadenza());
+                            dailyTransaction.setTimestamp(System.currentTimeMillis());
+                            realm.copyToRealmOrUpdate(dailyTransaction);
+                        }
+*/
+                    }
+                });
+                cal.add(Calendar.DAY_OF_MONTH, 1);
+            }
+        }
+        else if(recurrence.equalsIgnoreCase("WEEKLY")){
+            while (cal.getTime().before(endDate)){
+                final Movimento movimento = new Movimento();
+                movimento.setBeneficiario(beneficiario);
+                movimento.setImporto(importo);
+                movimento.setScadenza(cal.getTime());
+                movimento.setConto(conto);
+                movimento.setTimestamp(System.currentTimeMillis());
+                mRealm = Realm.getDefaultInstance();
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealmOrUpdate(movimento);
+/*
+                        if(realm.where(DailyTransaction.class).equalTo("dayOfYear", movimento.getScadenza()).findAll() == null ){
+                            DailyTransaction dailyTransaction = new DailyTransaction();
+                            dailyTransaction.setDayOfYear(movimento.getScadenza());
+                            dailyTransaction.setTimestamp(System.currentTimeMillis());
+                            realm.copyToRealmOrUpdate(dailyTransaction);
+                        }
+*/
+                    }
+                });
+                cal.add(Calendar.WEEK_OF_YEAR, 1);
+            }
+        }
+        else if(recurrence.equalsIgnoreCase("MONTHLY")){
+            while (cal.getTime().before(endDate)){
+                final Movimento movimento = new Movimento();
+                movimento.setBeneficiario(beneficiario);
+                movimento.setImporto(importo);
+                movimento.setScadenza(cal.getTime());
+                movimento.setConto(conto);
+                movimento.setTimestamp(System.currentTimeMillis());
+                mRealm = Realm.getDefaultInstance();
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealmOrUpdate(movimento);
+/*
+                        if(realm.where(DailyTransaction.class).equalTo("dayOfYear", movimento.getScadenza()).findAll() == null ){
+                            DailyTransaction dailyTransaction = new DailyTransaction();
+                            dailyTransaction.setDayOfYear(movimento.getScadenza());
+                            dailyTransaction.setTimestamp(System.currentTimeMillis());
+                            realm.copyToRealmOrUpdate(dailyTransaction);
+                        }
+*/
+                    }
+                });
+                cal.add(Calendar.MONTH, 1);
+            }
+        }
+        else if(recurrence.equalsIgnoreCase("YEARLY")){
+            while (cal.getTime().before(endDate)){
+                final Movimento movimento = new Movimento();
+                movimento.setBeneficiario(beneficiario);
+                movimento.setImporto(importo);
+                movimento.setScadenza(cal.getTime());
+                movimento.setConto(conto);
+                movimento.setTimestamp(System.currentTimeMillis());
+                mRealm = Realm.getDefaultInstance();
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealmOrUpdate(movimento);
+/*
+                        if(realm.where(DailyTransaction.class).equalTo("dayOfYear", movimento.getScadenza()).findAll() == null ){
+                            DailyTransaction dailyTransaction = new DailyTransaction();
+                            dailyTransaction.setDayOfYear(movimento.getScadenza());
+                            dailyTransaction.setTimestamp(System.currentTimeMillis());
+                            realm.copyToRealmOrUpdate(dailyTransaction);
+                        }
+*/
+                    }
+                });
+                cal.add(Calendar.YEAR, 1);
+            }
+        }
+
+
     }
 
     // REMOVE TRNSACTION ON SWIPED
