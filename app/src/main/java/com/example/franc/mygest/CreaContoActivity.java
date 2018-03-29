@@ -85,7 +85,6 @@ public class CreaContoActivity extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //SAVE
                 RealmHelper helper = new RealmHelper();
 
                 String cleanString = saldoConto.getText().toString().replaceAll("[ €,.\\s]", "");
@@ -109,13 +108,6 @@ public class CreaContoActivity extends AppCompatActivity {
                     displayPopupWindow(getBaseContext(), nomeConto, "Inserisci il nome del Conto!");
 
                 }
-                //CLEAN FORM FIELDS
-/*
-                nomeConto.setText("");
-                saldoConto.setText("");
-*/
-
-                //CLOSE DIALOG
             }
         });
     }
@@ -142,26 +134,18 @@ public class CreaContoActivity extends AppCompatActivity {
         tv.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL);
         tv.setTextColor(ContextCompat.getColor(context, R.color.red));
         tv.setTextSize(25);
-/*
-        tv.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.black));
-*/
         ll.addView(tv);
 
         PopupWindow popup = new PopupWindow(ll, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         popup.setContentView(ll);
 
 
-/*
-        popup.setHeight(ll.getHeight());
-        popup.setWidth(ll.getWidth());
-*/
         popup.setOutsideTouchable(true);
         popup.setFocusable(true);
         // Show anchored to button
         Drawable drawBackground = ContextCompat.getDrawable(context, R.drawable.dialog_background);
-        ;
+
         popup.setBackgroundDrawable(drawBackground);
         popup.showAtLocation(anchorView, Gravity.TOP, 150, 0);
     }
-
 }
