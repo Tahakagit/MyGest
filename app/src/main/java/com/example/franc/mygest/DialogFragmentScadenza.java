@@ -1,17 +1,26 @@
 package com.example.franc.mygest;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,7 +36,7 @@ public class DialogFragmentScadenza extends Fragment{
     Spinner spinner;
 
     String recurrence;
-    Date startDateToSend;
+    Date startDateToSend = null;
     Date endDateToSend;
 
     public void onCreate(Bundle savedInstanceState){
@@ -51,8 +60,14 @@ public class DialogFragmentScadenza extends Fragment{
         // or  (ImageView) view.findViewById(R.id.foo);
         next.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
+                if (startDateToSend!= null){
+                    ((DialogActivity)getActivity()).getScadenza(startDateToSend, endDateToSend, recurrence);
+                }else{
+                    Log.w("DialogFragmentBen", "WARNING:: beneficiario null");
+                    displayPopupWindow(getContext(), startDateText, "Inserisci la data di scadenza!");
+                    startDateText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.red));
+                }
 
-                ((DialogActivity)getActivity()).getScadenza(startDateToSend, endDateToSend, recurrence);
 
             }
         } );
@@ -191,6 +206,48 @@ public class DialogFragmentScadenza extends Fragment{
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+    }
+    /**
+     * Starts Alert
+     * @param anchorView Anchor view
+     * @param helpText Custom Message
+     */
+    private void displayPopupWindow(Context context, View anchorView, String helpText) {
+        View layout = getLayoutInflater().inflate(R.layout.popup_content, null);
+
+        LinearLayout ll = new LinearLayout(context);
+        ViewGroup.LayoutParams linLayoutParam = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        TextView tv = new TextView(context);
+
+        ll.setOrientation(LinearLayout.VERTICAL);
+        ll.setLayoutParams(linLayoutParam);
+
+
+        tv.setText(helpText);
+        tv.setLayoutParams(linLayoutParam);
+        tv.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL);
+        tv.setTextColor(ContextCompat.getColor(context, R.color.red));
+        tv.setTextSize(25);
+/*
+        tv.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.black));
+*/
+        ll.addView(tv);
+
+        PopupWindow popup = new PopupWindow(ll, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popup.setContentView(ll);
+
+
+/*
+        popup.setHeight(ll.getHeight());
+        popup.setWidth(ll.getWidth());
+*/
+        popup.setOutsideTouchable(true);
+        popup.setFocusable(true);
+        // Show anchored to button
+        Drawable drawBackground = ContextCompat.getDrawable(context, R.drawable.dialog_background);
+        ;
+        popup.setBackgroundDrawable(drawBackground);
+        popup.showAtLocation(anchorView, Gravity.TOP, 150, 0);
     }
 
 }
