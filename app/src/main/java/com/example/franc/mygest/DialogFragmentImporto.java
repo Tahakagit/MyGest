@@ -41,7 +41,7 @@ public class DialogFragmentImporto extends Fragment {
 
                 String cleanString = importo.getText().toString().replaceAll("[ €,.\\s]", "");
 
-                if(cleanString.matches(""))
+                if(!cleanString.matches(""))
                     ((DialogActivity)getActivity()).getImporto(new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
                 else{
                     displayPopupWindow(getContext(), importo, "Inserisci la data di scadenza!");

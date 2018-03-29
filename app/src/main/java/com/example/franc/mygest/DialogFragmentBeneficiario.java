@@ -43,6 +43,12 @@ public class DialogFragmentBeneficiario extends Fragment {
 
         textBeneficiario = view.findViewById(R.id.inputBeneficiario);
 
+        textBeneficiario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textBeneficiario.setHintTextColor(ContextCompat.getColor(getContext(), R.color.grey));
+            }
+        });
         next.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 String beneficiario = null;
@@ -51,6 +57,7 @@ public class DialogFragmentBeneficiario extends Fragment {
                     ((DialogActivity)getActivity()).getBeneficiario(beneficiario);
                 }else{
                     Log.w("DialogFragmentBen", "WARNING:: beneficiario null");
+                    textBeneficiario.setHint("Beneficiario");
                     textBeneficiario.setHintTextColor(ContextCompat.getColor(getContext(), R.color.red));
                     displayPopupWindow(getContext(), textBeneficiario, "Inserisci il beneficiario!");
                }

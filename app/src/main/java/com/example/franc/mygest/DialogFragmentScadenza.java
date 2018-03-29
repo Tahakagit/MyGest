@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 
 
@@ -60,12 +61,25 @@ public class DialogFragmentScadenza extends Fragment{
         // or  (ImageView) view.findViewById(R.id.foo);
         next.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                if (startDateToSend!= null){
-                    ((DialogActivity)getActivity()).getScadenza(startDateToSend, endDateToSend, recurrence);
+
+                if (recurrence.equalsIgnoreCase("nessuna")) {
+                    if (startDateToSend != null) {
+                        ((DialogActivity) getActivity()).getScadenza(startDateToSend, endDateToSend, recurrence);
+                    } else {
+                        Log.w("DialogFragmentBen", "WARNING:: beneficiario null");
+                        displayPopupWindow(getContext(), startDateText, "Inserisci la data di scadenza!");
+                        startDateText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.red));
+                    }
                 }else{
-                    Log.w("DialogFragmentBen", "WARNING:: beneficiario null");
-                    displayPopupWindow(getContext(), startDateText, "Inserisci la data di scadenza!");
-                    startDateText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.red));
+                    if (startDateToSend != null||endDateToSend != null) {
+                        ((DialogActivity) getActivity()).getScadenza(startDateToSend, endDateToSend, recurrence);
+                    } else {
+                        Log.w("DialogFragmentBen", "WARNING:: beneficiario null");
+                        displayPopupWindow(getContext(), startDateText, "Inserisci la data di scadenza!");
+                        startDateText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.red));
+                        endDateText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.red));
+                    }
+
                 }
 
 
@@ -201,6 +215,11 @@ public class DialogFragmentScadenza extends Fragment{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 recurrence =  parent.getItemAtPosition(position).toString();
+                if (recurrence.equalsIgnoreCase("nessuna")){
+                    endDateText.setVisibility(View.GONE);
+                }else{
+                    endDateText.setVisibility(View.VISIBLE);
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
