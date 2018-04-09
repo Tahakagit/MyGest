@@ -1,5 +1,7 @@
 package com.example.franc.mygest;
 
+import android.content.Context;
+
 import java.math.BigDecimal;
 import java.security.Timestamp;
 import java.sql.Time;
@@ -128,9 +130,9 @@ public class RealmHelper {
 
 
     }
-    void updateBalance(String accountName, final BigDecimal newBalance){
+    ContoObj updateBalance(ContoObj contoObj, final BigDecimal newBalance){
         mRealm = Realm.getDefaultInstance();
-        final Conto conto = mRealm.where(Conto.class).equalTo("nomeConto", accountName).findFirst();
+        final Conto conto = mRealm.where(Conto.class).equalTo("nomeConto", contoObj.getNomeConto()).findFirst();
 
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -139,6 +141,8 @@ public class RealmHelper {
                 conto.setSaldoConto(newBalance);
             }
         });
+        contoObj.setSaldoConto(newBalance);
+        return contoObj;
     }
 
 
@@ -315,5 +319,24 @@ public class RealmHelper {
             }
         });
     }
+
+    void updateConto(final String nomeConto, final BigDecimal saldoConto){
+
+
+
+
+
+        mRealm = Realm.getDefaultInstance();
+
+        final Conto  conto = mRealm.where(Conto.class).equalTo("nomeConto", nomeConto).findFirst();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                conto.setSaldoConto(saldoConto);
+
+            }
+        });
+    }
+
 
 }

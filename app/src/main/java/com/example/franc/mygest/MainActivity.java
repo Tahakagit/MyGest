@@ -53,7 +53,9 @@ public class MainActivity extends AppCompatActivity{
         initUi(helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime()));
         showDatePicker();
 
+/*
         showCurrentBalances(helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime()));
+*/
     }
 
     /**
@@ -142,6 +144,7 @@ public class MainActivity extends AppCompatActivity{
     /**
      * show accounts balances and let modify it
      */
+/*
     private void showCurrentBalances(final ArrayList<ContoObj> conti2){
 
         final EditText c1Balance = findViewById(R.id.id_c1_balance);
@@ -154,10 +157,10 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) {
                 String cleanString = c1Balance.getText().toString().replaceAll("[ €,.\\s]", "");
                 BigDecimal newBalance = new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
+
                 helper.updateBalance("c1", newBalance);
                 conti2.get(0).setSaldoConto(newBalance);
                 adapterDailyTransaction.updateResults();
-
             }
         });
         c2Set.setOnClickListener(new View.OnClickListener() {
@@ -166,7 +169,7 @@ public class MainActivity extends AppCompatActivity{
                 String cleanString = c2Balance.getText().toString().replaceAll("[ €,.\\s]", "");
                 BigDecimal newBalance = new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
 
-                helper.updateBalance("c2", new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
+                helper.updateBalance("c2", newBalance);
                 conti2.get(1).setSaldoConto(newBalance);
 
                 adapterDailyTransaction.notifyDataSetChanged();
@@ -195,6 +198,7 @@ public class MainActivity extends AppCompatActivity{
         c2Balance.setText(c2BalanceFormatted);
 
     }
+*/
     /**
      * Starts navigationdrawer
      */

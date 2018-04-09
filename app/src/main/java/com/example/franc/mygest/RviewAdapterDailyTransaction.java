@@ -4,8 +4,12 @@ package com.example.franc.mygest;
  * Created by franc on 28/10/2017.
  */
 
-import android.content.ClipData;
+import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -13,16 +17,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 //questo diventa il recycler view dei giorni con transazioni all'interno del quale ogni viewholer
 //avra la sua recycler view popolata dai singoli movimenti
@@ -32,6 +36,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     private ArrayList<ContoObj> mResults;
     private Context context;
     final Realm mRealm = Realm.getDefaultInstance();
+    BigDecimal currentBalance;
 
     RviewAdapterDailyTransaction(Context context, ArrayList<ContoObj> mResults) {
         setResultsRealm(mResults);
@@ -65,6 +70,8 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
         // START NESTED TRANSACTIONS RECYCLERVIEW
         RecyclerView rviewMovimenti = holder.itemView.findViewById(R.id.rv_transaction);
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(rviewMovimenti.getContext(), RecyclerView.VERTICAL);
+        rviewMovimenti.addItemDecoration(mDividerItemDecoration);
 
         final RviewAdapterMovimenti adapterMovimenti = new RviewAdapterMovimenti(movs);
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
@@ -115,9 +122,11 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         }
 
         // FUTURE ACCOUNT BALANCE
-        BigDecimal newBalance = mResults.get(position).getSaldoConto().subtract(totExpences);
+        final BigDecimal newBalance = mResults.get(position).getSaldoConto().subtract(totExpences);
+        currentBalance = mResults.get(position).getSaldoConto();
+        BigDecimal currentBalance = mResults.get(position).getSaldoConto();
         if(mResults.get(position) != null) {
-            holder.setData(mResults.get(position).getNomeConto(), NumberFormat.getCurrencyInstance().format(newBalance));
+            holder.setData(mResults.get(position).getNomeConto(), NumberFormat.getCurrencyInstance().format(newBalance), NumberFormat.getCurrencyInstance().format(currentBalance));
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -133,6 +142,14 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         });
 
 
+        final BigDecimal currentBalance2 = currentBalance;
+        holder.updateAccountImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateAccountCurrentBalance(NumberFormat.getCurrencyInstance().format(currentBalance2), NumberFormat.getCurrencyInstance().format(newBalance), nomeConto, position);
+            }
+        });
+
 
     }
     @Override
@@ -142,37 +159,84 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
     }
 
+    void updateAccountCurrentBalance(String currentBalance, final String newBalance, String accountName, final int position){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Aggiorna saldo!");
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = inflater.inflate(R.layout.dialog_update_account, null);
+        builder.setView(dialogView);
+
+        final EditText balanceText = dialogView.findViewById(R.id.id_input_new_balance);
+
+        balanceText.setText(currentBalance);
+        balanceText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                balanceText.setText("");
+                balanceText.addTextChangedListener(new MoneyTextWatcher(balanceText));
+
+            }
+        });
+
+        builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String cleanString = balanceText.getText().toString().replaceAll("[ €,.\\s]", "");
+
+                RealmHelper helper = new RealmHelper();
+/*
+                helper.updateConto(nomeConto, new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
+*/
+                helper.updateBalance(mResults.get(position), new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
+                updateItem(position);
+            }
+        });
+        builder.create().show();
+    }
     void setResultsRealm(ArrayList<ContoObj> results){
         movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend.getTime(), nomeConto);
 
         mResults = results;
         notifyDataSetChanged();
     }
+    void updateItem(int position){
+        this.notifyItemChanged(position);
+    }
     void updateResults(){
 /*
         movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.weekRange.getTime(), mResults.get(position).getNomeConto());
 */
 
-        notifyDataSetChanged();
+
+        this.notifyDataSetChanged();
+    }
+    Context getContext(){
+
+        return context;
     }
 
     public static class DataObjectHolder extends RecyclerView.ViewHolder{
-        TextView accountBalance;
+        TextView accountFutureBalance;
+        TextView accountCurrentBalance;
         TextView accountName;
+        ImageView updateAccountImg;
         LinearLayout hiddenlayout;
 
         public DataObjectHolder(View itemView) {
             super(itemView);
             accountName = itemView.findViewById(R.id.id_account_name);
-            accountBalance = itemView.findViewById(R.id.id_account_balance);
-
+            accountFutureBalance = itemView.findViewById(R.id.id_account_future_balance);
+            accountCurrentBalance = itemView.findViewById(R.id.id_account_current_balance);
+            updateAccountImg = itemView.findViewById(R.id.id_refresh_current_balance);
             hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
 
         }
 
-        public void setData(String textscadenza, String balance){
+        public void setData(String textscadenza, String futureBalance, String currentBalance){
             accountName.setText(textscadenza);
-            accountBalance.setText(balance);
+            accountFutureBalance.setText(futureBalance);
+            accountCurrentBalance.setText(currentBalance);
+
 
 
         }
