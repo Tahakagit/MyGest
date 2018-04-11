@@ -4,7 +4,7 @@ apply plugin: 'realm-android'
 android {
     compileSdkVersion 26
     def versionMajor = 0
-    def versionMinor = 21
+    def versionMinor = 41
     def versionPatch = 1
 
     defaultConfig {
