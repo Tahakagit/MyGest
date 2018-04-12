@@ -18,10 +18,10 @@ public class ContoObj{
 
     private String nomeConto;
     private String saldoConto;
-    private String coloreConto;
+    private int coloreConto;
     private int transactionNumber = 0;
 
-    public ContoObj(String nomeConto, String saldoConto, String coloreConto) {
+    public ContoObj(String nomeConto, String saldoConto, int coloreConto) {
         this.nomeConto = nomeConto;
         this.saldoConto = saldoConto;
         this.coloreConto = coloreConto;
@@ -47,11 +47,11 @@ public class ContoObj{
         this.saldoConto = saldoConto.toString();
     }
 
-    public String getColoreConto() {
+    public int getColoreConto() {
         return coloreConto;
     }
 
-    public void setColoreConto(String coloreConto) {
+    public void setColoreConto(int coloreConto) {
         this.coloreConto = coloreConto;
     }
 

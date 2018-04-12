@@ -1,6 +1,8 @@
 package com.example.franc.mygest;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +24,12 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
     private Realm contiRealm;
     private RealmResults<Conto> mResults;
     RealmHelper helper = new RealmHelper();
+    private Context context;
+
 
     public RviewAdapterConto(Context context, Realm realm, RealmResults<Conto> results) {
         this.contiRealm = realm;
+        this.context = context;
         setResults(results);
     }
 
@@ -34,12 +39,13 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
     public static class DataObjectHolder extends RecyclerView.ViewHolder{
         TextView nome;
         TextView saldo;
+        CardView cv;
         LinearLayout hiddenlayout;
         public DataObjectHolder(View itemView) {
             super(itemView);
             nome = itemView.findViewById(R.id.cardNomeconto);
             saldo = itemView.findViewById(R.id.cardSaldoconto);
-
+            cv = itemView.findViewById(R.id.cv_account);
             hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
 
         }
@@ -86,6 +92,8 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
             BigDecimal rawBalanceFromDb = helper.getAccountBalance(conto.getNomeConto());
             String balance = NumberFormat.getCurrencyInstance().format(rawBalanceFromDb);
             holder.setData(conto.getNomeConto(), balance);
+            holder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
+
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 

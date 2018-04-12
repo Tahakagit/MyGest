@@ -9,6 +9,8 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -127,6 +129,8 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         BigDecimal currentBalance = mResults.get(position).getSaldoConto();
         if(mResults.get(position) != null) {
             holder.setData(mResults.get(position).getNomeConto(), NumberFormat.getCurrencyInstance().format(newBalance), NumberFormat.getCurrencyInstance().format(currentBalance));
+            holder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
+
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -221,9 +225,11 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         TextView accountName;
         ImageView updateAccountImg;
         LinearLayout hiddenlayout;
+        CardView cv;
 
         public DataObjectHolder(View itemView) {
             super(itemView);
+            cv = itemView.findViewById(R.id.cv_account_dashboard);
             accountName = itemView.findViewById(R.id.id_account_name);
             accountFutureBalance = itemView.findViewById(R.id.id_account_future_balance);
             accountCurrentBalance = itemView.findViewById(R.id.id_account_current_balance);

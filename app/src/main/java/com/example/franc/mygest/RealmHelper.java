@@ -300,12 +300,13 @@ public class RealmHelper {
     }
 
 
-    void saveConto(final String nomeConto, final BigDecimal saldoConto){
+    void saveConto(final String nomeConto, final BigDecimal saldoConto, final int coloreConto){
 
 
         final Conto s=new Conto();
         s.setNomeConto(nomeConto);
         s.setSaldoConto(saldoConto);
+        s.setColoreConto(coloreConto);
 
 
 
