@@ -127,16 +127,29 @@ public class CreaContoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Display color picker dialog
+     * @param v
+     * @return
+     */
     private ColorPickerDialog displayColorsDialog(Dialog v){
-        int colors[] = {ContextCompat.getColor(this, com.example.franc.mygest.R.color.red),ContextCompat.getColor(this, com.example.franc.mygest.R.color.blue), ContextCompat.getColor(this, com.example.franc.mygest.R.color.green)};
-
         final ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
-        colorPickerDialog.initialize(R.string.title_dialog_select_colors,
-                colors,
-                selectedColor,
-                1,
-                colors.length);
+        int colors[] = {ContextCompat.getColor(this, R.color.blue_bg_black_text),
+                        ContextCompat.getColor(this, R.color.brown_bg_black_text),
+                        ContextCompat.getColor(this, R.color.green_bg_black_text),
+                        ContextCompat.getColor(this, R.color.grey_bg_black_text),
+                        ContextCompat.getColor(this, R.color.orange_bg_black_text),
+                        ContextCompat.getColor(this, R.color.pink_bg_black_text),
+                        ContextCompat.getColor(this, R.color.purple_bg_black_text),
+                        ContextCompat.getColor(this, R.color.red_bg_black_text),
+                        ContextCompat.getColor(this, R.color.yellow_bg_black_text)};
         final Button selectColorBtn = v.findViewById(R.id.btn_select_color);
+
+
+        colorPickerDialog.initialize(R.string.title_dialog_select_colors, colors,
+                    selectedColor,
+                    3,
+                    colors.length);
         selectColorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,8 +159,9 @@ public class CreaContoActivity extends AppCompatActivity {
 
         return colorPickerDialog;
     }
+
     /**
-     * Starts Alert
+     * Starts Alert FIXME
      * @param context Context
      * @param anchorView Anchor view
      * @param helpText Custom Message
