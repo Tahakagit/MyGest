@@ -40,12 +40,18 @@ public class MoneyTextWatcher implements TextWatcher {
 
         EditText editText = editTextWeakReference.get();
         if (editText == null) return;
-        //String s = editable.toString();€
+        String s = editable.toString();
+        String u = "";
+        if(s.matches("-")){
+            u = s + " ";
+            return;
+        }
+
         editText.removeTextChangedListener(this);
-        String cleanString = editable.toString().replaceAll("[ €,.\\s]", "");
+        String cleanString = s.replaceAll("[ €,.\\s]", "");
         BigDecimal parsed = new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
         String formatted = NumberFormat.getCurrencyInstance().format(parsed);
-        editText.setText(formatted);
+        editText.setText(u.concat(formatted));
 
         editText.setSelection(formatted.length());
         editText.addTextChangedListener(this);

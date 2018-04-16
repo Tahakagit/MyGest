@@ -141,64 +141,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     }
-    /**
-     * show accounts balances and let modify it
-     */
-/*
-    private void showCurrentBalances(final ArrayList<ContoObj> conti2){
 
-        final EditText c1Balance = findViewById(R.id.id_c1_balance);
-        final EditText c2Balance = findViewById(R.id.id_c2_balance);
-        final Button c1Set = findViewById(R.id.id_btn_set_c1);
-        final Button c2Set = findViewById(R.id.id_btn_set_c2);
-
-        c1Set.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String cleanString = c1Balance.getText().toString().replaceAll("[ €,.\\s]", "");
-                BigDecimal newBalance = new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
-
-                helper.updateBalance("c1", newBalance);
-                conti2.get(0).setSaldoConto(newBalance);
-                adapterDailyTransaction.updateResults();
-            }
-        });
-        c2Set.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String cleanString = c2Balance.getText().toString().replaceAll("[ €,.\\s]", "");
-                BigDecimal newBalance = new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
-
-                helper.updateBalance("c2", newBalance);
-                conti2.get(1).setSaldoConto(newBalance);
-
-                adapterDailyTransaction.notifyDataSetChanged();
-
-            }
-        });
-        c1Balance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                c1Balance.setText("");
-                c1Balance.addTextChangedListener(new MoneyTextWatcher(c1Balance));
-
-            }
-        });
-        c2Balance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                c2Balance.setText("");
-                c2Balance.addTextChangedListener(new MoneyTextWatcher(c2Balance));
-            }
-        });
-        String c1BalanceFormatted = NumberFormat.getCurrencyInstance().format(helper.getAccountBalance("c1"));
-        String c2BalanceFormatted = NumberFormat.getCurrencyInstance().format(helper.getAccountBalance("c2"));
-
-        c1Balance.setText(c1BalanceFormatted);
-        c2Balance.setText(c2BalanceFormatted);
-
-    }
-*/
     /**
      * Starts navigationdrawer
      */
@@ -243,9 +186,14 @@ public class MainActivity extends AppCompatActivity{
                 String result=data.getStringExtra("result");
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                adapterDailyTransaction.setResultsRealm(helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime()));
+                ArrayList<ContoObj> conti = helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime());
+                adapterDailyTransaction.setResultsRealm(conti);
+/*
                 adapterDailyTransaction.notifyDataSetChanged();
                 adapterDailyTransaction.updateResults();
+                adapterDailyTransaction.setResultsRealm(helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime()));
+*/
+
             }
         }
 

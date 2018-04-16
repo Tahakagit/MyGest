@@ -36,7 +36,7 @@ public class RealmHelper {
     public RealmResults<Movimento> getTransactionsUntil(Date dateTo){
 
         mRealm = Realm.getDefaultInstance();
-        RealmResults<Movimento> transactionInDay = mRealm.where(Movimento.class).lessThan("scadenza", dateTo).findAll();
+        RealmResults<Movimento> transactionInDay = mRealm.where(Movimento.class).lessThanOrEqualTo("scadenza", dateTo).findAll();
         mRealm.close();
         return transactionInDay;
 
@@ -76,7 +76,6 @@ public class RealmHelper {
         mRealm = Realm.getDefaultInstance();
         RealmResults<Movimento> allTransaction = getTransactionsUntil(dateTo);
 
-        // cerco i conti con transazioni in textImporto nel range todo fix this
         RealmResults<Movimento> conti = allTransaction.where().distinct("conto");
         ArrayList<ContoObj> listConti = new ArrayList<>();
 

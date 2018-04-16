@@ -5,11 +5,8 @@ package com.example.franc.mygest;
  */
 
 import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -138,16 +135,25 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             public void onClick(View v) {
                 if(holder.hiddenlayout.getVisibility()==View.GONE){
                     holder.hiddenlayout.setVisibility(View.VISIBLE);
+/*
+                    holder.cv.setCardElevation(5.0f);
+*/
+                    holder.cv.setCardElevation(15f);
+
+
                 }
                 else {
                     holder.hiddenlayout.setVisibility(View.GONE);
+                    holder.cv.setCardElevation(1f);
+
+
                 }
             }
         });
 
 
         final BigDecimal currentBalance2 = currentBalance;
-        holder.updateAccountImg.setOnClickListener(new View.OnClickListener() {
+        holder.moreIc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 updateAccountCurrentBalance(NumberFormat.getCurrencyInstance().format(currentBalance2), NumberFormat.getCurrencyInstance().format(newBalance), nomeConto, position);
@@ -202,10 +208,14 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
         mResults = results;
         notifyDataSetChanged();
+/*
+        notifyItemInserted(results.size()-1);
+*/
     }
     void updateItem(int position){
         this.notifyItemChanged(position);
     }
+
     void updateResults(){
 /*
         movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.weekRange.getTime(), mResults.get(position).getNomeConto());
@@ -223,7 +233,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         TextView accountFutureBalance;
         TextView accountCurrentBalance;
         TextView accountName;
-        ImageView updateAccountImg;
+        ImageView moreIc;
         LinearLayout hiddenlayout;
         CardView cv;
 
@@ -233,7 +243,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             accountName = itemView.findViewById(R.id.id_account_name);
             accountFutureBalance = itemView.findViewById(R.id.id_account_future_balance);
             accountCurrentBalance = itemView.findViewById(R.id.id_account_current_balance);
-            updateAccountImg = itemView.findViewById(R.id.id_refresh_current_balance);
+            moreIc = itemView.findViewById(R.id.imageView);
             hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
 
         }
