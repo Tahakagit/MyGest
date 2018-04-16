@@ -46,10 +46,13 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
     @Override
     public void onBindViewHolder(final DataObjectHolder holder, final int position) {
 
-        if(mResults.get(position) != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
+        Movimento movimento = mResults.get(position);
 
-            holder.setData(mResults.get(position).getImporto().toString(), mResults.get(position).getBeneficiario(), sdf.format(mResults.get(position).getScadenza()));
+        if(movimento != null) {
+            SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
+
+            holder.setData(movimento.getImporto().toString(), movimento.getBeneficiario(), dayFormat.format(movimento.getScadenza()), monthFormat.format(movimento.getScadenza()).toUpperCase());
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -83,23 +86,26 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
     public static class DataObjectHolder extends RecyclerView.ViewHolder{
         TextView textBeneficiario;
         TextView textImporto;
-        TextView textScadenza;
+        TextView dayScadenzaText;
+        TextView monthScadenzaText;
         LinearLayout hiddenlayout;
 
         public DataObjectHolder(View itemView) {
             super(itemView);
             textImporto = itemView.findViewById(R.id.id_card_importo);
             textBeneficiario = itemView.findViewById(R.id.id_card_beneficiario);
-            textScadenza = itemView.findViewById(R.id.id_card_scadenza_day);
+            dayScadenzaText = itemView.findViewById(R.id.id_card_scadenza_day);
+            monthScadenzaText = itemView.findViewById(R.id.id_card_scadenza_month);
 
             hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
 
         }
 
-        public void setData(String importo, String beneficiario, String scadenza){
-            textImporto.setText(importo);
-            textScadenza.setText(scadenza);
-            textBeneficiario.setText(beneficiario);
+        public void setData(String textbeneficiario, String textimporto, String dayScadenza, String monthScadenza){
+            textImporto.setText(textimporto);
+            dayScadenzaText.setText(dayScadenza);
+            monthScadenzaText.setText(monthScadenza);
+            textBeneficiario.setText(textbeneficiario);
 
 
         }

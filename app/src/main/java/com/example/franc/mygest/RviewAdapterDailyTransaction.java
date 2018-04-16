@@ -34,8 +34,10 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
     private ArrayList<ContoObj> mResults;
     private Context context;
-    final Realm mRealm = Realm.getDefaultInstance();
-    BigDecimal currentBalance;
+    private Realm mRealm = Realm.getDefaultInstance();
+    private String nomeConto = null;
+    private RealmResults<Movimento> movs;
+    private RealmHelper helper = new RealmHelper();
 
     RviewAdapterDailyTransaction(Context context, ArrayList<ContoObj> mResults) {
         setResultsRealm(mResults);
@@ -55,28 +57,23 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         return new DataObjectHolder(view);
     }
 
-    String nomeConto = null;
-    RealmResults<Movimento> movs;
 
-    RealmHelper helper = new RealmHelper();
-
-    @Override
-    public void onBindViewHolder(final DataObjectHolder holder, final int position) {
-        nomeConto = mResults.get(position).getNomeConto();
-
-        movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend.getTime(), nomeConto);
-
-
-        // START NESTED TRANSACTIONS RECYCLERVIEW
-        RecyclerView rviewMovimenti = holder.itemView.findViewById(R.id.rv_transaction);
-        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(rviewMovimenti.getContext(), RecyclerView.VERTICAL);
-        rviewMovimenti.addItemDecoration(mDividerItemDecoration);
-
+    //FIXME javadoc
+    private void startTransactionRecyclerView(View view){
+        RecyclerView rviewMovimenti = view.findViewById(R.id.rv_transaction);
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(rviewMovimenti.getContext(),
+                    RecyclerView.VERTICAL);
         final RviewAdapterMovimenti adapterMovimenti = new RviewAdapterMovimenti(movs);
+
+        rviewMovimenti.addItemDecoration(mDividerItemDecoration);
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
         rviewMovimenti.setAdapter(adapterMovimenti);
 
+        enableSwipe(adapterMovimenti, rviewMovimenti);
+    }
 
+    //FIXME javadoc
+    private void enableSwipe(final RviewAdapterMovimenti adapter, RecyclerView rv){
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -89,21 +86,21 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 long timestamp = 0;
-                movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend.getTime(), mResults.get(position).getNomeConto());
+                movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend.getTime(), mResults.get(viewHolder.getAdapterPosition()).getNomeConto());
                 try {
                     timestamp = movs.get(viewHolder.getAdapterPosition()).getTimestamp();
-                    adapterMovimenti.deleteItemAt(timestamp);
+                    adapter.deleteItemAt(timestamp);
 
                 } catch (ArrayIndexOutOfBoundsException e) {
                     Log.w("OnSwipe", "Skip timestamp cause ther's no result");
                 }
                 if (movs.size() == 0) {
-                    Log.d("delete on swipe", "posizione adapter dailytransactions" + String.valueOf(position));
-                    mResults.remove(position);
+                    Log.d("delete on swipe", "posizione adapter dailytransactions" + String.valueOf(viewHolder.getAdapterPosition()));
+                    mResults.remove(viewHolder.getAdapterPosition());
                     notifyDataSetChanged();
-                    notifyItemRemoved(position);
+                    notifyItemRemoved(viewHolder.getAdapterPosition());
                 }else {
-                    adapterMovimenti.notifyItemRemoved(viewHolder.getAdapterPosition());
+                    adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
                     notifyDataSetChanged();
                 }
 /*
@@ -112,7 +109,12 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(rviewMovimenti);
+        itemTouchHelper.attachToRecyclerView(rv);
+
+    }
+
+    //FIXME javadoc
+    private BigDecimal calculateNewBalance(BigDecimal oldBalance){
 
         // SUM ALL UNCHECKED TRANSACTIONS
         BigDecimal totExpences = new BigDecimal("0");
@@ -121,42 +123,51 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         }
 
         // FUTURE ACCOUNT BALANCE
-        final BigDecimal newBalance = mResults.get(position).getSaldoConto().subtract(totExpences);
-        currentBalance = mResults.get(position).getSaldoConto();
-        BigDecimal currentBalance = mResults.get(position).getSaldoConto();
-        if(mResults.get(position) != null) {
-            holder.setData(mResults.get(position).getNomeConto(), NumberFormat.getCurrencyInstance().format(newBalance), NumberFormat.getCurrencyInstance().format(currentBalance));
-            holder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
+        final BigDecimal newBalance = oldBalance.subtract(totExpences);
 
+        return newBalance;
+    }
+
+    @Override
+    public void onBindViewHolder(final DataObjectHolder holder, int position) {
+        nomeConto = mResults.get(position).getNomeConto();
+
+        movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend.getTime(), nomeConto);
+
+        startTransactionRecyclerView(holder.itemView);
+        BigDecimal currentBalance = mResults.get(position).getSaldoConto();
+        final BigDecimal newBalance = calculateNewBalance(currentBalance);
+
+        //Fills cards with account data
+        if(mResults.get(position) != null) {
+            holder.setData(mResults.get(position).getNomeConto(),
+                        NumberFormat.getCurrencyInstance().format(newBalance),
+                        NumberFormat.getCurrencyInstance().format(currentBalance));
+            holder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
         }
+
+        //Expanding Collapsing Account cards
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 if(holder.hiddenlayout.getVisibility()==View.GONE){
                     holder.hiddenlayout.setVisibility(View.VISIBLE);
-/*
-                    holder.cv.setCardElevation(5.0f);
-*/
                     holder.cv.setCardElevation(15f);
-
-
                 }
                 else {
                     holder.hiddenlayout.setVisibility(View.GONE);
                     holder.cv.setCardElevation(1f);
-
-
                 }
             }
         });
 
-
+        //Updating account balance
         final BigDecimal currentBalance2 = currentBalance;
         holder.moreIc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateAccountCurrentBalance(NumberFormat.getCurrencyInstance().format(currentBalance2), NumberFormat.getCurrencyInstance().format(newBalance), nomeConto, position);
+                updateAccountCurrentBalance(holder.getAdapterPosition());
             }
         });
 
@@ -169,16 +180,19 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
     }
 
-    void updateAccountCurrentBalance(String currentBalance, final String newBalance, String accountName, final int position){
+    /**
+     * Shows dialog to update account balance
+     * @param position position to retrieve account
+     */
+    private void updateAccountCurrentBalance(final int position){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Aggiorna saldo!");
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = inflater.inflate(R.layout.dialog_update_account, null);
-        builder.setView(dialogView);
-
         final EditText balanceText = dialogView.findViewById(R.id.id_input_new_balance);
 
-        balanceText.setText(currentBalance);
+        builder.setTitle("Aggiorna saldo!");
+        builder.setView(dialogView);
+        balanceText.setText(mResults.get(position).getSaldoConto().toString());
         balanceText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -187,49 +201,45 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
             }
         });
-
+        //save new balance
         builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String cleanString = balanceText.getText().toString().replaceAll("[ €,.\\s]", "");
-
                 RealmHelper helper = new RealmHelper();
-/*
-                helper.updateConto(nomeConto, new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
-*/
+
                 helper.updateBalance(mResults.get(position), new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
                 updateItem(position);
             }
         });
         builder.create().show();
     }
+
+    /**
+     * Updates adapter items list
+     * @param results ArrayList to show
+     */
     void setResultsRealm(ArrayList<ContoObj> results){
         movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend.getTime(), nomeConto);
 
         mResults = results;
         notifyDataSetChanged();
-/*
-        notifyItemInserted(results.size()-1);
-*/
     }
-    void updateItem(int position){
+
+    /**
+     * Updates item data
+     * @param position position to update
+     */
+    private void updateItem(int position){
         this.notifyItemChanged(position);
     }
 
-    void updateResults(){
-/*
-        movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.weekRange.getTime(), mResults.get(position).getNomeConto());
-*/
-
-
-        this.notifyDataSetChanged();
-    }
     Context getContext(){
 
         return context;
     }
 
-    public static class DataObjectHolder extends RecyclerView.ViewHolder{
+    static class DataObjectHolder extends RecyclerView.ViewHolder{
         TextView accountFutureBalance;
         TextView accountCurrentBalance;
         TextView accountName;
@@ -237,7 +247,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         LinearLayout hiddenlayout;
         CardView cv;
 
-        public DataObjectHolder(View itemView) {
+        DataObjectHolder(View itemView) {
             super(itemView);
             cv = itemView.findViewById(R.id.cv_account_dashboard);
             accountName = itemView.findViewById(R.id.id_account_name);
@@ -248,7 +258,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
         }
 
-        public void setData(String textscadenza, String futureBalance, String currentBalance){
+        void setData(String textscadenza, String futureBalance, String currentBalance){
             accountName.setText(textscadenza);
             accountFutureBalance.setText(futureBalance);
             accountCurrentBalance.setText(currentBalance);
