@@ -3,7 +3,6 @@ package com.example.franc.mygest;
 /**
  * Created by franc on 24/12/2017.
  */
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
-import java.security.Timestamp;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import io.realm.Realm;
 import io.realm.RealmResults;
 //questo adapter fornisce i dati alla recyclerview all'interno del dataholder della rv dei giorni con
 //transazioni
@@ -43,9 +37,15 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         if(movimento.getBeneficiario() != null) {
             BigDecimal raw = movimento.getImporto();
             String importoFormatted = NumberFormat.getCurrencyInstance().format(raw);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
+            SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
 
-            holder.setData(movimento.getBeneficiario(), importoFormatted, sdf.format(movimento.getScadenza()));
+
+            holder.setData(movimento.getBeneficiario(), importoFormatted, dayFormat.format(movimento.getScadenza()), monthFormat.format(movimento.getScadenza()).toUpperCase());
+/*
+            holder.setData(movimento.getBeneficiario(), String.valueOf(movimento.getTimestamp()), sdf.format(movimento.getScadenza()));
+*/
+
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -86,21 +86,25 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
     public static class DataObjectHolder extends RecyclerView.ViewHolder{
         TextView beneficiario;
         TextView importo;
-        TextView scadenza;
+        TextView dayScadenzaText;
+        TextView monthScadenzaText;
+
         LinearLayout hiddenlayout;
         public DataObjectHolder(View itemView) {
             super(itemView);
             beneficiario = itemView.findViewById(R.id.id_card_beneficiario);
             importo = itemView.findViewById(R.id.id_card_importo);
-            scadenza = itemView.findViewById(R.id.id_card_scadenza);
+            dayScadenzaText = itemView.findViewById(R.id.id_card_scadenza_day);
+            monthScadenzaText = itemView.findViewById(R.id.id_card_scadenza_month);
 
             hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
 
         }
-        public void setData(String textbeneficiario, String textimporto, String textscadenza){
+        public void setData(String textbeneficiario, String textimporto, String dayScadenza, String monthScadenza){
             beneficiario.setText(textbeneficiario);
             importo.setText(textimporto);
-            scadenza.setText(textscadenza);
+            dayScadenzaText.setText(dayScadenza);
+            monthScadenzaText.setText(monthScadenza);
         }
     }
 
