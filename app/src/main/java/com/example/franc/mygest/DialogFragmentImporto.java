@@ -44,7 +44,7 @@ public class DialogFragmentImporto extends Fragment {
                 if(!cleanString.matches(""))
                     ((DialogActivity)getActivity()).getImporto(new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
                 else{
-                    displayPopupWindow(getContext(), importo, "Inserisci la data di scadenza!");
+                    displayPopupWindow(getContext(), importo, "Inserisci la data di dayScadenzaText!");
                     importo.setHintTextColor(ContextCompat.getColor(getContext(), R.color.red));
 
                 }

@@ -67,7 +67,7 @@ public class DialogFragmentScadenza extends Fragment{
                         ((DialogActivity) getActivity()).getScadenza(startDateToSend, endDateToSend, recurrence);
                     } else {
                         Log.w("DialogFragmentBen", "WARNING:: beneficiario null");
-                        displayPopupWindow(getContext(), startDateText, "Inserisci la data di scadenza!");
+                        displayPopupWindow(getContext(), startDateText, "Inserisci la data di dayScadenzaText!");
                         startDateText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.red));
                     }
                 }else{
@@ -75,7 +75,7 @@ public class DialogFragmentScadenza extends Fragment{
                         ((DialogActivity) getActivity()).getScadenza(startDateToSend, endDateToSend, recurrence);
                     } else {
                         Log.w("DialogFragmentBen", "WARNING:: beneficiario null");
-                        displayPopupWindow(getContext(), startDateText, "Inserisci la data di scadenza!");
+                        displayPopupWindow(getContext(), startDateText, "Inserisci la data di dayScadenzaText!");
                         startDateText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.red));
                         endDateText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.red));
                     }

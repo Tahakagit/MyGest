@@ -2,6 +2,7 @@ package com.example.franc.mygest;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +22,9 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.colorpicker.ColorPickerDialog;
+import com.android.colorpicker.ColorPickerSwatch;
+
 import java.math.BigDecimal;
 
 import io.realm.Realm;
@@ -29,6 +33,7 @@ import io.realm.RealmResults;
 
 
 public class CreaContoActivity extends AppCompatActivity {
+    int selectedColor = R.color.blue;
 
     Realm realm;
     RviewAdapterConto adapter;
@@ -65,32 +70,42 @@ public class CreaContoActivity extends AppCompatActivity {
                 displayInputDialog();
             }
         });
+
     }
 
     //DISPLAY INPUT DIALOG AND SAVE ACCOUNT
     private void displayInputDialog()    {
         final Dialog d=new Dialog(this);
-        d.setTitle("Save to Realm");
 
-        //Todo: creare layout dialog inserimento conto
+        d.setTitle("Save to Realm");
         d.setContentView(R.layout.input_dialog_creaconto);
-        final EditText nomeConto= d.findViewById(R.id.nomeconto);
-        final EditText saldoConto= d.findViewById(R.id.saldoconto);
 
         Button saveBtn= d.findViewById(R.id.saveconto);
 
         d.show();
+        final EditText nomeConto= d.findViewById(R.id.nomeconto);
+        final EditText saldoConto= d.findViewById(R.id.saldoconto);
+        final ColorPickerDialog colorDialog = displayColorsDialog(d);
 
+        colorDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
+            @Override
+            public void onColorSelected(int color) {
+                selectedColor = color;
+            }
+        });
         saldoConto.addTextChangedListener(new MoneyTextWatcher(saldoConto));
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RealmHelper helper = new RealmHelper();
 
+
+
                 String cleanString = saldoConto.getText().toString().replaceAll("[ €,.\\s]", "");
                 if (!cleanString.matches("")&&!nomeConto.getText().toString().matches("")) {
-                    helper.saveConto(nomeConto.getText().toString(), new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
-
+                    helper.saveConto(nomeConto.getText().toString(),
+                                new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR),
+                                selectedColor);
                     //REFRESH ADAPTER
                     adapter.notifyDataSetChanged();
                     d.dismiss();
@@ -113,7 +128,40 @@ public class CreaContoActivity extends AppCompatActivity {
     }
 
     /**
-     * Starts Alert
+     * Display color picker dialog
+     * @param v
+     * @return
+     */
+    private ColorPickerDialog displayColorsDialog(Dialog v){
+        final ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
+        int colors[] = {ContextCompat.getColor(this, R.color.blue_bg_black_text),
+                        ContextCompat.getColor(this, R.color.brown_bg_black_text),
+                        ContextCompat.getColor(this, R.color.green_bg_black_text),
+                        ContextCompat.getColor(this, R.color.grey_bg_black_text),
+                        ContextCompat.getColor(this, R.color.orange_bg_black_text),
+                        ContextCompat.getColor(this, R.color.pink_bg_black_text),
+                        ContextCompat.getColor(this, R.color.purple_bg_black_text),
+                        ContextCompat.getColor(this, R.color.red_bg_black_text),
+                        ContextCompat.getColor(this, R.color.yellow_bg_black_text)};
+        final Button selectColorBtn = v.findViewById(R.id.btn_select_color);
+
+
+        colorPickerDialog.initialize(R.string.title_dialog_select_colors, colors,
+                    selectedColor,
+                    3,
+                    colors.length);
+        selectColorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                colorPickerDialog.show(getFragmentManager(), "colorPickerDialog");
+            }
+        });
+
+        return colorPickerDialog;
+    }
+
+    /**
+     * Starts Alert FIXME
      * @param context Context
      * @param anchorView Anchor view
      * @param helpText Custom Message

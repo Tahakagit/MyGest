@@ -19,8 +19,7 @@ public class Conto extends RealmObject {
     @PrimaryKey
     private String nomeConto;
     private String saldoConto;
-    private String coloreConto;
-    private int transactionNumber = 0;
+    private int coloreConto;
 
     @Override
     public String toString(){
@@ -42,19 +41,12 @@ public class Conto extends RealmObject {
         this.saldoConto = saldoConto.toString();
     }
 
-    public String getColoreConto() {
+    public int getColoreConto() {
         return coloreConto;
     }
 
-    public void setColoreConto(String coloreConto) {
+    public void setColoreConto(int coloreConto) {
         this.coloreConto = coloreConto;
     }
 
-    public int getTransactionNumber() {
-        return transactionNumber;
-    }
-
-    public void setTransactionNumber(int transactionNumber) {
-        this.transactionNumber = transactionNumber;
-    }
 }
