@@ -64,11 +64,13 @@ public class DialogActivity extends AppCompatActivity {
 
     //ON PREV PRESS
     public void goBack(){
-        --i;
-        FragmentTransaction ft2 = fragmentManager.beginTransaction();
-        ft2.replace(R.id.fragmentcontainer, fragments.get(i));
-        ft2.addToBackStack(null);
-        ft2.commit();
+        if (i>0) {
+            --i;
+            FragmentTransaction ft2 = fragmentManager.beginTransaction();
+            ft2.replace(R.id.fragmentcontainer, fragments.get(i));
+            ft2.addToBackStack(null);
+            ft2.commit();
+        }
     }
 
 

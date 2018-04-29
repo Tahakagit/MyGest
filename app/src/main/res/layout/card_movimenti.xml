@@ -1,43 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:layout_margin="1dp"
-    >
 
-    <android.support.v7.widget.CardView
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:orientation="vertical"
 
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:cardUseCompatPadding="true"
-        app:cardMaxElevation="1dp"
-        app:cardElevation="1dp"
+        android:layout_margin="0dp"
         android:id="@+id/cv"
         >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
+
+        >
 
         <LinearLayout
             android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp">
+            >
 
-            <TextView
-                android:id="@+id/id_card_scadenza"
+            <LinearLayout
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="0"
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/id_card_scadenza_day"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="-10dp"
+                    android:textAlignment="center"
+                    android:textSize="36sp" />
 
-                />
+                <TextView
+                    android:layout_marginTop="-10dp"
+                    android:padding="0dp"
+                    android:id="@+id/id_card_scadenza_month"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/id_card_importo"
@@ -86,6 +103,5 @@
     </LinearLayout>
 
 
-    </android.support.v7.widget.CardView>
-
 </LinearLayout>
+
