@@ -113,24 +113,11 @@ public class DialogActivity extends AppCompatActivity {
 
     public void getConto(String conto) {
         conto2 = conto;
-        RealmHelper helper = new RealmHelper();
-
-
-        EntityMovimento mov = new EntityMovimento(beneficiario2, importo2.toString(), scadenza2, conto2, endDate2);
-        mWordViewModel.insert(mov);
-/*
-        helper.saveMovimento(beneficiario2, importo2, scadenza2, conto2, endDate2, recurrence2);
-*/
+        mWordViewModel.insert(beneficiario2, importo2.toString(), scadenza2, conto2, endDate2, recurrence2);
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
-
-
-/*
-        MainActivity.conti.add(helper.getAccountObjectByName(conto2));
-*/
         i = 0;
         finish();
-
     }
 
 

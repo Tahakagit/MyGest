@@ -111,7 +111,7 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         }
         void setData(int id, String textbeneficiario, String textimporto, String dayScadenza, String monthScadenza){
             beneficiario.setText(textbeneficiario);
-            importo.setText(textimporto);
+            importo.setText(String.valueOf(id));
             dayScadenzaText.setText(dayScadenza);
             monthScadenzaText.setText(monthScadenza);
             transId = id;

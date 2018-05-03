@@ -102,7 +102,37 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
         rviewMovimenti.setAdapter(adapterMovimenti);
 
-        enableSwipe(adapterMovimenti, rviewMovimenti, holder.getAdapterPosition());
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+/*
+            this.movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend, mResults.get(position).getNomeConto());
+*/
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                try {
+                    int transactionPosition = viewHolder.getAdapterPosition();
+                    int id = (int)adapterMovimenti.getItemId(transactionPosition);
+
+                    Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(holder.getAdapterPosition()).getNomeConto());
+/*
+                    adapter.deleteItemAt(transactionPosition);
+*/
+
+                    movsVM.deleteTransactionById(id);
+                    adapterMovimenti.notifyDataSetChanged();
+
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Log.w("swipe", "Skip timestamp cause ther's no result");
+                }
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(rviewMovimenti);
     }
 
     /**
@@ -128,10 +158,9 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 /*
                     adapter.deleteItemAt(transactionPosition);
 */
-                    movsVM.deleteTransactionById((int)adapter.getItemId(viewHolder.getAdapterPosition()));
-/*
-                    adapter.notifyItemRemoved(transactionPosition);
-*/
+
+                    movsVM.deleteTransactionById((int)adapter.getItemId(transactionPosition));
+                    adapter.notifyDataSetChanged();
 
                 } catch (ArrayIndexOutOfBoundsException e) {
                     Log.w("swipe", "Skip timestamp cause ther's no result");

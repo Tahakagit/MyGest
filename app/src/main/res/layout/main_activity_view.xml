@@ -12,13 +12,25 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-        <Button
+        <android.support.v7.widget.Toolbar
+            android:id="@id/toolbar_mainactivity"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/selectdate"
-            android:hint="Seleziona intervallo di tempo"
-            android:background="@android:color/transparent"/>
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/Base.ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light"
+            android:layout_height="56dp">
+
+            <Button
+                android:id="@+id/selectdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="Seleziona intervallo di tempo"
+                android:textAlignment="center" />
+
+        </android.support.v7.widget.Toolbar>
+
         <android.support.v7.widget.RecyclerView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"

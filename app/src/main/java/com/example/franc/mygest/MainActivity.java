@@ -16,10 +16,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -83,10 +86,13 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         FloatingActionButton fab = findViewById(R.id.fab_insert_transaction);
 
         RecyclerView rview = findViewById(R.id.recyclerview_filter);
-/*
-        Toolbar myToolbar = findViewById(R.id.toolbar_creacontoactivity);
+        Toolbar myToolbar = findViewById(R.id.toolbar_mainactivity);
+        myToolbar.setTitle("");
         setSupportActionBar(myToolbar);
-*/
+
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
         final Intent intent = new Intent(this, DialogActivity.class);
 
@@ -179,12 +185,12 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         return datePickerFragment;
     }
 
+    DrawerLayout mDrawerLayout;
 
     /**
      * Starts navigationdrawer
      */
     private void startNavDrawer(){
-        final DrawerLayout mDrawerLayout;
         final Intent creaConto = new Intent(this, AccountsManageActivity.class);
         final Intent allTransaction = new Intent(this, AllTransactionActivity.class);
 
@@ -215,6 +221,16 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         }
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
