@@ -12,7 +12,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.franc.mygest.persistence.EntityMovimento;
+
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -21,20 +26,21 @@ import io.realm.RealmResults;
 
 public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapterAllTransactions.DataObjectHolder> {
 
-    RealmResults<Movimento> mResults;
+    List<EntityMovimento> mResults;
     private Context context;
     static RviewAdapterMovimenti adapterMovimenti;
     final Realm mRealm = Realm.getDefaultInstance();
 
-    RviewAdapterAllTransactions(Context context, RealmResults<Movimento> results) {
-        setResultsRealm(results);
+    RviewAdapterAllTransactions(Context context) {
         this.context = context;
     }
 
 
     @Override
     public int getItemCount() {
-        return mResults.size();
+        if (mResults != null)
+            return mResults.size();
+        else return 0;
     }
     @Override
     public long getItemId(int position){ return  0;}
@@ -46,13 +52,18 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
     @Override
     public void onBindViewHolder(final DataObjectHolder holder, final int position) {
 
+/*
         Movimento movimento = mResults.get(position);
+*/
+        EntityMovimento current = mResults.get(position);
 
-        if(movimento != null) {
+        if(current != null) {
             SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
             SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
+            BigDecimal raw = new BigDecimal(String.valueOf(current.getImporto()));
+            String importoFormatted = NumberFormat.getCurrencyInstance().format(raw);
 
-            holder.setData(movimento.getImporto().toString(), movimento.getBeneficiario(), dayFormat.format(movimento.getScadenza()), monthFormat.format(movimento.getScadenza()).toUpperCase());
+            holder.setData(current.getBeneficiario(), current.getImporto(), dayFormat.format(current.getScadenza()), monthFormat.format(current.getScadenza()).toUpperCase());
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -75,7 +86,7 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
 
     }
 
-    void setResultsRealm(RealmResults<Movimento> results){
+    void setResults(List<EntityMovimento> results){
         mResults = results;
         notifyDataSetChanged();
     }

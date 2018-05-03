@@ -1,6 +1,7 @@
 package com.example.franc.mygest;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.franc.mygest.persistence.EntityMovimento;
+import com.example.franc.mygest.persistence.MovimentoViewModel;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -37,6 +41,7 @@ public class DialogActivity extends AppCompatActivity {
     static String recurrence2 = null;
     static String tipo2 = null;
     static String direzione2 = null;
+    private MovimentoViewModel mWordViewModel;
 
 
     @Override
@@ -47,6 +52,7 @@ public class DialogActivity extends AppCompatActivity {
         prev = findViewById(R.id.prev);
 
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
 
 
         fragments.add(new DialogFragmentBeneficiario());
@@ -54,7 +60,7 @@ public class DialogActivity extends AppCompatActivity {
         fragments.add(new DialogFragmentImporto());
         fragments.add(new DialogFragmentConto());
 
-        fragmentTransaction.add(R.id.fragmentcontainer, fragments.get(i));
+        fragmentTransaction.add(R.id.fragment_container, fragments.get(i));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
@@ -67,7 +73,7 @@ public class DialogActivity extends AppCompatActivity {
         if (i>0) {
             --i;
             FragmentTransaction ft2 = fragmentManager.beginTransaction();
-            ft2.replace(R.id.fragmentcontainer, fragments.get(i));
+            ft2.replace(R.id.fragment_container, fragments.get(i));
             ft2.addToBackStack(null);
             ft2.commit();
         }
@@ -79,7 +85,7 @@ public class DialogActivity extends AppCompatActivity {
         beneficiario2 = beneficiario;
         ++i;
         FragmentTransaction ft2 = fragmentManager.beginTransaction();
-        ft2.replace(R.id.fragmentcontainer, fragments.get(i));
+        ft2.replace(R.id.fragment_container, fragments.get(i));
         ft2.addToBackStack(null);
         ft2.commit();
     }
@@ -89,7 +95,7 @@ public class DialogActivity extends AppCompatActivity {
 
         ++i;
         FragmentTransaction ft2 = fragmentManager.beginTransaction();
-        ft2.replace(R.id.fragmentcontainer, fragments.get(i));
+        ft2.replace(R.id.fragment_container, fragments.get(i));
         ft2.addToBackStack(null);
         ft2.commit();
     }
@@ -100,7 +106,7 @@ public class DialogActivity extends AppCompatActivity {
         recurrence2 = recurrence;
         ++i;
         FragmentTransaction ft2 = fragmentManager.beginTransaction();
-        ft2.replace(R.id.fragmentcontainer, fragments.get(i));
+        ft2.replace(R.id.fragment_container, fragments.get(i));
         ft2.addToBackStack(null);
         ft2.commit();
     }
@@ -108,7 +114,13 @@ public class DialogActivity extends AppCompatActivity {
     public void getConto(String conto) {
         conto2 = conto;
         RealmHelper helper = new RealmHelper();
+
+
+        EntityMovimento mov = new EntityMovimento(beneficiario2, importo2.toString(), scadenza2, conto2, endDate2);
+        mWordViewModel.insert(mov);
+/*
         helper.saveMovimento(beneficiario2, importo2, scadenza2, conto2, endDate2, recurrence2);
+*/
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
 

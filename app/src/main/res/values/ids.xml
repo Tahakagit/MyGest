@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="toolbar_mainactivity" type="id"/>
+    <item name="toolbar_creacontoactivity" type="id"/>
+    <item name="fragment_container" type="id"/>
+    <item name="cv_account_dashboard" type="id"/>
+</resources>

@@ -1,80 +1,99 @@
+/**
+ * Activity showing accountdashboard
+ *
+ * FIXME Rename Class?
+ */
 package com.example.franc.mygest;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.Context;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.ContextThemeWrapper;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
+import com.example.franc.mygest.persistence.ContoDao;
+import com.example.franc.mygest.persistence.ContoViewModel;
+import com.example.franc.mygest.persistence.EntityConto;
+import com.example.franc.mygest.persistence.EntityMovimento;
+import com.example.franc.mygest.persistence.MovimentoDao;
+import com.example.franc.mygest.persistence.MovimentoViewModel;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
+public class MainActivity extends AppCompatActivity implements UIController.onAccountCreatedListener{
 
-public class MainActivity extends AppCompatActivity{
+    private RealmHelper helper = new RealmHelper();
+    static RviewAdapterDailyTransaction adapterDailyTransaction;
+    private ContoViewModel mAcountsViewModel;
+    private MovimentoViewModel mTransViewModel;
 
-    RealmHelper helper = new RealmHelper();
-    private RviewAdapterDailyTransaction adapterDailyTransaction;
-    static Calendar weekRange;
     static Calendar dateToSend;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.navigation_drawer_main);
-
-        weekRange = Calendar.getInstance();
-        weekRange.add(Calendar.DAY_OF_MONTH, 7);
+        mTransViewModel = new MovimentoViewModel(getApplication());
+        mAcountsViewModel = new ContoViewModel(getApplication());
+        UIController onAccountModifiedListener = new UIController(this);
 
         dateToSend = Calendar.getInstance();
-        initUi(helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime()));
+        dateToSend.set(Calendar.HOUR_OF_DAY, 23);
+        dateToSend.set(Calendar.SECOND, 59);
+        initUi();
+        mAcountsViewModel.setDate(dateToSend.getTime());
+        mAcountsViewModel.getAllAccoutsByName().observe(this, new Observer<List<EntityConto>>() {
+            @Override
+            public void onChanged(@Nullable List<EntityConto> entityContos) {
+                Log.d("on change movimenti", " trovati  " + entityContos.size() + "  conti  ");
+
+                adapterDailyTransaction.setResults(entityContos);
+                adapterDailyTransaction.notifyDataSetChanged();
+            }
+        });
         showDatePicker();
 
-/*
-        showCurrentBalances(helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime()));
-*/
     }
 
     /**
      * Starts UI
-     * @param conti2 Arraylist of accounts with pending transactions
      */
-    private void initUi(ArrayList<ContoObj> conti2){
+    private void initUi(){
 
+        FloatingActionButton fab = findViewById(R.id.fab_insert_transaction);
 
         RecyclerView rview = findViewById(R.id.recyclerview_filter);
-        Toolbar myToolbar = findViewById(R.id.toolbar);
+/*
+        Toolbar myToolbar = findViewById(R.id.toolbar_creacontoactivity);
         setSupportActionBar(myToolbar);
+*/
 
         final Intent intent = new Intent(this, DialogActivity.class);
 
-        adapterDailyTransaction = new RviewAdapterDailyTransaction(this, conti2);
+        adapterDailyTransaction = new RviewAdapterDailyTransaction(this, getApplication());
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapterDailyTransaction);
-        FloatingActionButton fab = findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -89,65 +108,84 @@ public class MainActivity extends AppCompatActivity{
         startNavDrawer();
 
     }
+
+    @Override
+    public void onAccountCreated(EntityConto conto) {
+        mAcountsViewModel.update(conto);
+
+    }
+
     /**
      * Starts date selection, waits for user choice and gets back selected date
      * todo trasformare editext in button?
      */
     private void showDatePicker() {
-        final DatePickerFragment date = new DatePickerFragment();
-
-
-        Calendar calender = Calendar.getInstance();
-        Bundle args = new Bundle();
-        args.putInt("year", calender.get(Calendar.YEAR));
-        args.putInt("month", calender.get(Calendar.MONTH));
-        args.putInt("day", calender.get(Calendar.DAY_OF_MONTH));
-        date.setArguments(args);
-        /**
-         * Set Call back to capture selected date
-         */
+        Calendar calendar = Calendar.getInstance();
         final Button edittext = findViewById(R.id.selectdate);
+        final DatePickerFragment datePickerFragment;
+
+        datePickerFragment = initDatePicker(calendar.get(calendar.DAY_OF_MONTH),calendar.get(calendar.MONTH), calendar.get(calendar.YEAR));
         edittext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                date.show(getSupportFragmentManager(), "Date Picker");
+                datePickerFragment.show(getSupportFragmentManager(), "Date Picker");
             }
         });
 
         DatePickerDialog.OnDateSetListener ondate = new DatePickerDialog.OnDateSetListener() {
-
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-                Calendar c = Calendar.getInstance();
-                c.set(year, monthOfYear, dayOfMonth);
-
+                /**
+                 * new date starts at 00:00 so to filter up to eg. 12/02 we need
+                 * to set 13/02.
+                 * dateToDisplay is going to show 12/02
+                 */
+/*
+                Calendar dateToDisplay = Calendar.getInstance();
+*/
+                Calendar dateTo = Calendar.getInstance();
+                dateTo.set(year, monthOfYear, dayOfMonth);
+/*
+                dateToDisplay.set(year, monthOfYear, dayOfMonth);
+*/
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
+                dateToSend.setTime(dateTo.getTime());
+                dateToSend.set(Calendar.HOUR_OF_DAY, 23);
+                dateToSend.set(Calendar.SECOND, 59);
 
-                //date object from spinner
-                dateToSend.setTime(c.getTime());
-                //formatted date string from spinner
-                String formattedDate = sdf.format(c.getTime());
-
-
-
-
+                String formattedDate = sdf.format(dateTo.getTime());
                 edittext.setText(formattedDate);
-                //in set resultRealm deve rifare la query movs
-                adapterDailyTransaction.setResultsRealm(helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime()));
+                mAcountsViewModel.setDate(dateToSend.getTime());
             }
         };
-        date.setCallBack(ondate);
-
-
-
+        datePickerFragment.setCallBack(ondate);
     }
+
+    /**
+     * Init DatePickerFragment with selected date
+     * @param day default day
+     * @param month default month
+     * @param year default year
+     * @return A DatePickerFragment
+     */
+    private DatePickerFragment initDatePicker(int day, int month, int year){
+        final DatePickerFragment datePickerFragment = new DatePickerFragment();
+
+
+        Bundle args = new Bundle();
+        args.putInt("year", year);
+        args.putInt("month", month);
+        args.putInt("day", day);
+        datePickerFragment.setArguments(args);
+        return datePickerFragment;
+    }
+
 
     /**
      * Starts navigationdrawer
      */
     private void startNavDrawer(){
         final DrawerLayout mDrawerLayout;
-        final Intent creaConto = new Intent(this, CreaContoActivity.class);
+        final Intent creaConto = new Intent(this, AccountsManageActivity.class);
         final Intent allTransaction = new Intent(this, AllTransactionActivity.class);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -186,14 +224,10 @@ public class MainActivity extends AppCompatActivity{
                 String result=data.getStringExtra("result");
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                ArrayList<ContoObj> conti = helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime());
-                adapterDailyTransaction.setResultsRealm(conti);
 /*
-                adapterDailyTransaction.notifyDataSetChanged();
-                adapterDailyTransaction.updateResults();
-                adapterDailyTransaction.setResultsRealm(helper.getTransactionsUntilGroupedByAccount(dateToSend.getTime()));
+                List<EntityConto> contos = mAcountsViewModel.getAllAccoutsByName(dateToSend.getTime());
+                adapterDailyTransaction.setResults(contos);
 */
-
             }
         }
 

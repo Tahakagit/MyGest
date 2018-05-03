@@ -5,26 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.franc.mygest.CreaContoActivity"
+    tools:context="com.example.franc.mygest.AccountsManageActivity"
     tools:showIn="@layout/activity_crea_conto">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rv">
+        android:id="@+id/rv_account_manage">
 
     </android.support.v7.widget.RecyclerView>
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/fab_menu"
-        android:layout_width="match_parent"
-
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-         />
-
+    <include layout="@layout/fab_account_create"/>
 </android.support.constraint.ConstraintLayout>

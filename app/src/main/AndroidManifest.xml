@@ -27,7 +27,7 @@
             android:label="@string/new_record"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity
-            android:name=".CreaContoActivity"
+            android:name=".AccountsManageActivity"
             android:label="@string/title_activity_crea_conto"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>

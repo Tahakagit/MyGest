@@ -42,7 +42,7 @@
 
     <include
         android:id="@+id/include"
-        layout="@layout/fab_menu"
+        layout="@layout/fab_insert_transaction"
         android:layout_width="match_parent"
 
         android:layout_height="wrap_content"

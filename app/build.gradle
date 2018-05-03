@@ -6,14 +6,13 @@ android {
     def versionMajor = 0
     def versionMinor = 42
     def versionPatch = 1
-
     defaultConfig {
         applicationId "com.example.franc.mygest"
         minSdkVersion 23
         targetSdkVersion 26
         versionCode versionMajor * 10000
-        + versionMinor * 100
-        + versionPatch
+        +versionMinor * 100
+        +versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -28,10 +27,15 @@ android {
         release {
             minifyEnabled false
             resValue "string", "app_version",
-            "${defaultConfig.versionName}"
+                    "${defaultConfig.versionName}"
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    buildToolsVersion '26.0.2'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 realm {
@@ -39,7 +43,7 @@ realm {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
@@ -50,5 +54,9 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     compile project(':colorpicker')
-
+    implementation "android.arch.persistence.room:runtime:$rootProject.roomVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$rootProject.roomVersion"
+    androidTestImplementation "android.arch.persistence.room:testing:$rootProject.roomVersion"
+    implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
+    annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
 }

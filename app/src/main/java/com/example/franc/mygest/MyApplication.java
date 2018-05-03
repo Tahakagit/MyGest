@@ -1,6 +1,11 @@
 package com.example.franc.mygest;
 
 import android.app.Application;
+import android.content.Intent;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.view.MenuItem;
+import android.view.View;
 
 import java.math.BigDecimal;
 
@@ -21,4 +26,5 @@ public class MyApplication extends Application {
         Realm.init(getApplicationContext());
 
     }
+
 }

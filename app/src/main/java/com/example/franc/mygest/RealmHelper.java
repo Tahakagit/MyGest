@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.realm.Realm;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -299,7 +300,7 @@ public class RealmHelper {
     }
 
 
-    void saveConto(final String nomeConto, final BigDecimal saldoConto, final int coloreConto){
+    void updateAccount(final String nomeConto, final BigDecimal saldoConto, final int coloreConto){
 
 
         final Conto s=new Conto();
@@ -319,24 +320,7 @@ public class RealmHelper {
             }
         });
     }
+    void checkIfExists(RealmObject obj){
 
-    void updateConto(final String nomeConto, final BigDecimal saldoConto){
-
-
-
-
-
-        mRealm = Realm.getDefaultInstance();
-
-        final Conto  conto = mRealm.where(Conto.class).equalTo("nomeConto", nomeConto).findFirst();
-        mRealm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                conto.setSaldoConto(saldoConto);
-
-            }
-        });
     }
-
-
 }

@@ -1,8 +1,11 @@
 package com.example.franc.mygest;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -13,9 +16,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.util.Calendar;
+import com.example.franc.mygest.persistence.EntityMovimento;
+import com.example.franc.mygest.persistence.MovimentoViewModel;
 
-import io.realm.Realm;
+import java.util.Calendar;
+import java.util.List;
+
 import io.realm.RealmResults;
 
 public class AllTransactionActivity extends AppCompatActivity{
@@ -23,6 +29,7 @@ public class AllTransactionActivity extends AppCompatActivity{
     private static RviewAdapterAllTransactions adapterAllTransactions;
     private static Context context;
     private static Calendar weekRange;
+    private MovimentoViewModel mWordViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,27 +37,35 @@ public class AllTransactionActivity extends AppCompatActivity{
 
         context = this;
         setContentView(R.layout.navigation_drawer_filter);
+        mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
 
+        mWordViewModel.getAllWords().observe(this, new Observer<List<EntityMovimento>>() {
+            @Override
+            public void onChanged(@Nullable final List<EntityMovimento> words) {
+                // Update the cached copy of the words in the adapter.
+                adapterAllTransactions.setResults(words);
+            }
+        });
 
         RealmHelper helper = new RealmHelper();
-        initUi(helper.getTransactionsAll());
+        initUi();
 
     }
 
     //START USER INTERFACE
-    private void initUi(RealmResults<Movimento> content){
+    private void initUi(){
 
         RecyclerView rview = findViewById(R.id.recyclerview);
-        Toolbar myToolbar = findViewById(R.id.toolbar);
+        Toolbar myToolbar = findViewById(R.id.toolbar_creacontoactivity);
         setSupportActionBar(myToolbar);
 
         final Intent intent = new Intent(this, DialogActivity.class);
 
         //todo fix this
-        adapterAllTransactions = new RviewAdapterAllTransactions(this, content);
+        adapterAllTransactions = new RviewAdapterAllTransactions(this);
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapterAllTransactions);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab_insert_transaction);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -68,7 +83,7 @@ public class AllTransactionActivity extends AppCompatActivity{
     //NAVIGATION DRAWER
     private void startNavDrawer(){
         final DrawerLayout mDrawerLayout;
-        final Intent creaConto = new Intent(this, CreaContoActivity.class);
+        final Intent creaConto = new Intent(this, AccountsManageActivity.class);
 
         mDrawerLayout = findViewById(R.id.drawer_layout_filter);
         NavigationView navigationView = findViewById(R.id.nav_view);

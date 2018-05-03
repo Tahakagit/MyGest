@@ -1,12 +1,19 @@
 package com.example.franc.mygest;
 
-/**
+/*
  * Created by franc on 28/10/2017.
+ *
+ * Creates account overview card, each one displaying his own transactions up to the chosen date
  */
-
 import android.app.AlertDialog;
+import android.app.Application;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.renderscript.Sampler;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,33 +28,45 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.franc.mygest.persistence.EntityConto;
+import com.example.franc.mygest.persistence.EntityMovimento;
+import com.example.franc.mygest.persistence.MovimentoViewModel;
+
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 
+/*
+import io.realm.MovimentoRealmProxy;
+*/
 import io.realm.Realm;
 import io.realm.RealmResults;
-//questo diventa il recycler view dei giorni con transazioni all'interno del quale ogni viewholer
-//avra la sua recycler view popolata dai singoli movimenti
 
 public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdapterDailyTransaction.DataObjectHolder> {
 
-    private ArrayList<ContoObj> mResults;
+    private List<EntityConto> mResults;
     private Context context;
-    private Realm mRealm = Realm.getDefaultInstance();
-    private String nomeConto = null;
-    private RealmResults<Movimento> movs;
-    private RealmHelper helper = new RealmHelper();
+    MovimentoViewModel movsVM;
+    private RviewAdapterDailyTransaction mAdapter;
+    private Application app;
 
-    RviewAdapterDailyTransaction(Context context, ArrayList<ContoObj> mResults) {
-        setResultsRealm(mResults);
+    RviewAdapterDailyTransaction(Context context, Application app) {
+        setResults(mResults);
         this.context = context;
+        mAdapter = this;
+        this.app = app;
+        movsVM = new MovimentoViewModel(app);
+
+
     }
 
 
     @Override
     public int getItemCount() {
-        return mResults.size();
+        if (mResults != null)
+            return mResults.size();
+        else return 0;
     }
     @Override
     public long getItemId(int position){ return  0;}
@@ -58,22 +77,40 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     }
 
 
-    //FIXME javadoc
-    private void startTransactionRecyclerView(View view){
+    /**
+     *
+     * @param view needed to findViewById
+     *
+     * */
+    private void startTransactionRecyclerView(final BigDecimal currentBalance, View view, DataObjectHolder holder){
         RecyclerView rviewMovimenti = view.findViewById(R.id.rv_transaction);
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(rviewMovimenti.getContext(),
                     RecyclerView.VERTICAL);
-        final RviewAdapterMovimenti adapterMovimenti = new RviewAdapterMovimenti(movs);
+        RviewAdapterMovimenti adapterMovimenti = new RviewAdapterMovimenti(app);
+
+        String nomeConto = mResults.get(holder.getAdapterPosition()).getNomeConto();
+        movsVM.getAllMovimentoDistByAccount(MainActivity.dateToSend.getTime(), mResults.get(holder.getAdapterPosition()).getNomeConto()).observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
+            @Override
+            public void onChanged(@Nullable List<EntityMovimento> entityMovimentos) {
+                adapterMovimenti.setResults(entityMovimentos);
+                Log.d("on change movimenti", " trovati  " + entityMovimentos.size() + "  movimenti per il conto  " + nomeConto);
+                holder.setNewBalance(NumberFormat.getCurrencyInstance().format(new BigDecimal(calculateNewBalance(currentBalance, entityMovimentos))));
+            }
+        });
 
         rviewMovimenti.addItemDecoration(mDividerItemDecoration);
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
         rviewMovimenti.setAdapter(adapterMovimenti);
 
-        enableSwipe(adapterMovimenti, rviewMovimenti);
+        enableSwipe(adapterMovimenti, rviewMovimenti, holder.getAdapterPosition());
     }
 
-    //FIXME javadoc
-    private void enableSwipe(final RviewAdapterMovimenti adapter, RecyclerView rv){
+    /**
+     * enable swipe on recyclerview
+     * @param adapter mAdapterConti
+     * @param rv recyclerview
+     */
+    private void enableSwipe(RviewAdapterMovimenti adapter, RecyclerView rv, int contoPosition){
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -85,27 +122,20 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                long timestamp = 0;
-                movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend.getTime(), mResults.get(viewHolder.getAdapterPosition()).getNomeConto());
+                int transactionPosition = viewHolder.getAdapterPosition();
                 try {
-                    timestamp = movs.get(viewHolder.getAdapterPosition()).getTimestamp();
-                    adapter.deleteItemAt(timestamp);
+                    Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(contoPosition).getNomeConto());
+/*
+                    adapter.deleteItemAt(transactionPosition);
+*/
+                    movsVM.deleteTransactionById((int)adapter.getItemId(viewHolder.getAdapterPosition()));
+/*
+                    adapter.notifyItemRemoved(transactionPosition);
+*/
 
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    Log.w("OnSwipe", "Skip timestamp cause ther's no result");
+                    Log.w("swipe", "Skip timestamp cause ther's no result");
                 }
-                if (movs.size() == 0) {
-                    Log.d("delete on swipe", "posizione adapter dailytransactions" + String.valueOf(viewHolder.getAdapterPosition()));
-                    mResults.remove(viewHolder.getAdapterPosition());
-                    notifyDataSetChanged();
-                    notifyItemRemoved(viewHolder.getAdapterPosition());
-                }else {
-                    adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-                    notifyDataSetChanged();
-                }
-/*
-                movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend, mResults.get(position).getNomeConto());
-*/
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
@@ -113,78 +143,89 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
     }
 
-    //FIXME javadoc
-    private BigDecimal calculateNewBalance(BigDecimal oldBalance){
+    /**
+     * Subtract all transactions to current balance up to the selected date
+     * @param oldBalance old balance
+     * @return new balance
+     */
+    private String calculateNewBalance(BigDecimal oldBalance, List<EntityMovimento> movs){
 
         // SUM ALL UNCHECKED TRANSACTIONS
         BigDecimal totExpences = new BigDecimal("0");
-        for (Movimento res:movs) {
-            totExpences = totExpences.add(res.getImporto());
+        for (EntityMovimento res:movs) {
+            totExpences = totExpences.add(new BigDecimal(String.valueOf(res.getImporto())));
         }
 
         // FUTURE ACCOUNT BALANCE
         final BigDecimal newBalance = oldBalance.subtract(totExpences);
 
-        return newBalance;
+        return newBalance.toString();
     }
 
     @Override
     public void onBindViewHolder(final DataObjectHolder holder, int position) {
-        nomeConto = mResults.get(position).getNomeConto();
+/*
+        String nomeConto = mResults.get(position).getNomeConto();
+*/
+        position = holder.getAdapterPosition();
+        BigDecimal currentBalance = new BigDecimal(String.valueOf(mResults.get(position).getSaldoConto()));
 
-        movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend.getTime(), nomeConto);
-
-        startTransactionRecyclerView(holder.itemView);
-        BigDecimal currentBalance = mResults.get(position).getSaldoConto();
+        startTransactionRecyclerView(currentBalance, holder.itemView, holder);
+/*
         final BigDecimal newBalance = calculateNewBalance(currentBalance);
+*/
 
         //Fills cards with account data
         if(mResults.get(position) != null) {
             holder.setData(mResults.get(position).getNomeConto(),
-                        NumberFormat.getCurrencyInstance().format(newBalance),
-                        NumberFormat.getCurrencyInstance().format(currentBalance));
+                        NumberFormat.getCurrencyInstance().format(new BigDecimal(String.valueOf(mResults.get(position).getSaldoConto()))));
             holder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
+
+
+            //Expanding Collapsing Account cards
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    if(holder.hiddenlayout.getVisibility()==View.GONE){
+                        holder.hiddenlayout.setVisibility(View.VISIBLE);
+                        holder.cv.setCardElevation(15f);
+                    }
+                    else {
+                        holder.hiddenlayout.setVisibility(View.GONE);
+                        holder.cv.setCardElevation(1f);
+                    }
+                }
+            });
+
+            //Updating account balance
+            final BigDecimal currentBalance2 = currentBalance;
+            holder.moreIc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UIController uiController = new UIController(context);
+                    uiController.displayAccountDialog(mResults.get(holder.getAdapterPosition()).getNomeConto(),
+                            NumberFormat.getCurrencyInstance().format(new BigDecimal(String.valueOf(mResults.get(holder.getAdapterPosition()).getSaldoConto()))),
+                            mResults.get(holder.getAdapterPosition()).getColoreConto());
+                }
+            });
+
         }
 
-        //Expanding Collapsing Account cards
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if(holder.hiddenlayout.getVisibility()==View.GONE){
-                    holder.hiddenlayout.setVisibility(View.VISIBLE);
-                    holder.cv.setCardElevation(15f);
-                }
-                else {
-                    holder.hiddenlayout.setVisibility(View.GONE);
-                    holder.cv.setCardElevation(1f);
-                }
-            }
-        });
-
-        //Updating account balance
-        final BigDecimal currentBalance2 = currentBalance;
-        holder.moreIc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateAccountCurrentBalance(holder.getAdapterPosition());
-            }
-        });
 
 
     }
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
-        mRealm.close();
-
     }
 
     /**
      * Shows dialog to update account balance
      * @param position position to retrieve account
      */
-    private void updateAccountCurrentBalance(final int position){
+/*
+    private void updateAccount(final int position){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = inflater.inflate(R.layout.dialog_update_account, null);
@@ -214,16 +255,21 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         });
         builder.create().show();
     }
+*/
 
     /**
-     * Updates adapter items list
+     * Updates mAdapterConti items list
      * @param results ArrayList to show
      */
-    void setResultsRealm(ArrayList<ContoObj> results){
+    void setResults(List<EntityConto> results){
+/*
         movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend.getTime(), nomeConto);
+*/
 
         mResults = results;
+/*
         notifyDataSetChanged();
+*/
     }
 
     /**
@@ -258,9 +304,14 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
         }
 
-        void setData(String textscadenza, String futureBalance, String currentBalance){
+        void setNewBalance(String newBalance){
+            accountFutureBalance.setText(newBalance);
+        }
+        void setData(String textscadenza, String currentBalance){
             accountName.setText(textscadenza);
+/*
             accountFutureBalance.setText(futureBalance);
+*/
             accountCurrentBalance.setText(currentBalance);
 
 

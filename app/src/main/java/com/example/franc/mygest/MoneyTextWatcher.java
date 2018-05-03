@@ -45,6 +45,8 @@ public class MoneyTextWatcher implements TextWatcher {
         if(s.matches("-")){
             u = s + " ";
             return;
+        }else if(s.matches("")){
+            return;
         }
 
         editText.removeTextChangedListener(this);

@@ -1,5 +1,7 @@
 package com.example.franc.mygest;
 
+import android.app.Application;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -22,6 +24,9 @@ import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.franc.mygest.persistence.ContoViewModel;
+import com.example.franc.mygest.persistence.EntityConto;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,14 +61,26 @@ public class DialogFragmentConto extends Fragment {
 
     }
 
+    private void populateSpinner(List<String> list){
+        Application appCtx = (MyApplication) getActivity().getApplication();
+        ContoViewModel contoVM = new ContoViewModel(appCtx);
+
+        List<EntityConto> arraylist = new ArrayList<>();
+        arraylist = contoVM.getAllAccountsList();
+        for (EntityConto s:arraylist) {
+            list.add(s.getNomeConto());
+        }
+
+    }
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         Button next;
         Button prev;
-        List<Conto> arraylist = retrieve();
 
+        List<String> list = new ArrayList<>();
+        populateSpinner(list);
         next = view.findViewById(R.id.next);
         prev = view.findViewById(R.id.prev);
-        ArrayAdapter<Conto> dataAdapter = new ArrayAdapter<Conto>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arraylist);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, list);
         spinner = view.findViewById(R.id.spinner);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
