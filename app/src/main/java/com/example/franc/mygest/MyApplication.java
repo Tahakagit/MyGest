@@ -9,8 +9,6 @@ import android.view.View;
 
 import java.math.BigDecimal;
 
-import io.realm.Realm;
-
 /**
  * Created by franc on 08/11/2017.
  */
@@ -22,8 +20,6 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Realm.init(getApplicationContext());
 
     }
 

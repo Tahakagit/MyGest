@@ -1,57 +1,33 @@
-package com.example.franc.mygest;
+package com.example.franc.mygest.fragments;
 
 import android.app.Application;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.PopupWindow;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.franc.mygest.MyApplication;
+import com.example.franc.mygest.R;
+import com.example.franc.mygest.activities.DialogActivity;
 import com.example.franc.mygest.persistence.ContoViewModel;
 import com.example.franc.mygest.persistence.EntityConto;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
-
 
 public class DialogFragmentConto extends Fragment {
     static Spinner spinner;
-    Realm realm;
-    static RealmResults<Conto> realmSelect;
     String contos;
-    static Conto conto;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        realm = Realm.getDefaultInstance();
-        realmSelect = realm.where(Conto.class).findAllAsync();
-
-
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -115,17 +91,5 @@ public class DialogFragmentConto extends Fragment {
 
 
     }
-    public List<Conto> retrieve()
-    {
-        List<Conto> nomeConto=new ArrayList<Conto>();
-
-        RealmResults<Conto> conti=realm.where(Conto.class).findAll();
-        for(Conto s: conti)
-        {
-            nomeConto.add(s);
-        }
-        return nomeConto;
-    }
-
 
 }

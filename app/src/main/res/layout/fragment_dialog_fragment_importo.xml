@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
-    tools:context="com.example.franc.mygest.DialogFragmentBeneficiario">
+    tools:context="com.example.franc.mygest.fragments.DialogFragmentBeneficiario">
 
     <LinearLayout
         android:layout_width="match_parent"

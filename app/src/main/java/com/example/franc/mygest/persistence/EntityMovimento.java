@@ -2,15 +2,11 @@ package com.example.franc.mygest.persistence;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.Nullable;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.annotation.Nullable;
-
-import io.realm.RealmObject;
-import io.realm.annotations.Index;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by franc on 23/04/2018.

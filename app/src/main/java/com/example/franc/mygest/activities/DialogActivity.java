@@ -1,4 +1,4 @@
-package com.example.franc.mygest;
+package com.example.franc.mygest.activities;
 
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
@@ -11,16 +11,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.franc.mygest.persistence.EntityMovimento;
+import com.example.franc.mygest.fragments.DialogFragmentBeneficiario;
+import com.example.franc.mygest.fragments.DialogFragmentConto;
+import com.example.franc.mygest.fragments.DialogFragmentImporto;
+import com.example.franc.mygest.fragments.DialogFragmentScadenza;
+import com.example.franc.mygest.R;
+import com.example.franc.mygest.adapters.RviewAdapterMovimenti;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class DialogActivity extends AppCompatActivity {
 
@@ -28,8 +29,6 @@ public class DialogActivity extends AppCompatActivity {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     final ArrayList<Fragment> fragments = new ArrayList <>();
     static RviewAdapterMovimenti adapter;
-    Realm mRealm;
-    static RealmResults<Movimento> realmSelect;
 
     static Button next;
     static Button prev;

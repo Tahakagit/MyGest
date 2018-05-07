@@ -6,10 +6,6 @@ import android.support.annotation.NonNull;
 
 import java.math.BigDecimal;
 
-import javax.annotation.Nonnull;
-
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by franc on 23/04/2018.
@@ -40,7 +36,7 @@ public class EntityConto {
         this.id = id;
     }
 
-    @Nonnull
+    @NonNull
     public String getNomeConto() {
         return nomeConto;
     }

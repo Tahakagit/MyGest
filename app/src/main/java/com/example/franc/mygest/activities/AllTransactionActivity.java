@@ -1,4 +1,4 @@
-package com.example.franc.mygest;
+package com.example.franc.mygest.activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -16,13 +16,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.franc.mygest.R;
+import com.example.franc.mygest.adapters.RviewAdapterAllTransactions;
 import com.example.franc.mygest.persistence.EntityMovimento;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
 
 import java.util.Calendar;
 import java.util.List;
 
-import io.realm.RealmResults;
 
 public class AllTransactionActivity extends AppCompatActivity{
 
@@ -47,7 +48,6 @@ public class AllTransactionActivity extends AppCompatActivity{
             }
         });
 
-        RealmHelper helper = new RealmHelper();
         initUi();
 
     }

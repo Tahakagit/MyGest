@@ -1,4 +1,4 @@
-package com.example.franc.mygest;
+package com.example.franc.mygest.adapters;
 
 /**
  * Created by franc on 24/12/2017.
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.franc.mygest.R;
 import com.example.franc.mygest.persistence.EntityMovimento;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
 
@@ -20,9 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import javax.annotation.Nonnull;
-
-import io.realm.RealmResults;
 public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovimenti.DataObjectHolder> {
 
     private List<EntityMovimento> mResults;
@@ -60,10 +58,9 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
                     }
                 }
             });
-
         }
-
     }
+
     @Override
     public int getItemCount() {
         if (mResults != null)
@@ -72,7 +69,9 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
     }
 
     @Override
-    public long getItemId(int position){ return  mResults.get(position).getId();}
+    public long getItemId(int position){
+        return  (long)mResults.get(position).getId();
+    }
 
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -82,12 +81,8 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
 
     public void setResults(List<EntityMovimento> results){
         mResults = results;
-        notifyDataSetChanged();
-    }
-    void deleteItemAt(int position){
-        transVM.deleteTransactionById(mResults.get(position).getId());
 /*
-        mResults.remove(position);
+        notifyDataSetChanged();
 */
     }
 
@@ -96,9 +91,9 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         TextView importo;
         TextView dayScadenzaText;
         TextView monthScadenzaText;
-
         int transId;
         LinearLayout hiddenlayout;
+
         DataObjectHolder(View itemView) {
             super(itemView);
             beneficiario = itemView.findViewById(R.id.id_card_beneficiario);
@@ -109,15 +104,13 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
             hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
 
         }
+
         void setData(int id, String textbeneficiario, String textimporto, String dayScadenza, String monthScadenza){
             beneficiario.setText(textbeneficiario);
             importo.setText(String.valueOf(id));
             dayScadenzaText.setText(dayScadenza);
             monthScadenzaText.setText(monthScadenza);
             transId = id;
-        }
-        public int getTransId(){
-            return transId;
         }
     }
 

@@ -3,13 +3,13 @@ package com.example.franc.mygest.persistence;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.support.annotation.Nullable;
 
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.annotation.Nullable;
 
 /**
  * Created by franc on 23/04/2018.

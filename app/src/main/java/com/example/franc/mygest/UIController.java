@@ -3,6 +3,7 @@ package com.example.franc.mygest;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,19 +20,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
+import com.example.franc.mygest.adapters.RviewAdapterConto;
+import com.example.franc.mygest.adapters.RviewAdapterDailyTransaction;
 import com.example.franc.mygest.persistence.EntityConto;
 
 import java.math.BigDecimal;
 
-import javax.annotation.Nullable;
-
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 
 /**
  * Created by franc on 18/04/2018.
@@ -52,7 +49,7 @@ public class UIController {
         mAdapterConti = adapterConti;
         iface = (onAccountCreatedListener) context;
     }
-    UIController(Context context){
+    public UIController(Context context){
         mContext = context;
         iface = (onAccountCreatedListener) context;
 
@@ -66,18 +63,6 @@ public class UIController {
      * Starts conti rv
      */
     public void initUi(){
-
-        Realm realm = Realm.getDefaultInstance();
-
-/*
-        realmSelect.addChangeListener(new RealmChangeListener<RealmResults<Conto>>() {
-            @Override
-            public void onChange(RealmResults<Conto> mResults) {
-                mAdapterConti.notifyDataSetChanged();
-                Toast.makeText(mActivity, "On change triggered", Toast.LENGTH_SHORT).show();
-            }
-        });
-*/
 
         Toolbar toolbar = mActivity.findViewById(R.id.toolbar_creacontoactivity);
         RecyclerView rv = mActivity.findViewById(R.id.rv_account_manage);
@@ -94,7 +79,6 @@ public class UIController {
         });
         rv.setLayoutManager(new LinearLayoutManager(mActivity));
         rv.setAdapter(mAdapterConti);
-        realm.close();
     }
 
     //DISPLAY INPUT DIALOG AND SAVE ACCOUNT

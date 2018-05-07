@@ -1,4 +1,4 @@
-package com.example.franc.mygest;
+package com.example.franc.mygest.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -9,24 +9,20 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.franc.mygest.R;
 import com.example.franc.mygest.persistence.EntityConto;
-import com.example.franc.mygest.persistence.EntityMovimento;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Created by franc on 20/12/2017.
  */
 
 public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.DataObjectHolder> {
-    private Realm contiRealm;
     List<EntityConto> mResults;
-    RealmHelper helper = new RealmHelper();
     private Context context;
 
 
@@ -57,15 +53,6 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
     }
 
 
-    public void setConto(final Conto conto){
-        contiRealm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Conto s=realm.copyToRealm(conto);
-            }
-        });
-        notifyDataSetChanged();
-    }
     public void setResults(List<EntityConto> results){
         mResults = results;
         notifyDataSetChanged();

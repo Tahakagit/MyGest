@@ -1,4 +1,4 @@
-package com.example.franc.mygest;
+package com.example.franc.mygest.fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -11,7 +11,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,11 +21,13 @@ import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.franc.mygest.R;
+import com.example.franc.mygest.activities.DialogActivity;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.ConcurrentModificationException;
 import java.util.Date;
 
 

@@ -1,4 +1,4 @@
-package com.example.franc.mygest;
+package com.example.franc.mygest.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;

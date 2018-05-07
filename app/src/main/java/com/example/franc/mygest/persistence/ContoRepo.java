@@ -5,8 +5,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.TypeConverters;
 import android.os.AsyncTask;
 
-import com.example.franc.mygest.Conto;
-
 import java.util.Date;
 import java.util.List;
 

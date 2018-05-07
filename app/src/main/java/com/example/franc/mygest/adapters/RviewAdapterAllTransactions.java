@@ -1,4 +1,4 @@
-package com.example.franc.mygest;
+package com.example.franc.mygest.adapters;
 
 /**
  * Created by franc on 28/10/2017.
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.franc.mygest.R;
 import com.example.franc.mygest.persistence.EntityMovimento;
 
 import java.math.BigDecimal;
@@ -19,8 +20,6 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
 //questo diventa il recycler view dei giorni con transazioni all'interno del quale ogni viewholer
 //avra la sua recycler view popolata dai singoli movimenti
 
@@ -29,9 +28,7 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
     List<EntityMovimento> mResults;
     private Context context;
     static RviewAdapterMovimenti adapterMovimenti;
-    final Realm mRealm = Realm.getDefaultInstance();
-
-    RviewAdapterAllTransactions(Context context) {
+    public RviewAdapterAllTransactions(Context context) {
         this.context = context;
     }
 
@@ -79,14 +76,8 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
         });
 
     }
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        mRealm.close();
 
-    }
-
-    void setResults(List<EntityMovimento> results){
+    public void setResults(List<EntityMovimento> results){
         mResults = results;
         notifyDataSetChanged();
     }

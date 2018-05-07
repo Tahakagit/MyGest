@@ -1,18 +1,14 @@
-package com.example.franc.mygest;
+package com.example.franc.mygest.adapters;
 
 /*
  * Created by franc on 28/10/2017.
  *
  * Creates account overview card, each one displaying his own transactions up to the chosen date
  */
-import android.app.AlertDialog;
 import android.app.Application;
 import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.renderscript.Sampler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
@@ -23,25 +19,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.franc.mygest.R;
+import com.example.franc.mygest.UIController;
+import com.example.franc.mygest.activities.MainActivity;
 import com.example.franc.mygest.persistence.EntityConto;
 import com.example.franc.mygest.persistence.EntityMovimento;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
-
-/*
-import io.realm.MovimentoRealmProxy;
-*/
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdapterDailyTransaction.DataObjectHolder> {
 
@@ -51,7 +42,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     private RviewAdapterDailyTransaction mAdapter;
     private Application app;
 
-    RviewAdapterDailyTransaction(Context context, Application app) {
+    public RviewAdapterDailyTransaction(Context context, Application app) {
         setResults(mResults);
         this.context = context;
         mAdapter = this;
@@ -73,6 +64,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dailytransaction, parent, false);
+
         return new DataObjectHolder(view);
     }
 
@@ -86,31 +78,23 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         RecyclerView rviewMovimenti = view.findViewById(R.id.rv_transaction);
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(rviewMovimenti.getContext(),
                     RecyclerView.VERTICAL);
-        RviewAdapterMovimenti adapterMovimenti = new RviewAdapterMovimenti(app);
+        RviewAdapterMovimenti adapterMovimenti;
+
+        adapterMovimenti = new RviewAdapterMovimenti(app);
+        adapterMovimenti.setHasStableIds(true);
 
         String nomeConto = mResults.get(holder.getAdapterPosition()).getNomeConto();
-        movsVM.getAllMovimentoDistByAccount(MainActivity.dateToSend.getTime(), mResults.get(holder.getAdapterPosition()).getNomeConto()).observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
-            @Override
-            public void onChanged(@Nullable List<EntityMovimento> entityMovimentos) {
-                adapterMovimenti.setResults(entityMovimentos);
-                Log.d("on change movimenti", " trovati  " + entityMovimentos.size() + "  movimenti per il conto  " + nomeConto);
-                holder.setNewBalance(NumberFormat.getCurrencyInstance().format(new BigDecimal(calculateNewBalance(currentBalance, entityMovimentos))));
-            }
-        });
-
+        // SET UP RECYCLERVIEW
         rviewMovimenti.addItemDecoration(mDividerItemDecoration);
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
         rviewMovimenti.setAdapter(adapterMovimenti);
-
+        // SET UP SWIPE
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
 
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
             }
-/*
-            this.movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend, mResults.get(position).getNomeConto());
-*/
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
@@ -119,12 +103,11 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                     int id = (int)adapterMovimenti.getItemId(transactionPosition);
 
                     Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(holder.getAdapterPosition()).getNomeConto());
-/*
-                    adapter.deleteItemAt(transactionPosition);
-*/
 
                     movsVM.deleteTransactionById(id);
                     adapterMovimenti.notifyDataSetChanged();
+
+                    holder.hiddenlayout.setVisibility(View.VISIBLE);
 
                 } catch (ArrayIndexOutOfBoundsException e) {
                     Log.w("swipe", "Skip timestamp cause ther's no result");
@@ -133,6 +116,18 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(rviewMovimenti);
+        // QUERY DB FOR RESULTS
+        movsVM.getAllMovimentoDistByAccount(MainActivity.getDateToSend().getTime(),
+                mResults.get(holder.getAdapterPosition()).getNomeConto())
+                .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
+                    @Override
+                    public void onChanged(@Nullable List<EntityMovimento> entityMovimentos) {
+                        adapterMovimenti.setResults(entityMovimentos);
+                        Log.d("on change movimenti", " trovati  " + entityMovimentos.size() + "  movimenti per il conto  " + nomeConto);
+                        holder.setNewBalance(NumberFormat.getCurrencyInstance().format(new BigDecimal(calculateNewBalance(currentBalance, entityMovimentos))));
+                    }
+                });
+
     }
 
     /**
@@ -153,13 +148,14 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int transactionPosition = viewHolder.getAdapterPosition();
+                int transactionId = (int)adapter.getItemId(transactionPosition);
                 try {
                     Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(contoPosition).getNomeConto());
 /*
                     adapter.deleteItemAt(transactionPosition);
 */
 
-                    movsVM.deleteTransactionById((int)adapter.getItemId(transactionPosition));
+                    movsVM.deleteTransactionById(transactionId);
                     adapter.notifyDataSetChanged();
 
                 } catch (ArrayIndexOutOfBoundsException e) {
@@ -171,6 +167,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         itemTouchHelper.attachToRecyclerView(rv);
 
     }
+
 
     /**
      * Subtract all transactions to current balance up to the selected date
@@ -199,8 +196,15 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         position = holder.getAdapterPosition();
         BigDecimal currentBalance = new BigDecimal(String.valueOf(mResults.get(position).getSaldoConto()));
 
+
+
         startTransactionRecyclerView(currentBalance, holder.itemView, holder);
-/*
+
+
+
+
+
+        /*
         final BigDecimal newBalance = calculateNewBalance(currentBalance);
 */
 
@@ -226,6 +230,8 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                     }
                 }
             });
+
+
 
             //Updating account balance
             final BigDecimal currentBalance2 = currentBalance;
@@ -253,52 +259,14 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
      * Shows dialog to update account balance
      * @param position position to retrieve account
      */
-/*
-    private void updateAccount(final int position){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = inflater.inflate(R.layout.dialog_update_account, null);
-        final EditText balanceText = dialogView.findViewById(R.id.id_input_new_balance);
-
-        builder.setTitle("Aggiorna saldo!");
-        builder.setView(dialogView);
-        balanceText.setText(mResults.get(position).getSaldoConto().toString());
-        balanceText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                balanceText.setText("");
-                balanceText.addTextChangedListener(new MoneyTextWatcher(balanceText));
-
-            }
-        });
-        //save new balance
-        builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                String cleanString = balanceText.getText().toString().replaceAll("[ €,.\\s]", "");
-                RealmHelper helper = new RealmHelper();
-
-                helper.updateBalance(mResults.get(position), new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
-                updateItem(position);
-            }
-        });
-        builder.create().show();
-    }
-*/
 
     /**
      * Updates mAdapterConti items list
      * @param results ArrayList to show
      */
-    void setResults(List<EntityConto> results){
-/*
-        movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend.getTime(), nomeConto);
-*/
-
+    public void setResults(List<EntityConto> results){
         mResults = results;
-/*
         notifyDataSetChanged();
-*/
     }
 
     /**

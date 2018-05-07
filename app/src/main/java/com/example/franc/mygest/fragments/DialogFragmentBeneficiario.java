@@ -1,4 +1,4 @@
-package com.example.franc.mygest;
+package com.example.franc.mygest.fragments;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,47 +17,59 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import java.math.BigDecimal;
+import com.example.franc.mygest.R;
+import com.example.franc.mygest.activities.DialogActivity;
 
 
-public class DialogFragmentImporto extends Fragment {
-    static Button next;
-    static Button prev;
-
-    static EditText importo;
+public class DialogFragmentBeneficiario extends Fragment {
 
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    EditText textBeneficiario;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_dialog_fragment_importo, container, false);
+        return inflater.inflate(R.layout.fragment_dialog_fragment_beneficiario, container, false);
+
+
     }
+
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        Button next;
+        Button prev;
+
         next = view.findViewById(R.id.next);
         prev = view.findViewById(R.id.prev);
-        importo = view.findViewById(R.id.inputimporto);
 
-        importo.addTextChangedListener(new MoneyTextWatcher(importo));
+        textBeneficiario = view.findViewById(R.id.inputBeneficiario);
+
+        textBeneficiario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textBeneficiario.setHintTextColor(ContextCompat.getColor(getContext(), R.color.grey));
+            }
+        });
         next.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
+                String beneficiario = null;
+                beneficiario = textBeneficiario.getText().toString();
+                if (!beneficiario.matches("")){
+                    ((DialogActivity)getActivity()).getBeneficiario(beneficiario);
+                }else{
+                    Log.w("DialogFragmentBen", "WARNING:: beneficiario null");
+                    textBeneficiario.setHint("Beneficiario");
+                    textBeneficiario.setHintTextColor(ContextCompat.getColor(getContext(), R.color.red));
+                    displayPopupWindow(getContext(), textBeneficiario, "Inserisci il beneficiario!");
+               }
 
-                String cleanString = importo.getText().toString().replaceAll("[ €,.\\s]", "");
 
-                if(!cleanString.matches(""))
-                    ((DialogActivity)getActivity()).getImporto(new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR));
-                else{
-                    displayPopupWindow(getContext(), importo, "Inserisci la data di dayScadenzaText!");
-                    importo.setHintTextColor(ContextCompat.getColor(getContext(), R.color.red));
-
-                }
             }
         } );
+
         prev.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-
                 ((DialogActivity)getActivity()).goBack();
-
             }
         } );
+
 
 
     }
@@ -102,7 +115,5 @@ public class DialogFragmentImporto extends Fragment {
         popup.setBackgroundDrawable(drawBackground);
         popup.showAtLocation(anchorView, Gravity.TOP, 150, 0);
     }
-
-
 
 }

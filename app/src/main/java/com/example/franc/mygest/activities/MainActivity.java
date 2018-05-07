@@ -3,15 +3,12 @@
  *
  * FIXME Rename Class?
  */
-package com.example.franc.mygest;
+package com.example.franc.mygest.activities;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -29,26 +26,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 
-import com.example.franc.mygest.persistence.ContoDao;
+import com.example.franc.mygest.fragments.DatePickerFragment;
+import com.example.franc.mygest.R;
+import com.example.franc.mygest.adapters.RviewAdapterDailyTransaction;
+import com.example.franc.mygest.UIController;
 import com.example.franc.mygest.persistence.ContoViewModel;
 import com.example.franc.mygest.persistence.EntityConto;
-import com.example.franc.mygest.persistence.EntityMovimento;
-import com.example.franc.mygest.persistence.MovimentoDao;
-import com.example.franc.mygest.persistence.MovimentoViewModel;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements UIController.onAccountCreatedListener{
+public class MainActivity extends AppCompatActivity implements UIController.onAccountCreatedListener {
 
-    private RealmHelper helper = new RealmHelper();
     static RviewAdapterDailyTransaction adapterDailyTransaction;
     private ContoViewModel mAcountsViewModel;
-    private MovimentoViewModel mTransViewModel;
-
+    DrawerLayout mDrawerLayout;
     static Calendar dateToSend;
 
 
@@ -56,28 +49,31 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation_drawer_main);
-        mTransViewModel = new MovimentoViewModel(getApplication());
         mAcountsViewModel = new ContoViewModel(getApplication());
         UIController onAccountModifiedListener = new UIController(this);
 
         dateToSend = Calendar.getInstance();
         dateToSend.set(Calendar.HOUR_OF_DAY, 23);
         dateToSend.set(Calendar.SECOND, 59);
+        // START MAIN RECYCLERVIEW, FAB AND ACTIONBAR
         initUi();
         mAcountsViewModel.setDate(dateToSend.getTime());
-        mAcountsViewModel.getAllAccoutsByName().observe(this, new Observer<List<EntityConto>>() {
+        mAcountsViewModel.getAllAccoutsByName().observe(this,
+                    new Observer<List<EntityConto>>() {
             @Override
             public void onChanged(@Nullable List<EntityConto> entityContos) {
                 Log.d("on change movimenti", " trovati  " + entityContos.size() + "  conti  ");
 
                 adapterDailyTransaction.setResults(entityContos);
-                adapterDailyTransaction.notifyDataSetChanged();
             }
         });
+        // SET UP DATE PICKER
         showDatePicker();
-
     }
 
+    public static Calendar getDateToSend(){
+        return dateToSend;
+    }
     /**
      * Starts UI
      */
@@ -89,7 +85,8 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         Toolbar myToolbar = findViewById(R.id.toolbar_mainactivity);
         myToolbar.setTitle("");
         setSupportActionBar(myToolbar);
-
+        // don't reuse viewholder because i need to restart everything in it everytimes rview updates
+        rview.getRecycledViewPool().setMaxRecycledViews(0, 0);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
@@ -185,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         return datePickerFragment;
     }
 
-    DrawerLayout mDrawerLayout;
 
     /**
      * Starts navigationdrawer
@@ -193,9 +189,9 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
     private void startNavDrawer(){
         final Intent creaConto = new Intent(this, AccountsManageActivity.class);
         final Intent allTransaction = new Intent(this, AllTransactionActivity.class);
+        NavigationView navigationView = findViewById(R.id.nav_view);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
 
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(
@@ -219,8 +215,6 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
                         }
                     });
         }
-
-
     }
 
     @Override
