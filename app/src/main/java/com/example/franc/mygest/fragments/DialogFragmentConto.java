@@ -22,8 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DialogFragmentConto extends Fragment {
-    static Spinner spinner;
+    static Spinner accountSpinner;
+    static Spinner typeSpinner;
+
     String contos;
+    String type;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,27 +40,42 @@ public class DialogFragmentConto extends Fragment {
 
     }
 
-    private void populateSpinner(List<String> list){
+    private ArrayList<String> getAccountList(){
         Application appCtx = (MyApplication) getActivity().getApplication();
         ContoViewModel contoVM = new ContoViewModel(appCtx);
 
+        ArrayList<String> list = new ArrayList<>();
+        List<EntityConto> arraylist = new ArrayList<>();
+        arraylist = contoVM.getAllAccountsList();
+        for (EntityConto s:arraylist) {
+            list.add(s.getNomeConto());
+        }
+        return  list;
+
+    }
+    private ArrayList<String> getTypeList(){
+        ArrayList<String> arraylist = new ArrayList<>();
+
+        arraylist.add("Assegno");
+        arraylist.add("SSD");
+        arraylist.add("Riba");
+        arraylist.add("Bonifico");
+        return arraylist;
+    }
+
+
+    void populateAccountSpinner(Spinner spinner){
+        Application appCtx = (MyApplication) getActivity().getApplication();
+        ContoViewModel contoVM = new ContoViewModel(appCtx);
+
+        ArrayList<String> list = new ArrayList<>();
         List<EntityConto> arraylist = new ArrayList<>();
         arraylist = contoVM.getAllAccountsList();
         for (EntityConto s:arraylist) {
             list.add(s.getNomeConto());
         }
 
-    }
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        Button next;
-        Button prev;
-
-        List<String> list = new ArrayList<>();
-        populateSpinner(list);
-        next = view.findViewById(R.id.next);
-        prev = view.findViewById(R.id.prev);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, list);
-        spinner = view.findViewById(R.id.spinner);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -70,11 +88,48 @@ public class DialogFragmentConto extends Fragment {
             }
         });
 
+    }
+    void populateTypeSpinner(Spinner spinner){
+        ArrayList<String> arraylist = new ArrayList<>();
+
+        arraylist.add("Assegno");
+        arraylist.add("SSD");
+        arraylist.add("Riba");
+        arraylist.add("Bonifico");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arraylist);
+        spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                type = parent.getItemAtPosition(position).toString();
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+    }
+
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        Button next;
+        Button prev;
+
+        accountSpinner = view.findViewById(R.id.spinner);
+        typeSpinner = view.findViewById(R.id.spinner_transaction_types);
+
+        List<String> list = new ArrayList<>();
+        populateAccountSpinner(accountSpinner);
+        populateTypeSpinner(typeSpinner);
+        next = view.findViewById(R.id.next);
+        prev = view.findViewById(R.id.prev);
+
         next.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
 
-                ((DialogActivity)getActivity()).getConto(contos);
+                ((DialogActivity)getActivity()).getConto(contos, type);
 
 
             }

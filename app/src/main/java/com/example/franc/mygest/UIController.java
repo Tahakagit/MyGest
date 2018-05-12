@@ -71,6 +71,7 @@ public class UIController {
 
         mActivity.setSupportActionBar(toolbar);
 
+        fab.setImageResource(R.drawable.ic_fab_add);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,7 +100,7 @@ public class UIController {
             nomeContoTxt.setText(nomeConto);
         }
         if (saldoConto != null){
-            saldoContoTxt.setText(saldoConto.toString());
+            saldoContoTxt.setText(saldoConto);
         }
         if (coloreConto != 0){
             selectedColor = coloreConto;
@@ -136,12 +137,15 @@ public class UIController {
         });
     }
 
+    /**
+     * interface wich send created account to activity to save it
+     */
     public interface onAccountCreatedListener{
         void onAccountCreated(EntityConto conto);
     }
 
     /**
-     * Checking input fields FIXME switch to setError
+     * Checking input fields
      * @param cleanstring input string to analize
      * @param nomeConto edittext to check
      * @param saldoConto editext to check
@@ -150,14 +154,19 @@ public class UIController {
     private boolean checkForInputError(String cleanstring, EditText nomeConto, EditText saldoConto){
         if(cleanstring.matches("")) {
             Log.w(this.getClass().getName(), "WARNING:: saldo null");
+/*
             displayErrorAlert(mContext, nomeConto, "Inserisci il saldo!");
+*/
             saldoConto.setError("Inserisci il saldo!");
             return false;
         }
         else if(nomeConto.getText().toString().matches("")){
             Log.w(this.getClass().getName(), "WARNING:: nome conto null");
+/*
             nomeConto.setHintTextColor(ContextCompat.getColor(mContext, R.color.red));
-            displayErrorAlert(mContext, nomeConto, "Inserisci il nome del EntityConto!");
+*/
+            /*displayErrorAlert(mContext, nomeConto, "Inserisci il nome del EntityConto!");*/
+            nomeConto.setError("Inserisci il nome!");
             return false;
         }else{
             return true;

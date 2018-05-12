@@ -41,5 +41,7 @@ public class ContoViewModel extends AndroidViewModel {
     public void insert(EntityConto conto) { mRepository.insert(conto); }
 
     public void update(EntityConto conto) { mRepository.update(conto); }
+    public void delete(EntityConto conto) { mRepository.delete(conto); }
+
 
 }

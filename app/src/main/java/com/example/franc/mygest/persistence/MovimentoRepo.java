@@ -34,6 +34,16 @@ public class MovimentoRepo {
         return mMovimentoDao.getTransactionUpToByAccount(upTo, account);
     }
 
+    LiveData<List<EntityMovimento>> getDailyTransactionsByAccount(java.util.Date upTo, String account) {
+        return mMovimentoDao.getDailyTransactionsByAccount(upTo, account);
+    }
+
+
+    LiveData<List<EntityMovimento>> getAllDates(java.util.Date upTo, String account) {
+        return mMovimentoDao.getAllDates(upTo, account);
+    }
+
+
 
     public void deleteTransactionById(int id){
         mMovimentoDao.deleteTransactionById(id);

@@ -130,9 +130,9 @@ public class DialogFragmentScadenza extends Fragment{
 
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
 
-                //date object from spinner
+                //date object from accountSpinner
                 startDateToSend = c.getTime();
-                //formatted date string from spinner
+                //formatted date string from accountSpinner
                 String formattedDate = sdf.format(c.getTime());
 
 
@@ -182,9 +182,9 @@ public class DialogFragmentScadenza extends Fragment{
 
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
 
-                //date object from spinner
+                //date object from accountSpinner
                 endDateToSend = c.getTime();
-                //formatted date string from spinner
+                //formatted date string from accountSpinner
                 String formattedDate = sdf.format(c.getTime());
 
 

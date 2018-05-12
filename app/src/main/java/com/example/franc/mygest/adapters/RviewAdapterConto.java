@@ -1,15 +1,19 @@
 package com.example.franc.mygest.adapters;
 
+import android.app.Application;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.franc.mygest.R;
+import com.example.franc.mygest.UIController;
+import com.example.franc.mygest.persistence.ContoViewModel;
 import com.example.franc.mygest.persistence.EntityConto;
 
 import java.math.BigDecimal;
@@ -24,10 +28,12 @@ import java.util.List;
 public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.DataObjectHolder> {
     List<EntityConto> mResults;
     private Context context;
+    ContoViewModel contoVM;
 
 
     public RviewAdapterConto(Context context) {
         this.context = context;
+        contoVM = new ContoViewModel((Application) context.getApplicationContext());
     }
 
     public RviewAdapterConto(){
@@ -36,6 +42,8 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
     public static class DataObjectHolder extends RecyclerView.ViewHolder{
         TextView nome;
         TextView saldo;
+        ImageView updateAccount;
+        ImageView deleteAccount;
         CardView cv;
         LinearLayout hiddenlayout;
         public DataObjectHolder(View itemView) {
@@ -44,6 +52,8 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
             saldo = itemView.findViewById(R.id.cardSaldoconto);
             cv = itemView.findViewById(R.id.cv_account_dashboard);
             hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
+            updateAccount = itemView.findViewById(R.id.img_edit_account);
+            deleteAccount = itemView.findViewById(R.id.img_delete_account);
 
         }
         public void setData(String textbeneficiario, String textimporto){
@@ -101,6 +111,25 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
                 }
             }
         });
+        holder.updateAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UIController uiController = new UIController(context);
+                uiController.displayAccountDialog(mResults.get(holder.getAdapterPosition()).getNomeConto(),
+                        NumberFormat.getCurrencyInstance().format(new BigDecimal(String.valueOf(mResults.get(holder.getAdapterPosition()).getSaldoConto()))),
+                        mResults.get(holder.getAdapterPosition()).getColoreConto());
+            }
+        });
+        holder.deleteAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //DELETE ACCOUNT
+                //what about transactions in it?
+                contoVM.delete(mResults.get(position));
+            }
+        });
+
+
 
     }
 

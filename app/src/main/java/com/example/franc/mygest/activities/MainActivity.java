@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
     public static Calendar getDateToSend(){
         return dateToSend;
     }
+
     /**
      * Starts UI
      */
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapterDailyTransaction);
 
+        fab.setImageResource(R.drawable.ic_fab_add);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)

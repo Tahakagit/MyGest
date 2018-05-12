@@ -16,11 +16,11 @@ import com.example.franc.mygest.fragments.DialogFragmentConto;
 import com.example.franc.mygest.fragments.DialogFragmentImporto;
 import com.example.franc.mygest.fragments.DialogFragmentScadenza;
 import com.example.franc.mygest.R;
-import com.example.franc.mygest.adapters.RviewAdapterMovimenti;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DialogActivity extends AppCompatActivity {
@@ -28,7 +28,6 @@ public class DialogActivity extends AppCompatActivity {
     static int i = 0;
     final FragmentManager fragmentManager = getSupportFragmentManager();
     final ArrayList<Fragment> fragments = new ArrayList <>();
-    static RviewAdapterMovimenti adapter;
 
     static Button next;
     static Button prev;
@@ -110,9 +109,24 @@ public class DialogActivity extends AppCompatActivity {
         ft2.commit();
     }
 
-    public void getConto(String conto) {
+    public void getConto(String conto, String tipo) {
         conto2 = conto;
-        mWordViewModel.insert(beneficiario2, importo2.toString(), scadenza2, conto2, endDate2, recurrence2);
+        tipo2 = tipo;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(scadenza2);
+        cal.set(Calendar.HOUR_OF_DAY, 00);
+        cal.set(Calendar.MINUTE, 00);
+        cal.set(Calendar.SECOND, 00);
+        cal.set(Calendar.MILLISECOND, 00);
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(scadenza2);
+        cal2.set(Calendar.HOUR_OF_DAY, 00);
+        cal2.set(Calendar.MINUTE, 00);
+        cal2.set(Calendar.SECOND, 00);
+        cal2.set(Calendar.MILLISECOND, 00);
+
+        mWordViewModel.insert(beneficiario2, importo2.toString(), cal.getTime(), conto2, cal2.getTime(), recurrence2, tipo2);
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
         i = 0;

@@ -32,7 +32,11 @@ import com.example.franc.mygest.persistence.MovimentoViewModel;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdapterDailyTransaction.DataObjectHolder> {
 
@@ -74,97 +78,49 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
      * @param view needed to findViewById
      *
      * */
-    private void startTransactionRecyclerView(final BigDecimal currentBalance, View view, DataObjectHolder holder){
-        RecyclerView rviewMovimenti = view.findViewById(R.id.rv_transaction);
-        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(rviewMovimenti.getContext(),
+    private void startDatesRecyclerView(final BigDecimal currentBalance, View view, DataObjectHolder holder){
+        RecyclerView rviewDates = view.findViewById(R.id.rv_dates);
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(rviewDates.getContext(),
                     RecyclerView.VERTICAL);
-        RviewAdapterMovimenti adapterMovimenti;
+        RviewAdapterGroupDates adapterDates;
 
-        adapterMovimenti = new RviewAdapterMovimenti(app);
-        adapterMovimenti.setHasStableIds(true);
+        adapterDates = new RviewAdapterGroupDates(context, app);
+        adapterDates.setHasStableIds(true);
 
         String nomeConto = mResults.get(holder.getAdapterPosition()).getNomeConto();
         // SET UP RECYCLERVIEW
-        rviewMovimenti.addItemDecoration(mDividerItemDecoration);
-        rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
-        rviewMovimenti.setAdapter(adapterMovimenti);
-        // SET UP SWIPE
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                try {
-                    int transactionPosition = viewHolder.getAdapterPosition();
-                    int id = (int)adapterMovimenti.getItemId(transactionPosition);
-
-                    Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(holder.getAdapterPosition()).getNomeConto());
-
-                    movsVM.deleteTransactionById(id);
-                    adapterMovimenti.notifyDataSetChanged();
-
-                    holder.hiddenlayout.setVisibility(View.VISIBLE);
-
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    Log.w("swipe", "Skip timestamp cause ther's no result");
-                }
-            }
-        };
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(rviewMovimenti);
+        rviewDates.addItemDecoration(mDividerItemDecoration);
+        rviewDates.setLayoutManager(new LinearLayoutManager(context));
+        rviewDates.setAdapter(adapterDates);
         // QUERY DB FOR RESULTS
+/*
         movsVM.getAllMovimentoDistByAccount(MainActivity.getDateToSend().getTime(),
                 mResults.get(holder.getAdapterPosition()).getNomeConto())
                 .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
                     @Override
                     public void onChanged(@Nullable List<EntityMovimento> entityMovimentos) {
-                        adapterMovimenti.setResults(entityMovimentos);
                         Log.d("on change movimenti", " trovati  " + entityMovimentos.size() + "  movimenti per il conto  " + nomeConto);
                         holder.setNewBalance(NumberFormat.getCurrencyInstance().format(new BigDecimal(calculateNewBalance(currentBalance, entityMovimentos))));
                     }
                 });
-
-    }
-
-    /**
-     * enable swipe on recyclerview
-     * @param adapter mAdapterConti
-     * @param rv recyclerview
-     */
-    private void enableSwipe(RviewAdapterMovimenti adapter, RecyclerView rv, int contoPosition){
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-/*
-            this.movs = helper.getTransactionsUntilGroupedBySingleAccount(MainActivity.dateToSend, mResults.get(position).getNomeConto());
 */
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int transactionPosition = viewHolder.getAdapterPosition();
-                int transactionId = (int)adapter.getItemId(transactionPosition);
-                try {
-                    Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(contoPosition).getNomeConto());
 /*
-                    adapter.deleteItemAt(transactionPosition);
+        SimpleDateFormat dayFormat = new SimpleDateFormat("DD/MM", Locale.ITALIAN);
+
+        Date d = null;
+        String strDate = dayFormat.format(MainActivity.getDateToSend().getTime());
+        d= dayFormat.parse(strDate);
 */
+        movsVM.getAllDates(MainActivity.getDateToSend().getTime(),
+                mResults.get(holder.getAdapterPosition()).getNomeConto())
+                .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
+                    @Override
+                    public void onChanged(@Nullable List<EntityMovimento> dates) {
+                        adapterDates.setResults(dates);
+                        Log.d("on change movimenti", " trovate  " + dates.size() + "  date per il conto  " + nomeConto);
+                    }
+                });
 
-                    movsVM.deleteTransactionById(transactionId);
-                    adapter.notifyDataSetChanged();
-
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    Log.w("swipe", "Skip timestamp cause ther's no result");
-                }
-            }
-        };
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(rv);
 
     }
 
@@ -198,7 +154,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
 
 
-        startTransactionRecyclerView(currentBalance, holder.itemView, holder);
+        startDatesRecyclerView(currentBalance, holder.itemView, holder);
 
 
 
@@ -213,6 +169,8 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             holder.setData(mResults.get(position).getNomeConto(),
                         NumberFormat.getCurrencyInstance().format(new BigDecimal(String.valueOf(mResults.get(position).getSaldoConto()))));
             holder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
+            holder.nestedBg.setBackgroundColor(mResults.get(position).getColoreConto());
+
 
 
             //Expanding Collapsing Account cards
@@ -250,10 +208,6 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
 
     }
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-    }
 
     /**
      * Shows dialog to update account balance
@@ -269,25 +223,14 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         notifyDataSetChanged();
     }
 
-    /**
-     * Updates item data
-     * @param position position to update
-     */
-    private void updateItem(int position){
-        this.notifyItemChanged(position);
-    }
-
-    Context getContext(){
-
-        return context;
-    }
-
     static class DataObjectHolder extends RecyclerView.ViewHolder{
         TextView accountFutureBalance;
         TextView accountCurrentBalance;
         TextView accountName;
         ImageView moreIc;
         LinearLayout hiddenlayout;
+        LinearLayout nestedBg;
+
         CardView cv;
 
         DataObjectHolder(View itemView) {
@@ -298,6 +241,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             accountCurrentBalance = itemView.findViewById(R.id.id_account_current_balance);
             moreIc = itemView.findViewById(R.id.imageView);
             hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
+            nestedBg = itemView.findViewById(R.id.id_bg_nested);
 
         }
 

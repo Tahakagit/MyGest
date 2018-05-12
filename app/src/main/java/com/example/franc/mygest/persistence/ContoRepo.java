@@ -55,6 +55,10 @@ public class ContoRepo {
         new updateAsyncTask(mContoDao).execute(conto);
     }
 
+    public void delete (EntityConto conto) {
+        new deleteAsyncTask(mContoDao).execute(conto);
+    }
+
 
     private static class insertAsyncTask extends AsyncTask<EntityConto, Void, Void> {
 
@@ -82,6 +86,21 @@ public class ContoRepo {
         @Override
         protected Void doInBackground(final EntityConto... params) {
             mAsyncTaskDao.update(params[0]);
+            return null;
+        }
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<EntityConto, Void, Void> {
+
+        private ContoDao mAsyncTaskDao;
+
+        deleteAsyncTask(ContoDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final EntityConto... params) {
+            mAsyncTaskDao.delete(params[0]);
             return null;
         }
     }

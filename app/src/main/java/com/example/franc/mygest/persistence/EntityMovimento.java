@@ -18,6 +18,7 @@ public class EntityMovimento{
 
     private String beneficiario;
     private String importo;
+    private String direction;
     private Date scadenza;
     private Date endscadenza;
     private String conto;
@@ -25,11 +26,13 @@ public class EntityMovimento{
     @android.arch.persistence.room.PrimaryKey(autoGenerate = true)
     private int id;
 
-    public EntityMovimento(final String beneficiario, final String importo, final Date scadenza, final String conto, @Nullable final Date endscadenza){
+    public EntityMovimento(final String beneficiario, final String importo, final Date scadenza, final String conto, @Nullable final Date endscadenza, final String tipo){
         this.beneficiario = beneficiario;
         setImporto(importo);
         this.scadenza = scadenza;
         this.conto = conto;
+        this.tipo = tipo;
+
         this.endscadenza = endscadenza;
     }
     //todo attrs checked, direzione
@@ -74,7 +77,13 @@ public class EntityMovimento{
         this.tipo = tipo;
     }
 
+    public String getDirection() {
+        return direction;
+    }
 
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
 
     public Date getScadenza() {
         return scadenza;

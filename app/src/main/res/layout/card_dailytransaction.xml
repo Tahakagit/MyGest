@@ -14,7 +14,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/id_bg_nested">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,7 +91,7 @@
 
             android:layout_weight="1"
             android:background="#1e000000"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <LinearLayout
 
@@ -102,7 +103,7 @@
             android:visibility="gone">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_transaction"
+                android:id="@+id/rv_dates"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white">
@@ -114,7 +115,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/white"
             android:orientation="horizontal"
             android:paddingBottom="24dp"
             android:paddingLeft="16dp"

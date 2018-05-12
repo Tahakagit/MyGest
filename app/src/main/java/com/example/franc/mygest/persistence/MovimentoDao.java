@@ -34,11 +34,20 @@ public interface MovimentoDao {
     @Query("SELECT DISTINCT conto FROM movimento_table WHERE scadenza <= (:dayet)")
     LiveData<List<String>> getTransactionUpTo(Date dayet);
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT scadenza, conto, id FROM movimento_table WHERE scadenza  <= :upTo AND conto == (:account) GROUP BY scadenza")
+    LiveData<List<EntityMovimento>> getAllDates(Date upTo, String account);
 
 
     @TypeConverters(DateConverter.class)
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM movimento_table WHERE scadenza <= (:dayet) AND conto LIKE (:account)")
     LiveData<List<EntityMovimento>> getTransactionUpToByAccount(Date dayet, String account);
+
+    @TypeConverters(DateConverter.class)
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM movimento_table WHERE scadenza == (:dayet) AND conto LIKE (:account)")
+    LiveData<List<EntityMovimento>> getDailyTransactionsByAccount(Date dayet, String account);
 
 }
