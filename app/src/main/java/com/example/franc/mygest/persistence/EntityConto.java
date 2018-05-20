@@ -10,11 +10,11 @@ import java.math.BigDecimal;
 /**
  * Created by franc on 23/04/2018.
  */
-@Entity(tableName = "conto_table", primaryKeys = "nomeConto")
+@Entity(tableName = "conto_table")
 public class EntityConto {
 
 
-
+    @android.arch.persistence.room.PrimaryKey(autoGenerate = true)
     private int id;
     @NonNull
     public String nomeConto;

@@ -5,6 +5,7 @@ package com.example.franc.mygest.adapters;
  */
 
 import android.content.Context;
+import android.support.constraint.Group;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,7 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
     public long getItemId(int position){ return  0;}
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_movimenti, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_transaction, parent, false);
         return new DataObjectHolder(view);
     }
     @Override
@@ -90,7 +91,7 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
         TextView textImporto;
         TextView dayScadenzaText;
         TextView monthScadenzaText;
-        LinearLayout hiddenlayout;
+        Group hiddenlayout;
 
         public DataObjectHolder(View itemView) {
             super(itemView);
@@ -99,7 +100,7 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
             dayScadenzaText = itemView.findViewById(R.id.id_card_scadenza_day);
             monthScadenzaText = itemView.findViewById(R.id.id_card_scadenza_month);
 
-            hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
+            hiddenlayout = itemView.findViewById(R.id.hidden_transaction_group);
 
         }
 

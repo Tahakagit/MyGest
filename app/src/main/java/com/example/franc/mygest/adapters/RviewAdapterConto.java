@@ -2,6 +2,7 @@ package com.example.franc.mygest.adapters;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.constraint.Group;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,13 +46,13 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
         ImageView updateAccount;
         ImageView deleteAccount;
         CardView cv;
-        LinearLayout hiddenlayout;
+        Group hiddenlayout;
         public DataObjectHolder(View itemView) {
             super(itemView);
             nome = itemView.findViewById(R.id.cardNomeconto);
             saldo = itemView.findViewById(R.id.cardSaldoconto);
             cv = itemView.findViewById(R.id.cv_account_dashboard);
-            hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
+            hiddenlayout = itemView.findViewById(R.id.hidden_account_group);
             updateAccount = itemView.findViewById(R.id.img_edit_account);
             deleteAccount = itemView.findViewById(R.id.img_delete_account);
 
@@ -115,9 +116,7 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
             @Override
             public void onClick(View view) {
                 UIController uiController = new UIController(context);
-                uiController.displayAccountDialog(mResults.get(holder.getAdapterPosition()).getNomeConto(),
-                        NumberFormat.getCurrencyInstance().format(new BigDecimal(String.valueOf(mResults.get(holder.getAdapterPosition()).getSaldoConto()))),
-                        mResults.get(holder.getAdapterPosition()).getColoreConto());
+                uiController.displaySaveAccountDialog(mResults.get(position));
             }
         });
         holder.deleteAccount.setOnClickListener(new View.OnClickListener() {

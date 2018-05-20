@@ -13,14 +13,11 @@
     <item android:title="Categorie">
         <menu>
             <item
-                android:title="Crea conto"
-                android:id="@+id/action_category_1"/>
+                android:id="@+id/action_category_1"
+                android:title="Gestisci conti" />
             <item
                 android:title="Tutti i movimenti"
                 android:id="@+id/action_category_2"/>
-            <item
-                android:title="Tech"
-                android:id="@+id/action_category_3"/>
         </menu>
     </item>
 

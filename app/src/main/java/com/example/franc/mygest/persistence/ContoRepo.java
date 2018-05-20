@@ -33,6 +33,11 @@ public class ContoRepo {
         return mAllAccounts;
     }
 
+
+    EntityConto getAccountIdByName(String accountName) {
+        return mContoDao.getAccountIdByName(accountName);
+    }
+
     List<EntityConto> getAllAccountsNames() {
         return mContoDao.getAllAccountsName();
     }

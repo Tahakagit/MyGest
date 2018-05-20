@@ -36,10 +36,13 @@ public interface ContoDao {
     @Query("SELECT * from conto_table")
     LiveData<List<EntityConto>> getAllAccounts();
 
+    @Query("SELECT * from conto_table WHERE nomeConto LIKE :accountName")
+    EntityConto getAccountIdByName(String accountName);
+
     @Query("SELECT * from conto_table")
     List<EntityConto> getAllAccountsName();
 
     @TypeConverters(DateConverter.class)
-    @Query("SELECT * FROM conto_table WHERE nomeConto IN (SELECT DISTINCT conto FROM movimento_table WHERE scadenza <= :upTo)")
+    @Query("SELECT * FROM conto_table WHERE id IN (SELECT DISTINCT idConto FROM movimento_table WHERE scadenza <= :upTo)")
     LiveData<List<EntityConto>> getAllAccountsDist(Date upTo);
 }

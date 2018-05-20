@@ -26,20 +26,22 @@ public class MovimentoRepo {
         return mAllMovimenti;
     }
 
+/*
     LiveData<List<String>> getAllMovimentoUpTo(java.util.Date upTo) {
         return mMovimentoDao.getTransactionUpTo(upTo);
     }
+*/
 
-    LiveData<List<EntityMovimento>> getAllMovimentoUpToByAccount(java.util.Date upTo, String account) {
+    List<EntityMovimento> getAllMovimentoUpToByAccount(java.util.Date upTo, int account) {
         return mMovimentoDao.getTransactionUpToByAccount(upTo, account);
     }
 
-    LiveData<List<EntityMovimento>> getDailyTransactionsByAccount(java.util.Date upTo, String account) {
+    LiveData<List<EntityMovimento>> getDailyTransactionsByAccount(java.util.Date upTo, int account) {
         return mMovimentoDao.getDailyTransactionsByAccount(upTo, account);
     }
 
 
-    LiveData<List<EntityMovimento>> getAllDates(java.util.Date upTo, String account) {
+    LiveData<List<EntityMovimento>> getAllDates(java.util.Date upTo, int account) {
         return mMovimentoDao.getAllDates(upTo, account);
     }
 

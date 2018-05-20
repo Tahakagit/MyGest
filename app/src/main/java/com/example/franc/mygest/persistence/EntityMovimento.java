@@ -21,22 +21,32 @@ public class EntityMovimento{
     private String direction;
     private Date scadenza;
     private Date endscadenza;
-    private String conto;
+    private int idConto;
+    private String nomeConto;
     private String tipo;
     @android.arch.persistence.room.PrimaryKey(autoGenerate = true)
     private int id;
 
-    public EntityMovimento(final String beneficiario, final String importo, final Date scadenza, final String conto, @Nullable final Date endscadenza, final String tipo){
+    public EntityMovimento(final String beneficiario, final String importo, final Date scadenza, final int idConto, final String nomeConto, @Nullable final Date endscadenza, final String tipo){
         this.beneficiario = beneficiario;
         setImporto(importo);
         this.scadenza = scadenza;
-        this.conto = conto;
+        this.idConto = idConto;
+        this.nomeConto = nomeConto;
         this.tipo = tipo;
 
         this.endscadenza = endscadenza;
     }
     //todo attrs checked, direzione
 
+
+    public String getNomeConto() {
+        return nomeConto;
+    }
+
+    public void setNomeConto(String nomeConto) {
+        this.nomeConto = nomeConto;
+    }
 
     public int getId() {
         return id;
@@ -61,12 +71,12 @@ public class EntityMovimento{
         this.endscadenza = endscadenza;
     }
 
-    public String getConto() {
-        return conto;
+    public int getIdConto() {
+        return idConto;
     }
 
-    public void setConto(String conto) {
-        this.conto = conto;
+    public void setIdConto(int contoId) {
+        this.idConto = contoId;
     }
 
     public String getTipo() {

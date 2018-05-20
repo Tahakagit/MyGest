@@ -9,13 +9,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.franc.mygest.fragments.DialogFragmentBeneficiario;
 import com.example.franc.mygest.fragments.DialogFragmentConto;
 import com.example.franc.mygest.fragments.DialogFragmentImporto;
 import com.example.franc.mygest.fragments.DialogFragmentScadenza;
 import com.example.franc.mygest.R;
+import com.example.franc.mygest.persistence.ContoViewModel;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
 
 import java.math.BigDecimal;
@@ -39,7 +39,8 @@ public class DialogActivity extends AppCompatActivity {
     static String recurrence2 = null;
     static String tipo2 = null;
     static String direzione2 = null;
-    private MovimentoViewModel mWordViewModel;
+    private MovimentoViewModel mMovimentoViewModel;
+    private ContoViewModel mContoViewModel;
 
 
     @Override
@@ -50,7 +51,8 @@ public class DialogActivity extends AppCompatActivity {
         prev = findViewById(R.id.prev);
 
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
+        mMovimentoViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
+        mContoViewModel = ViewModelProviders.of(this).get(ContoViewModel.class);
 
 
         fragments.add(new DialogFragmentBeneficiario());
@@ -112,32 +114,31 @@ public class DialogActivity extends AppCompatActivity {
     public void getConto(String conto, String tipo) {
         conto2 = conto;
         tipo2 = tipo;
+
         Calendar cal = Calendar.getInstance();
         cal.setTime(scadenza2);
         cal.set(Calendar.HOUR_OF_DAY, 00);
         cal.set(Calendar.MINUTE, 00);
         cal.set(Calendar.SECOND, 00);
         cal.set(Calendar.MILLISECOND, 00);
+        scadenza2 = cal.getTime();
 
-        Calendar cal2 = Calendar.getInstance();
-        cal2.setTime(scadenza2);
-        cal2.set(Calendar.HOUR_OF_DAY, 00);
-        cal2.set(Calendar.MINUTE, 00);
-        cal2.set(Calendar.SECOND, 00);
-        cal2.set(Calendar.MILLISECOND, 00);
+        if (endDate2!= null){
+            Calendar cal2 = Calendar.getInstance();
+            cal2.setTime(endDate2);
+            cal2.set(Calendar.HOUR_OF_DAY, 00);
+            cal2.set(Calendar.MINUTE, 00);
+            cal2.set(Calendar.SECOND, 00);
+            cal2.set(Calendar.MILLISECOND, 00);
+            endDate2 = cal2.getTime();
 
-        mWordViewModel.insert(beneficiario2, importo2.toString(), cal.getTime(), conto2, cal2.getTime(), recurrence2, tipo2);
+        }
+
+        int accountId = mContoViewModel.getAccountIdByName(conto2).getId();
+        mMovimentoViewModel.insert(beneficiario2, importo2.toString(), scadenza2, conto2, accountId, endDate2, recurrence2, tipo2);
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
         i = 0;
         finish();
     }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Toast.makeText(DialogActivity.this, "Oncreateview", Toast.LENGTH_SHORT);
-    }
-
 }

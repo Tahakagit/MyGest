@@ -32,11 +32,15 @@ public class ContoViewModel extends AndroidViewModel {
 
     public LiveData<List<EntityConto>> getAllAccounts() { return mAllAccounts; }
 
+
+
+    public EntityConto getAccountIdByName(String accountName) { return mRepository.getAccountIdByName(accountName); }
+
     public List<EntityConto> getAllAccountsList() {
         return mRepository.getAllAccountsNames();
     }
 
-    public LiveData<List<EntityConto>> getAllAccoutsByName() { return mActiveAccounts; }
+    public LiveData<List<EntityConto>> getActiveAccounts() { return mActiveAccounts; }
 
     public void insert(EntityConto conto) { mRepository.insert(conto); }
 

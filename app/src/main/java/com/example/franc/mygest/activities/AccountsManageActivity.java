@@ -19,7 +19,7 @@ import com.example.franc.mygest.persistence.EntityConto;
 import java.util.List;
 
 
-public class AccountsManageActivity extends AppCompatActivity implements UIController.onAccountCreatedListener {
+public class AccountsManageActivity extends AppCompatActivity implements UIController.onAccountListener {
     int selectedColor = R.color.blue;
 
     ContoViewModel contoVM;
@@ -43,7 +43,7 @@ public class AccountsManageActivity extends AppCompatActivity implements UIContr
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                uiController.displayAccountDialog(null, null, 0);
+                uiController.displaySaveAccountDialog(null);
             }
         });
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -63,7 +63,10 @@ public class AccountsManageActivity extends AppCompatActivity implements UIContr
         contoVM.insert(conto);
 
     }
-
+    @Override
+    public void onAccountUpdated(EntityConto conto){
+        contoVM.update(conto);
+    }
     @Override
     protected void onStop() {
         super.onStop();

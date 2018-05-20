@@ -14,13 +14,11 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.franc.mygest.R;
@@ -32,9 +30,6 @@ import com.example.franc.mygest.persistence.MovimentoViewModel;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -67,7 +62,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     public long getItemId(int position){ return  0;}
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dailytransaction, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dashboard_accounts, parent, false);
 
         return new DataObjectHolder(view);
     }
@@ -78,7 +73,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
      * @param view needed to findViewById
      *
      * */
-    private void startDatesRecyclerView(final BigDecimal currentBalance, View view, DataObjectHolder holder){
+    private void startDatesRecyclerView(View view, DataObjectHolder holder){
         RecyclerView rviewDates = view.findViewById(R.id.rv_dates);
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(rviewDates.getContext(),
                     RecyclerView.VERTICAL);
@@ -93,26 +88,8 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         rviewDates.setLayoutManager(new LinearLayoutManager(context));
         rviewDates.setAdapter(adapterDates);
         // QUERY DB FOR RESULTS
-/*
-        movsVM.getAllMovimentoDistByAccount(MainActivity.getDateToSend().getTime(),
-                mResults.get(holder.getAdapterPosition()).getNomeConto())
-                .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
-                    @Override
-                    public void onChanged(@Nullable List<EntityMovimento> entityMovimentos) {
-                        Log.d("on change movimenti", " trovati  " + entityMovimentos.size() + "  movimenti per il conto  " + nomeConto);
-                        holder.setNewBalance(NumberFormat.getCurrencyInstance().format(new BigDecimal(calculateNewBalance(currentBalance, entityMovimentos))));
-                    }
-                });
-*/
-/*
-        SimpleDateFormat dayFormat = new SimpleDateFormat("DD/MM", Locale.ITALIAN);
-
-        Date d = null;
-        String strDate = dayFormat.format(MainActivity.getDateToSend().getTime());
-        d= dayFormat.parse(strDate);
-*/
         movsVM.getAllDates(MainActivity.getDateToSend().getTime(),
-                mResults.get(holder.getAdapterPosition()).getNomeConto())
+                mResults.get(holder.getAdapterPosition()).getId())
                 .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
                     @Override
                     public void onChanged(@Nullable List<EntityMovimento> dates) {
@@ -130,46 +107,33 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
      * @param oldBalance old balance
      * @return new balance
      */
-    private String calculateNewBalance(BigDecimal oldBalance, List<EntityMovimento> movs){
+    private BigDecimal calculateNewBalance(String oldBalance, int idAccount){
 
+        BigDecimal oldBalanceBig = new BigDecimal(String.valueOf(oldBalance));
         // SUM ALL UNCHECKED TRANSACTIONS
         BigDecimal totExpences = new BigDecimal("0");
-        for (EntityMovimento res:movs) {
-            totExpences = totExpences.add(new BigDecimal(String.valueOf(res.getImporto())));
-        }
-
+        totExpences = totExpences.add(new BigDecimal(String.valueOf(movsVM.getAllTransactionAmount(idAccount, MainActivity.getDateToSend().getTime()))));
         // FUTURE ACCOUNT BALANCE
-        final BigDecimal newBalance = oldBalance.subtract(totExpences);
+        final BigDecimal newBalance = oldBalanceBig.subtract(totExpences);
 
-        return newBalance.toString();
+        return newBalance;
     }
 
     @Override
     public void onBindViewHolder(final DataObjectHolder holder, int position) {
-/*
-        String nomeConto = mResults.get(position).getNomeConto();
-*/
-        position = holder.getAdapterPosition();
-        BigDecimal currentBalance = new BigDecimal(String.valueOf(mResults.get(position).getSaldoConto()));
-
-
-
-        startDatesRecyclerView(currentBalance, holder.itemView, holder);
-
-
-
-
-
-        /*
-        final BigDecimal newBalance = calculateNewBalance(currentBalance);
-*/
-
-        //Fills cards with account data
         if(mResults.get(position) != null) {
+            position = holder.getAdapterPosition();
+            String currentBalance = NumberFormat.getCurrencyInstance(Locale.ITALY).format(new BigDecimal(String.valueOf(mResults.get(position).getSaldoConto())));
+            String futureBalance = NumberFormat.getCurrencyInstance(Locale.ITALY).format(calculateNewBalance(mResults.get(position).getSaldoConto(), mResults.get(position).getId()));
+
+
+
+            startDatesRecyclerView(holder.itemView, holder);
             holder.setData(mResults.get(position).getNomeConto(),
-                        NumberFormat.getCurrencyInstance().format(new BigDecimal(String.valueOf(mResults.get(position).getSaldoConto()))));
+                        currentBalance.toString(),
+                        futureBalance
+                    );
             holder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
-            holder.nestedBg.setBackgroundColor(mResults.get(position).getColoreConto());
 
 
 
@@ -178,12 +142,12 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
                 @Override
                 public void onClick(View v) {
-                    if(holder.hiddenlayout.getVisibility()==View.GONE){
-                        holder.hiddenlayout.setVisibility(View.VISIBLE);
+                    if(holder.hiddenRv.getVisibility()==View.GONE){
+                        holder.hiddenRv.setVisibility(View.VISIBLE);
                         holder.cv.setCardElevation(15f);
                     }
                     else {
-                        holder.hiddenlayout.setVisibility(View.GONE);
+                        holder.hiddenRv.setVisibility(View.GONE);
                         holder.cv.setCardElevation(1f);
                     }
                 }
@@ -192,14 +156,11 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
 
             //Updating account balance
-            final BigDecimal currentBalance2 = currentBalance;
             holder.moreIc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     UIController uiController = new UIController(context);
-                    uiController.displayAccountDialog(mResults.get(holder.getAdapterPosition()).getNomeConto(),
-                            NumberFormat.getCurrencyInstance().format(new BigDecimal(String.valueOf(mResults.get(holder.getAdapterPosition()).getSaldoConto()))),
-                            mResults.get(holder.getAdapterPosition()).getColoreConto());
+                    uiController.displaySaveAccountDialog(mResults.get(holder.getAdapterPosition()));
                 }
             });
 
@@ -228,8 +189,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         TextView accountCurrentBalance;
         TextView accountName;
         ImageView moreIc;
-        LinearLayout hiddenlayout;
-        LinearLayout nestedBg;
+        RecyclerView hiddenRv;
 
         CardView cv;
 
@@ -239,20 +199,17 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             accountName = itemView.findViewById(R.id.id_account_name);
             accountFutureBalance = itemView.findViewById(R.id.id_account_future_balance);
             accountCurrentBalance = itemView.findViewById(R.id.id_account_current_balance);
-            moreIc = itemView.findViewById(R.id.imageView);
-            hiddenlayout = itemView.findViewById(R.id.hiddenlayout);
-            nestedBg = itemView.findViewById(R.id.id_bg_nested);
+            moreIc = itemView.findViewById(R.id.ic_more);
+            hiddenRv = itemView.findViewById(R.id.rv_dates);
 
         }
 
         void setNewBalance(String newBalance){
             accountFutureBalance.setText(newBalance);
         }
-        void setData(String textscadenza, String currentBalance){
+        void setData(String textscadenza, String currentBalance, String futureBalance){
             accountName.setText(textscadenza);
-/*
             accountFutureBalance.setText(futureBalance);
-*/
             accountCurrentBalance.setText(currentBalance);
 
 

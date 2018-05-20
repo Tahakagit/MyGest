@@ -37,7 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements UIController.onAccountCreatedListener {
+public class MainActivity extends AppCompatActivity implements UIController.onAccountListener {
 
     static RviewAdapterDailyTransaction adapterDailyTransaction;
     private ContoViewModel mAcountsViewModel;
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         // START MAIN RECYCLERVIEW, FAB AND ACTIONBAR
         initUi();
         mAcountsViewModel.setDate(dateToSend.getTime());
-        mAcountsViewModel.getAllAccoutsByName().observe(this,
+        mAcountsViewModel.getActiveAccounts().observe(this,
                     new Observer<List<EntityConto>>() {
             @Override
             public void onChanged(@Nullable List<EntityConto> entityContos) {
@@ -115,8 +115,14 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
     }
 
     @Override
-    public void onAccountCreated(EntityConto conto) {
+    public void onAccountUpdated(EntityConto conto) {
         mAcountsViewModel.update(conto);
+
+    }
+
+
+    @Override
+    public void onAccountCreated(EntityConto conto) {
 
     }
 
@@ -208,8 +214,6 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
                                 case R.id.action_category_2:
                                     startActivity(allTransaction);
                                     break;
-                                case R.id.action_category_3:
-                                    //tabLayout.getTabAt(2).select();
                             }
 
                             mDrawerLayout.closeDrawers();
@@ -237,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
             }
             if (resultCode == Activity.RESULT_CANCELED) {
 /*
-                List<EntityConto> contos = mAcountsViewModel.getAllAccoutsByName(dateToSend.getTime());
+                List<EntityConto> contos = mAcountsViewModel.getActiveAccounts(dateToSend.getTime());
                 adapterDailyTransaction.setResults(contos);
 */
             }

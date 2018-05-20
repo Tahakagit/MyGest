@@ -29,25 +29,27 @@ public interface MovimentoDao {
     @Query("SELECT * from movimento_table")
     LiveData<List<EntityMovimento>> getAllTransactions();
 
+/*
     @TypeConverters(DateConverter.class)
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT DISTINCT conto FROM movimento_table WHERE scadenza <= (:dayet)")
     LiveData<List<String>> getTransactionUpTo(Date dayet);
+*/
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @TypeConverters(DateConverter.class)
-    @Query("SELECT scadenza, conto, id FROM movimento_table WHERE scadenza  <= :upTo AND conto == (:account) GROUP BY scadenza")
-    LiveData<List<EntityMovimento>> getAllDates(Date upTo, String account);
+    @Query("SELECT scadenza, nomeConto, idConto, id FROM movimento_table WHERE scadenza  <= :upTo AND idConto == (:account) GROUP BY scadenza")
+    LiveData<List<EntityMovimento>> getAllDates(Date upTo, int account);
 
 
     @TypeConverters(DateConverter.class)
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM movimento_table WHERE scadenza <= (:dayet) AND conto LIKE (:account)")
-    LiveData<List<EntityMovimento>> getTransactionUpToByAccount(Date dayet, String account);
+    @Query("SELECT * FROM movimento_table WHERE scadenza <= (:dayet) AND idConto LIKE (:account)")
+    List<EntityMovimento> getTransactionUpToByAccount(Date dayet, int account);
 
     @TypeConverters(DateConverter.class)
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM movimento_table WHERE scadenza == (:dayet) AND conto LIKE (:account)")
-    LiveData<List<EntityMovimento>> getDailyTransactionsByAccount(Date dayet, String account);
+    @Query("SELECT * FROM movimento_table WHERE scadenza == (:dayet) AND idConto LIKE (:account)")
+    LiveData<List<EntityMovimento>> getDailyTransactionsByAccount(Date dayet, int account);
 
 }

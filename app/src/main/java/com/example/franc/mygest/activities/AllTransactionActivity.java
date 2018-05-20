@@ -101,8 +101,6 @@ public class AllTransactionActivity extends AppCompatActivity{
                                 case R.id.action_category_2:
                                     //tabLayout.getTabAt(1).select();
                                     break;
-                                case R.id.action_category_3:
-                                    //tabLayout.getTabAt(2).select();
                             }
 
                             mDrawerLayout.closeDrawers();

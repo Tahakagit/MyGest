@@ -39,7 +39,7 @@ public class UIController {
     RviewAdapterDailyTransaction mAdapterDaily;
     AppCompatActivity mActivity;
     Context mContext;
-    onAccountCreatedListener iface;
+    onAccountListener iface;
 
     int selectedColor = R.color.blue;
 
@@ -47,11 +47,11 @@ public class UIController {
         mActivity = (AppCompatActivity) context;
         mContext = context;
         mAdapterConti = adapterConti;
-        iface = (onAccountCreatedListener) context;
+        iface = (onAccountListener) context;
     }
     public UIController(Context context){
         mContext = context;
-        iface = (onAccountCreatedListener) context;
+        iface = (onAccountListener) context;
 
     }
     public UIController(Context context, RviewAdapterDailyTransaction adapter){
@@ -75,7 +75,7 @@ public class UIController {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                displayAccountDialog(null, null, 0);
+                displaySaveAccountDialog(null);
             }
         });
         rv.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -83,9 +83,15 @@ public class UIController {
     }
 
     //DISPLAY INPUT DIALOG AND SAVE ACCOUNT
-    public void displayAccountDialog(@Nullable final String nomeConto, @Nullable final String saldoConto, @Nullable final int coloreConto )    {
+    public void displaySaveAccountDialog(@Nullable EntityConto conto )    {
         final Dialog d = new Dialog(mContext);
 
+        final Boolean exists;
+        if (conto == null){
+            exists = false;
+        }else {
+            exists = true;
+        }
         d.setTitle("Save to Realm");
         d.setContentView(R.layout.input_dialog_creaconto);
 
@@ -96,14 +102,10 @@ public class UIController {
         final EditText saldoContoTxt= d.findViewById(R.id.saldoconto);
         final ColorPickerDialog colorDialog = displayColorsDialog(d);
 
-        if (nomeConto!= null){
-            nomeContoTxt.setText(nomeConto);
-        }
-        if (saldoConto != null){
-            saldoContoTxt.setText(saldoConto);
-        }
-        if (coloreConto != 0){
-            selectedColor = coloreConto;
+        if (conto!= null){
+            nomeContoTxt.setText(conto.getNomeConto());
+            saldoContoTxt.setText(conto.getSaldoConto());
+            selectedColor = conto.getColoreConto();
         }
         colorDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
             @Override
@@ -123,14 +125,24 @@ public class UIController {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String cleanString = saldoContoTxt.getText().toString().replaceAll("[ €,.\\s]", "");
                 if (checkForInputError(cleanString, nomeContoTxt, saldoContoTxt)){
 
-                    EntityConto conto = new EntityConto(nomeContoTxt.getText().toString(),
+                    if (!exists){
+                        EntityConto newAccount = new EntityConto(nomeContoTxt.getText().toString(),
                                 new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR).toString(),
                                 selectedColor);
+                        iface.onAccountCreated(newAccount);
 
-                    iface.onAccountCreated(conto);
+                    }else {
+                        conto.setNomeConto(nomeContoTxt.getText().toString());
+                        conto.setSaldoConto(new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR).toString());
+                        conto.setColoreConto(selectedColor);
+                        iface.onAccountUpdated(conto);
+
+                    }
+
                     d.dismiss();
                 }
             }
@@ -140,8 +152,10 @@ public class UIController {
     /**
      * interface wich send created account to activity to save it
      */
-    public interface onAccountCreatedListener{
+    public interface onAccountListener {
         void onAccountCreated(EntityConto conto);
+        void onAccountUpdated(EntityConto conto);
+
     }
 
     /**

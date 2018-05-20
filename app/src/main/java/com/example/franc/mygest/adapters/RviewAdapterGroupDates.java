@@ -10,7 +10,6 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,19 +18,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.franc.mygest.R;
-import com.example.franc.mygest.UIController;
-import com.example.franc.mygest.activities.MainActivity;
-import com.example.franc.mygest.persistence.EntityConto;
 import com.example.franc.mygest.persistence.EntityMovimento;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -65,7 +57,7 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
     public long getItemId(int position){ return  0;}
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dates, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dashboard_dates, parent, false);
 
         return new DataObjectHolder(view);
     }
@@ -85,9 +77,11 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
         adapterMovimenti = new RviewAdapterMovimenti(app);
         adapterMovimenti.setHasStableIds(true);
 
-        String nomeConto = mResults.get(holder.getAdapterPosition()).getConto().toString();
+        String nomeConto = mResults.get(holder.getAdapterPosition()).getNomeConto().toString();
         // SET UP RECYCLERVIEW
+/*
         rviewMovimenti.addItemDecoration(mDividerItemDecoration);
+*/
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
         rviewMovimenti.setAdapter(adapterMovimenti);
         // SET UP SWIPE
@@ -104,7 +98,7 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
                     int transactionPosition = viewHolder.getAdapterPosition();
                     int id = (int)adapterMovimenti.getItemId(transactionPosition);
 
-                    Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(holder.getAdapterPosition()).getConto());
+                    Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(holder.getAdapterPosition()).getNomeConto());
 
                     movsVM.deleteTransactionById(id);
                     adapterMovimenti.notifyDataSetChanged();
@@ -119,7 +113,7 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
         itemTouchHelper.attachToRecyclerView(rviewMovimenti);
         // QUERY DB FOR RESULTS
         movsVM.getDailyTransactionsByAccount(mResults.get(holder.getAdapterPosition()).getScadenza(),
-                mResults.get(holder.getAdapterPosition()).getConto())
+                mResults.get(holder.getAdapterPosition()).getIdConto())
                 .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
                     @Override
                     public void onChanged(@Nullable List<EntityMovimento> entityMovimentos) {
@@ -150,7 +144,7 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
                 int transactionPosition = viewHolder.getAdapterPosition();
                 int transactionId = (int)adapter.getItemId(transactionPosition);
                 try {
-                    Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(contoPosition).getConto());
+                    Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(contoPosition).getNomeConto());
 /*
                     adapter.deleteItemAt(transactionPosition);
 */
