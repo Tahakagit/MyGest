@@ -15,6 +15,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.ToggleButton;
 
 import com.example.franc.mygest.R;
 import com.example.franc.mygest.adapters.RviewAdapterAllTransactions;
@@ -40,11 +44,26 @@ public class AllTransactionActivity extends AppCompatActivity{
         setContentView(R.layout.navigation_drawer_filter);
         mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
 
-        mWordViewModel.getAllWords().observe(this, new Observer<List<EntityMovimento>>() {
+        mWordViewModel.viewUnchecked();
+        mWordViewModel.getAllMovimentoChecked().observe(this, new Observer<List<EntityMovimento>>() {
             @Override
             public void onChanged(@Nullable final List<EntityMovimento> words) {
                 // Update the cached copy of the words in the adapter.
                 adapterAllTransactions.setResults(words);
+            }
+        });
+        Switch btnCheck = findViewById(R.id.btn_check);
+        btnCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (btnCheck.isChecked()){
+                    mWordViewModel.viewChecked();
+
+                }
+                else {
+                    mWordViewModel.viewUnchecked();
+
+                }
             }
         });
 

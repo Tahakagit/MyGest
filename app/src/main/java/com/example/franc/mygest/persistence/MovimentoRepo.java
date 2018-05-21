@@ -26,6 +26,10 @@ public class MovimentoRepo {
         return mAllMovimenti;
     }
 
+    LiveData<List<EntityMovimento>> getAllMovimentoChecked(String checked) {
+        return mMovimentoDao.getAllTransactionsChecked(checked);
+    }
+
 /*
     LiveData<List<String>> getAllMovimentoUpTo(java.util.Date upTo) {
         return mMovimentoDao.getTransactionUpTo(upTo);
@@ -45,6 +49,9 @@ public class MovimentoRepo {
         return mMovimentoDao.getAllDates(upTo, account);
     }
 
+    public void checkTransaction(int id){
+        mMovimentoDao.checkTransaction(id);
+    }
 
 
     public void deleteTransactionById(int id){

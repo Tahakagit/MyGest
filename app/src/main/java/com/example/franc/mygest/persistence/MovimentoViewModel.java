@@ -3,6 +3,8 @@ package com.example.franc.mygest.persistence;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Transformations;
 import android.support.annotation.Nullable;
 import android.widget.Switch;
 
@@ -19,22 +21,50 @@ import java.util.List;
 public class MovimentoViewModel extends AndroidViewModel {
 
     private MovimentoRepo mRepository;
+    private MutableLiveData<String> checked = new MutableLiveData<>();
 
     private LiveData<List<EntityMovimento>> mAllMovimento;
+    private LiveData<List<EntityMovimento>> mActiveTransaction;
 
     public MovimentoViewModel(Application application) {
         super(application);
         mRepository = new MovimentoRepo(application);
         mAllMovimento = mRepository.getAllMovimento();
+        mActiveTransaction = Transformations.switchMap(checked, check -> mRepository.getAllMovimentoChecked(check));
     }
 
+/*
+    public void switchChecked(){
+        if (this.checked.equals("checked")){
+            this.checked.setValue("unchecked");
+        }else {
+            this.checked.setValue("checked");
+        }
+    }
+*/
+
+    public void viewChecked(){
+        this.checked.setValue("checked");
+    }
+
+    public void viewUnchecked(){
+        this.checked.setValue("unchecked");
+    }
     public void deleteTransactionById(int id){
         mRepository.deleteTransactionById(id);
     }
+
+    public void checkTransaction(int id){
+        mRepository.checkTransaction(id);
+    }
+
+
     public LiveData<List<EntityMovimento>> getAllWords() { return mAllMovimento; }
-/*
-    public LiveData<List<String>> getAllMovimentoDist(java.util.Date upTo) { return mRepository.getAllMovimentoUpTo(upTo); }
-*/
+
+
+
+    public LiveData<List<EntityMovimento>> getAllMovimentoChecked() {
+        return mActiveTransaction; }
 
     public String getAllTransactionAmount(int accountId, java.util.Date upTo){
         List<EntityMovimento> allMovs = mRepository.getAllMovimentoUpToByAccount(upTo, accountId);

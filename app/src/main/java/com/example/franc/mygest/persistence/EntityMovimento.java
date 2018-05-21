@@ -26,6 +26,7 @@ public class EntityMovimento{
     private String tipo;
     @android.arch.persistence.room.PrimaryKey(autoGenerate = true)
     private int id;
+    private String checked = "unchecked";
 
     public EntityMovimento(final String beneficiario, final String importo, final Date scadenza, final int idConto, final String nomeConto, @Nullable final Date endscadenza, final String tipo){
         this.beneficiario = beneficiario;
@@ -39,6 +40,14 @@ public class EntityMovimento{
     }
     //todo attrs checked, direzione
 
+
+    public String getChecked() {
+        return checked;
+    }
+
+    public void setChecked(String checked) {
+        this.checked = checked;
+    }
 
     public String getNomeConto() {
         return nomeConto;
