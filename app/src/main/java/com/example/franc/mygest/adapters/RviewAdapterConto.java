@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.franc.mygest.R;
@@ -26,10 +25,10 @@ import java.util.List;
  * Created by franc on 20/12/2017.
  */
 
-public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.DataObjectHolder> {
-    List<EntityConto> mResults;
+public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.AccountViewHolder> {
+    private List<EntityConto> mResults;
     private Context context;
-    ContoViewModel contoVM;
+    private ContoViewModel contoVM;
 
 
     public RviewAdapterConto(Context context) {
@@ -37,17 +36,15 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
         contoVM = new ContoViewModel((Application) context.getApplicationContext());
     }
 
-    public RviewAdapterConto(){
-
-    }
-    public static class DataObjectHolder extends RecyclerView.ViewHolder{
+    public static class AccountViewHolder extends RecyclerView.ViewHolder{
         TextView nome;
         TextView saldo;
         ImageView updateAccount;
         ImageView deleteAccount;
         CardView cv;
         Group hiddenlayout;
-        public DataObjectHolder(View itemView) {
+
+        AccountViewHolder(View itemView) {
             super(itemView);
             nome = itemView.findViewById(R.id.cardNomeconto);
             saldo = itemView.findViewById(R.id.cardSaldoconto);
@@ -57,12 +54,12 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
             deleteAccount = itemView.findViewById(R.id.img_delete_account);
 
         }
-        public void setData(String textbeneficiario, String textimporto){
+
+        void setData(String textbeneficiario, String textimporto){
             nome.setText(textbeneficiario);
             saldo.setText(textimporto);
         }
     }
-
 
     public void setResults(List<EntityConto> results){
         mResults = results;
@@ -76,60 +73,47 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Da
             return mResults.size();
         else return 0;
     }
-/*
-    public long getItemId(int position){ return  mResults.get(position).getTimestamp();}
-*/
-    public RviewAdapterConto.DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+    public AccountViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_conti, parent, false);
-        return new RviewAdapterConto.DataObjectHolder(view);
+        return new AccountViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final RviewAdapterConto.DataObjectHolder holder, int position) {
+    public void onBindViewHolder(final AccountViewHolder holder, int position) {
         holder.hiddenlayout.setVisibility(View.GONE);
-
-/*
-        Conto conto = mResults.get(position);
-*/
         EntityConto current = mResults.get(position);
-
-        if(current.getNomeConto() != null) {
+        if(current != null) {
             BigDecimal rawBalanceFromDb = new BigDecimal(String.valueOf(current.getSaldoConto()));
-            String balance = NumberFormat.getCurrencyInstance().format(rawBalanceFromDb);
-            holder.setData(current.getNomeConto(), balance);
+            String formattedBalance = NumberFormat.getCurrencyInstance().format(rawBalanceFromDb);
+            holder.setData(current.getNomeConto(), formattedBalance);
             holder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
-
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(holder.hiddenlayout.getVisibility()==View.GONE){
+                        holder.hiddenlayout.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        holder.hiddenlayout.setVisibility(View.GONE);
+                    }
+                }
+            });
+            holder.updateAccount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UIController uiController = new UIController(context);
+                    uiController.displaySaveAccountDialog(mResults.get(position));
+                }
+            });
+            holder.deleteAccount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //DELETE ACCOUNT
+                    //what about transactions in it?
+                    contoVM.delete(mResults.get(position));
+                }
+            });
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if(holder.hiddenlayout.getVisibility()==View.GONE){
-                    holder.hiddenlayout.setVisibility(View.VISIBLE);
-                }
-                else {
-                    holder.hiddenlayout.setVisibility(View.GONE);
-                }
-            }
-        });
-        holder.updateAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UIController uiController = new UIController(context);
-                uiController.displaySaveAccountDialog(mResults.get(position));
-            }
-        });
-        holder.deleteAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //DELETE ACCOUNT
-                //what about transactions in it?
-                contoVM.delete(mResults.get(position));
-            }
-        });
-
-
-
     }
-
 }

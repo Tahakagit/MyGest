@@ -33,7 +33,7 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdapterDailyTransaction.DataObjectHolder> {
+public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdapterDailyTransaction.AccountDashboardViewHolder> {
 
     private List<EntityConto> mResults;
     private Context context;
@@ -61,35 +61,35 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     @Override
     public long getItemId(int position){ return  0;}
     @Override
-    public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AccountDashboardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dashboard_accounts, parent, false);
 
-        return new DataObjectHolder(view);
+        return new AccountDashboardViewHolder(view);
     }
 
 
     /**
      *
-     * @param view needed to findViewById
+     * @param accountViewHolder the viewholder
      *
      * */
-    private void startDatesRecyclerView(View view, DataObjectHolder holder){
-        RecyclerView rviewDates = view.findViewById(R.id.rv_dates);
-        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(rviewDates.getContext(),
-                    RecyclerView.VERTICAL);
+    private void startDatesRecyclerView(AccountDashboardViewHolder accountViewHolder){
+        RecyclerView rviewDates;
+        DividerItemDecoration mDividerItemDecoration;
         RviewAdapterGroupDates adapterDates;
+        String nomeConto = mResults.get(accountViewHolder.getAdapterPosition()).getNomeConto();//DEBUG
 
+        rviewDates = accountViewHolder.itemView.findViewById(R.id.rv_dates);
+        mDividerItemDecoration = new DividerItemDecoration(rviewDates.getContext(),
+                RecyclerView.VERTICAL);
         adapterDates = new RviewAdapterGroupDates(context, app);
         adapterDates.setHasStableIds(true);
-
-        String nomeConto = mResults.get(holder.getAdapterPosition()).getNomeConto();
-        // SET UP RECYCLERVIEW
         rviewDates.addItemDecoration(mDividerItemDecoration);
         rviewDates.setLayoutManager(new LinearLayoutManager(context));
         rviewDates.setAdapter(adapterDates);
-        // QUERY DB FOR RESULTS
+        // OBSERVE DB FOR RESULTS
         movsVM.getAllDates(MainActivity.getDateToSend().getTime(),
-                mResults.get(holder.getAdapterPosition()).getId())
+                mResults.get(accountViewHolder.getAdapterPosition()).getId())
                 .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
                     @Override
                     public void onChanged(@Nullable List<EntityMovimento> dates) {
@@ -97,70 +97,60 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                         Log.d("on change movimenti", " trovate  " + dates.size() + "  date per il conto  " + nomeConto);
                     }
                 });
-
-
     }
-
 
     /**
      * Subtract all transactions to current balance up to the selected date
-     * @param oldBalance old balance
+     * @param account EntityAccount
      * @return new balance
      */
-    private BigDecimal calculateNewBalance(String oldBalance, int idAccount){
-
-        BigDecimal oldBalanceBig = new BigDecimal(String.valueOf(oldBalance));
-        // SUM ALL UNCHECKED TRANSACTIONS
+    private BigDecimal calculateNewBalance(EntityConto account){
+        BigDecimal oldBalance = new BigDecimal(String.valueOf(account.getSaldoConto()));
         BigDecimal totExpences = new BigDecimal("0");
-        totExpences = totExpences.add(new BigDecimal(String.valueOf(movsVM.getAllTransactionAmount(idAccount, MainActivity.getDateToSend().getTime()))));
-        // FUTURE ACCOUNT BALANCE
-        final BigDecimal newBalance = oldBalanceBig.subtract(totExpences);
-
+        totExpences = totExpences.add(new BigDecimal(String.valueOf(movsVM.getAllTransactionAmount(account.getId(),
+                    MainActivity.getDateToSend().getTime()))));
+        BigDecimal newBalance = oldBalance.subtract(totExpences);
         return newBalance;
     }
 
     @Override
-    public void onBindViewHolder(final DataObjectHolder holder, int position) {
+    public void onBindViewHolder(final AccountDashboardViewHolder accountViewHolder, int position) {
         if(mResults.get(position) != null) {
-            position = holder.getAdapterPosition();
-            String currentBalance = NumberFormat.getCurrencyInstance(Locale.ITALY).format(new BigDecimal(String.valueOf(mResults.get(position).getSaldoConto())));
-            String futureBalance = NumberFormat.getCurrencyInstance(Locale.ITALY).format(calculateNewBalance(mResults.get(position).getSaldoConto(), mResults.get(position).getId()));
-
-
-
-            startDatesRecyclerView(holder.itemView, holder);
-            holder.setData(mResults.get(position).getNomeConto(),
-                        currentBalance.toString(),
-                        futureBalance
-                    );
-            holder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
-
-
-
-            //Expanding Collapsing Account cards
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            position = accountViewHolder.getAdapterPosition();
+            // CALCULATE BALANCES
+            BigDecimal currentBalanceBigD = new BigDecimal(String.valueOf(mResults.get(position).getSaldoConto()));
+            BigDecimal futureBalanceBigD = calculateNewBalance(mResults.get(position));
+            String currentBalance = NumberFormat.getCurrencyInstance(Locale.ITALY).format(currentBalanceBigD);
+            String futureBalance = NumberFormat.getCurrencyInstance(Locale.ITALY).format(futureBalanceBigD);
+            // FILL CARD WITH DATA
+            accountViewHolder.setData(mResults.get(position).getNomeConto(),
+                    currentBalance,
+                    futureBalance
+            );
+            accountViewHolder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
+            // STARTS DATES GROUPING RV
+            startDatesRecyclerView(accountViewHolder);
+            // STARTING EXPAND COLLAPSE ACCOUNT CARDS
+            accountViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    if(holder.hiddenRv.getVisibility()==View.GONE){
-                        holder.hiddenRv.setVisibility(View.VISIBLE);
-                        holder.cv.setCardElevation(15f);
+                    if(accountViewHolder.hiddenRv.getVisibility()==View.GONE){
+                        accountViewHolder.hiddenRv.setVisibility(View.VISIBLE);
+                        accountViewHolder.cv.setCardElevation(15f);
                     }
                     else {
-                        holder.hiddenRv.setVisibility(View.GONE);
-                        holder.cv.setCardElevation(1f);
+                        accountViewHolder.hiddenRv.setVisibility(View.GONE);
+                        accountViewHolder.cv.setCardElevation(1f);
                     }
                 }
             });
-
-
-
-            //Updating account balance
-            holder.moreIc.setOnClickListener(new View.OnClickListener() {
+            // CREATING EDIT ACCOUNT MENU
+            accountViewHolder.moreIc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     UIController uiController = new UIController(context);
-                    uiController.displaySaveAccountDialog(mResults.get(holder.getAdapterPosition()));
+                    uiController.displaySaveAccountDialog(mResults.get(accountViewHolder.getAdapterPosition()));
                 }
             });
 
@@ -169,11 +159,6 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
 
     }
-
-    /**
-     * Shows dialog to update account balance
-     * @param position position to retrieve account
-     */
 
     /**
      * Updates mAdapterConti items list
@@ -184,7 +169,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         notifyDataSetChanged();
     }
 
-    static class DataObjectHolder extends RecyclerView.ViewHolder{
+    static class AccountDashboardViewHolder extends RecyclerView.ViewHolder{
         TextView accountFutureBalance;
         TextView accountCurrentBalance;
         TextView accountName;
@@ -193,7 +178,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
         CardView cv;
 
-        DataObjectHolder(View itemView) {
+        AccountDashboardViewHolder(View itemView) {
             super(itemView);
             cv = itemView.findViewById(R.id.cv_account_dashboard);
             accountName = itemView.findViewById(R.id.id_account_name);
@@ -204,9 +189,6 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
         }
 
-        void setNewBalance(String newBalance){
-            accountFutureBalance.setText(newBalance);
-        }
         void setData(String textscadenza, String currentBalance, String futureBalance){
             accountName.setText(textscadenza);
             accountFutureBalance.setText(futureBalance);
