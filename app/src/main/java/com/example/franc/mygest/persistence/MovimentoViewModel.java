@@ -31,6 +31,12 @@ public class MovimentoViewModel extends AndroidViewModel {
     public void deleteTransactionById(int id){
         mRepository.deleteTransactionById(id);
     }
+
+    public void checkTransaction(int id){
+        mRepository.checkTransaction(id);
+    }
+
+
     public LiveData<List<EntityMovimento>> getAllWords() { return mAllMovimento; }
 /*
     public LiveData<List<String>> getAllMovimentoDist(java.util.Date upTo) { return mRepository.getAllMovimentoUpTo(upTo); }

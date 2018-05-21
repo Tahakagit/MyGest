@@ -45,6 +45,9 @@ public class MovimentoRepo {
         return mMovimentoDao.getAllDates(upTo, account);
     }
 
+    public void checkTransaction(int id){
+        mMovimentoDao.checkTransaction(id);
+    }
 
 
     public void deleteTransactionById(int id){

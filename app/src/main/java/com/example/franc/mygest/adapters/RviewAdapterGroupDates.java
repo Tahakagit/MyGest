@@ -78,7 +78,7 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
         rviewMovimenti.setAdapter(adapterMovimenti);
         // SET UP SWIPE
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT|ItemTouchHelper.LEFT) {
 
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -87,23 +87,43 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                try {
-                    int transactionPosition = viewHolder.getAdapterPosition();
-                    int id = (int)adapterMovimenti.getItemId(transactionPosition);
 
-                    Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(dateViewholder.getAdapterPosition()).getNomeConto());
+                if (direction == ItemTouchHelper.RIGHT) {
+                    try {
+                        int transactionPosition = viewHolder.getAdapterPosition();
+                        int id = (int)adapterMovimenti.getItemId(transactionPosition);
 
-                    movsVM.deleteTransactionById(id);
-                    adapterMovimenti.notifyDataSetChanged();
+                        Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(dateViewholder.getAdapterPosition()).getNomeConto());
+
+                        movsVM.deleteTransactionById(id);
+                        adapterMovimenti.notifyDataSetChanged();
 
 
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    Log.w("swipe", "Skip timestamp cause ther's no result");
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        Log.w("swipe", "Skip timestamp cause ther's no result");
+                    }
+                }else {
+                    try {
+                        int transactionPosition = viewHolder.getAdapterPosition();
+                        int id = (int)adapterMovimenti.getItemId(transactionPosition);
+
+                        Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(dateViewholder.getAdapterPosition()).getNomeConto());
+
+                        movsVM.checkTransaction(id);
+                        adapterMovimenti.notifyDataSetChanged();
+
+
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        Log.w("swipe", "Skip timestamp cause ther's no result");
+                    }
+
                 }
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(rviewMovimenti);
+
+
         // QUERY DB FOR RESULTS
         movsVM.getDailyTransactionsByAccount(mResults.get(dateViewholder.getAdapterPosition()).getScadenza(),
                 mResults.get(dateViewholder.getAdapterPosition()).getIdConto())

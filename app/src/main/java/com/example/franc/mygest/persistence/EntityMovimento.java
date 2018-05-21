@@ -26,7 +26,7 @@ public class EntityMovimento{
     private String tipo;
     @android.arch.persistence.room.PrimaryKey(autoGenerate = true)
     private int id;
-    private boolean checked;
+    private boolean checked = false;
 
     public EntityMovimento(final String beneficiario, final String importo, final Date scadenza, final int idConto, final String nomeConto, @Nullable final Date endscadenza, final String tipo){
         this.beneficiario = beneficiario;
