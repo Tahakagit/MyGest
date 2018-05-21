@@ -21,7 +21,7 @@
             android:id="@+id/saldoconto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
+            android:inputType="numberSigned"
             android:hint="Saldo..."/>
 
         <Button

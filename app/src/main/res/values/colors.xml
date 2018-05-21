@@ -33,6 +33,7 @@
     <color name="orange_bg_black_text">#ffb74d</color>
     <color name="brown_bg_black_text">#a1887f</color>
     <color name="grey_bg_black_text">#90a4ae</color>
+    <color name="grey_bg_soft">#e0e0e0</color>
 
 
     <color name="colorAccent">#ff4081</color>
