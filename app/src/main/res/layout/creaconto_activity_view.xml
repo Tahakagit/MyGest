@@ -8,6 +8,7 @@
     tools:context="com.example.franc.mygest.activities.AccountsManageActivity"
     tools:showIn="@layout/activity_crea_conto">
 
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
