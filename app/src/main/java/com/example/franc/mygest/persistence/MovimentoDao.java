@@ -26,18 +26,14 @@ public interface MovimentoDao {
     @Query("DELETE FROM movimento_table WHERE id LIKE :id")
     void deleteTransactionById(int id);
 
-    @Query("UPDATE movimento_table SET checked = 'true' WHERE id LIKE :id")
+    @Query("UPDATE movimento_table SET checked = 'checked' WHERE id LIKE :id")
     void checkTransaction(int id);
 
-    @Query("SELECT * from movimento_table WHERE checked == 'false'")
+    @Query("SELECT * from movimento_table WHERE checked == 'unchecked'")
     LiveData<List<EntityMovimento>> getAllTransactions();
 
-/*
-    @TypeConverters(DateConverter.class)
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT DISTINCT conto FROM movimento_table WHERE scadenza <= (:dayet)")
-    LiveData<List<String>> getTransactionUpTo(Date dayet);
-*/
+    @Query("SELECT * from movimento_table WHERE checked == :checked")
+    LiveData<List<EntityMovimento>> getAllTransactionsChecked(String checked);
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @TypeConverters(DateConverter.class)
