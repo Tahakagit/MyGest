@@ -92,11 +92,10 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
                     try {
                         int transactionPosition = viewHolder.getAdapterPosition();
                         int id = (int)adapterMovimenti.getItemId(transactionPosition);
-
-                        Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(dateViewholder.getAdapterPosition()).getNomeConto());
-
                         movsVM.deleteTransactionById(id);
-                        adapterMovimenti.notifyDataSetChanged();
+/*
+                        adapterMovimenti.notifyItemRemoved(transactionPosition);
+*/
 
 
                     } catch (ArrayIndexOutOfBoundsException e) {
@@ -110,7 +109,7 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
                         Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(dateViewholder.getAdapterPosition()).getNomeConto());
 
                         movsVM.checkTransaction(id);
-                        adapterMovimenti.notifyDataSetChanged();
+                        adapterMovimenti.notifyItemRemoved(transactionPosition);
 
 
                     } catch (ArrayIndexOutOfBoundsException e) {

@@ -33,7 +33,7 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
 
     @Override
     public void onBindViewHolder(final TransactionViewHolder holder, int position) {
-        holder.hiddenMenu.setVisibility(View.GONE);
+        holder.hiddenMenu.setVisibility(View.INVISIBLE);
         EntityMovimento movimento = mResults.get(position);
 
         if (movimento.getEndscadenza()!= null){
@@ -47,12 +47,14 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(holder.hiddenMenu.getVisibility()==View.GONE){
+                    if(holder.hiddenMenu.getVisibility()==View.INVISIBLE){
+                        //workaround to make visibility working with Constraint Group
+                        holder.hiddenMenu.setVisibility(View.GONE);
                         holder.hiddenMenu.setVisibility(View.VISIBLE);
                     }
                     else {
-
                         holder.hiddenMenu.setVisibility(View.GONE);
+                        holder.hiddenMenu.setVisibility(View.INVISIBLE);
                     }
                 }
             });
