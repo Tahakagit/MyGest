@@ -44,9 +44,20 @@ public class MovimentoRepo {
         return mMovimentoDao.getDailyTransactionsByAccount(upTo, account);
     }
 
+    LiveData<List<EntityMovimento>> getDailyTransactions(java.util.Date upTo) {
+        return mMovimentoDao.getDailyTransactions(upTo);
+    }
+    LiveData<List<EntityMovimento>> getDailyTransactionsChecked(java.util.Date upTo, String checked) {
+        return mMovimentoDao.getDailyTransactionsChecked(upTo, checked);
+    }
 
-    LiveData<List<EntityMovimento>> getAllDates(java.util.Date upTo, int account) {
-        return mMovimentoDao.getAllDates(upTo, account);
+    LiveData<List<EntityMovimento>> getAllDatesByAccount(java.util.Date upTo, int account) {
+        return mMovimentoDao.getAllDatesByAccount(upTo, account);
+    }
+
+
+    LiveData<List<EntityMovimento>> getAllDates(String checked) {
+        return mMovimentoDao.getAllDates(checked);
     }
 
     public void checkTransaction(int id){

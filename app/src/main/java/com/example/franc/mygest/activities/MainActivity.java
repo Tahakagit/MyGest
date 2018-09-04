@@ -62,11 +62,11 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
                     new Observer<List<EntityConto>>() {
             @Override
             public void onChanged(@Nullable List<EntityConto> entityContos) {
-                Log.d("on change movimenti", " trovati  " + entityContos.size() + "  conti  ");
 
                 adapterDailyTransaction.setResults(entityContos);
             }
         });
+
         // SET UP DATE PICKER
         showDatePicker();
     }
@@ -166,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
                 String formattedDate = sdf.format(dateTo.getTime());
                 edittext.setText(formattedDate);
                 mAcountsViewModel.setDate(dateToSend.getTime());
+
             }
         };
         datePickerFragment.setCallBack(ondate);

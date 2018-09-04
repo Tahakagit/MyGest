@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +23,7 @@ import android.widget.ToggleButton;
 
 import com.example.franc.mygest.R;
 import com.example.franc.mygest.adapters.RviewAdapterAllTransactions;
+import com.example.franc.mygest.adapters.RviewAdapterGroupDates;
 import com.example.franc.mygest.persistence.EntityMovimento;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
 
@@ -31,8 +33,8 @@ import java.util.List;
 
 public class AllTransactionActivity extends AppCompatActivity{
 
-    private static RviewAdapterAllTransactions adapterAllTransactions;
-    private static Context context;
+    private RviewAdapterAllTransactions adapterAllTransactions;
+    private Context context;
     private static Calendar weekRange;
     private MovimentoViewModel mWordViewModel;
 
@@ -45,11 +47,11 @@ public class AllTransactionActivity extends AppCompatActivity{
         mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
 
         mWordViewModel.viewUnchecked();
-        mWordViewModel.getAllMovimentoChecked().observe(this, new Observer<List<EntityMovimento>>() {
+        mWordViewModel.getAllDates().observe(this, new Observer<List<EntityMovimento>>() {
             @Override
-            public void onChanged(@Nullable final List<EntityMovimento> words) {
-                // Update the cached copy of the words in the adapter.
-                adapterAllTransactions.setResults(words);
+            public void onChanged(@Nullable final List<EntityMovimento> movimentos) {
+                // Update the cached copy of the movimentos in the adapter.
+                adapterAllTransactions.setResults(movimentos);
             }
         });
         Switch btnCheck = findViewById(R.id.btn_check);
@@ -58,10 +60,11 @@ public class AllTransactionActivity extends AppCompatActivity{
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (btnCheck.isChecked()){
                     mWordViewModel.viewChecked();
-
+                    adapterAllTransactions.notifyDataSetChanged();
                 }
                 else {
                     mWordViewModel.viewUnchecked();
+                    adapterAllTransactions.notifyDataSetChanged();
 
                 }
             }
@@ -73,17 +76,20 @@ public class AllTransactionActivity extends AppCompatActivity{
 
     //START USER INTERFACE
     private void initUi(){
+        DividerItemDecoration mDividerItemDecoration;
 
         RecyclerView rview = findViewById(R.id.recyclerview);
         Toolbar myToolbar = findViewById(R.id.toolbar_creacontoactivity);
         setSupportActionBar(myToolbar);
 
         final Intent intent = new Intent(this, DialogActivity.class);
+        mDividerItemDecoration = new DividerItemDecoration(rview.getContext(),
+                RecyclerView.VERTICAL);
 
-        //todo fix this
-        adapterAllTransactions = new RviewAdapterAllTransactions(this);
+        adapterAllTransactions = new RviewAdapterAllTransactions(this, getApplication());
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapterAllTransactions);
+        rview.addItemDecoration(mDividerItemDecoration);
         FloatingActionButton fab = findViewById(R.id.fab_insert_transaction);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

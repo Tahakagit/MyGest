@@ -19,6 +19,7 @@ public class ContoRepo {
     private LiveData<List<EntityConto>> mAllAccounts;
     private List<String> mAllAccountName;
     private LiveData<List<EntityConto>> mAllAccountsDist;
+    private List<EntityConto> mAllAccountsDistSync;
 
     ContoRepo(Application application) {
         MovimentoRoomDatabase db = MovimentoRoomDatabase.getDatabase(application);
@@ -50,6 +51,15 @@ public class ContoRepo {
         mAllAccountsDist = mContoDao.getAllAccountsDist(upTo);
 
         return mAllAccountsDist;
+    }
+    @TypeConverters(DateConverter.class)
+    List<EntityConto> getAllAccountsSync(Date upTo) {
+/*
+        distAccounts = mMovimentoDao.getTransactionUpTo(upTo);
+*/
+        mAllAccountsDistSync = mContoDao.getAllAccountsDistAsync(upTo);
+
+        return mAllAccountsDistSync;
     }
 
     public void insert (EntityConto conto) {

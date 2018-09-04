@@ -87,14 +87,14 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         rviewDates.addItemDecoration(mDividerItemDecoration);
         rviewDates.setLayoutManager(new LinearLayoutManager(context));
         rviewDates.setAdapter(adapterDates);
+        int accountId = mResults.get(accountViewHolder.getAdapterPosition()).getId();
         // OBSERVE DB FOR RESULTS
-        movsVM.getAllDates(MainActivity.getDateToSend().getTime(),
-                mResults.get(accountViewHolder.getAdapterPosition()).getId())
+        movsVM.getAllDatesByAccount(MainActivity.getDateToSend().getTime(),
+                accountId)
                 .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
                     @Override
                     public void onChanged(@Nullable List<EntityMovimento> dates) {
                         adapterDates.setResults(dates);
-                        Log.d("on change movimenti", " trovate  " + dates.size() + "  date per il conto  " + nomeConto);
                     }
                 });
     }

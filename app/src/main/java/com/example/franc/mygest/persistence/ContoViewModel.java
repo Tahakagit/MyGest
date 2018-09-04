@@ -41,6 +41,7 @@ public class ContoViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<EntityConto>> getActiveAccounts() { return mActiveAccounts; }
+    public List<EntityConto> getActiveAccountsSync(Date date) { return mRepository.getAllAccountsSync(date); }
 
     public void insert(EntityConto conto) { mRepository.insert(conto); }
 

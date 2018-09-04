@@ -37,18 +37,32 @@ public interface MovimentoDao {
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @TypeConverters(DateConverter.class)
-    @Query("SELECT scadenza, nomeConto, idConto, id, checked FROM movimento_table WHERE scadenza  <= :upTo AND idConto == (:account) GROUP BY scadenza")
-    LiveData<List<EntityMovimento>> getAllDates(Date upTo, int account);
+    @Query("SELECT scadenza, nomeConto, idConto, id, checked FROM movimento_table WHERE scadenza  <= :upTo AND idConto == (:account) AND checked == 'unchecked' GROUP BY scadenza")
+    LiveData<List<EntityMovimento>> getAllDatesByAccount(Date upTo, int account);
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT scadenza, nomeConto, idConto, id, checked FROM movimento_table WHERE checked == :checked GROUP BY scadenza")
+    LiveData<List<EntityMovimento>> getAllDates(String checked);
 
     @TypeConverters(DateConverter.class)
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM movimento_table WHERE scadenza <= (:dayet) AND idConto LIKE (:account)")
+    @Query("SELECT * FROM movimento_table WHERE scadenza <= (:dayet) AND checked == 'unchecked' AND idConto  LIKE (:account)")
     List<EntityMovimento> getTransactionUpToByAccount(Date dayet, int account);
 
     @TypeConverters(DateConverter.class)
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM movimento_table WHERE scadenza == (:dayet) AND idConto LIKE (:account)")
+    @Query("SELECT * FROM movimento_table WHERE scadenza == (:dayet) AND idConto LIKE (:account) AND checked == 'unchecked'")
     LiveData<List<EntityMovimento>> getDailyTransactionsByAccount(Date dayet, int account);
+
+    @TypeConverters(DateConverter.class)
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM movimento_table WHERE scadenza == (:dayet) AND checked == 'unchecked'")
+    LiveData<List<EntityMovimento>> getDailyTransactions(Date dayet);
+
+    @TypeConverters(DateConverter.class)
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM movimento_table WHERE scadenza == :dayet AND checked == :checked")
+    LiveData<List<EntityMovimento>> getDailyTransactionsChecked(Date dayet, String checked);
 
 }

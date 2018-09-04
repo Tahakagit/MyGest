@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:orientation="vertical"
 
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
     android:layout_margin="0dp"
-    android:id="@+id/linearLayout">
+    android:orientation="vertical">
 
 
     <TextView
@@ -30,9 +30,8 @@
 
     <ImageView
         android:id="@+id/ic_recurrence"
-        android:layout_width="28dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:padding="2dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/imageView2"
@@ -47,9 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:padding="2dp"
-        app:layout_constraintBottom_toBottomOf="@+id/id_card_importo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/id_card_importo"
+        app:layout_constraintTop_toBottomOf="@+id/id_card_importo"
         app:srcCompat="@drawable/ic_trans_out"
         tools:layout_conversion_absoluteHeight="54dp"
         tools:layout_conversion_absoluteWidth="28dp" />
@@ -60,11 +58,11 @@
         style="@style/text_style_tipo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="assegno"
         android:textAlignment="center"
+        android:textSize="12sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -74,10 +72,13 @@
         android:id="@+id/ic_beneficiario"
         android:layout_width="wrap_content"
         android:layout_height="23dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/id_card_beneficiario"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/id_card_beneficiario"
-        app:layout_constraintTop_toTopOf="@+id/id_card_beneficiario"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/id_card_tipo"
+        app:layout_constraintTop_toBottomOf="@+id/id_card_importo"
         app:srcCompat="@drawable/ic_beneficiario" />
 
     <TextView
@@ -87,12 +88,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
         android:text="pio"
         android:textAlignment="center"
+        android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id_card_importo"
+        app:layout_constraintBottom_toBottomOf="@+id/ic_beneficiario"
+        app:layout_constraintEnd_toStartOf="@+id/ic_recurrence"
+        app:layout_constraintStart_toEndOf="@+id/ic_beneficiario"
+        app:layout_constraintTop_toTopOf="@+id/ic_beneficiario"
         tools:layout_conversion_absoluteHeight="25dp"
         tools:layout_conversion_absoluteWidth="1dp" />
 
@@ -101,7 +104,7 @@
         android:id="@+id/hidden_transaction_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:constraint_referenced_ids="id_card_beneficiario, ic_beneficiario, id_card_tipo" />
+        android:visibility="visible"
+        app:constraint_referenced_ids="id_card_beneficiario, ic_beneficiario, id_card_tipo,ic_recurrence,imageView2" />
 </android.support.constraint.ConstraintLayout>
 

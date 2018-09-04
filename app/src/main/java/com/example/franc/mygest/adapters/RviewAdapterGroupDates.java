@@ -9,6 +9,11 @@ import android.app.Application;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +40,7 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
     private Context context;
     MovimentoViewModel movsVM;
     private Application app;
+    Drawable background;
 
     public RviewAdapterGroupDates(Context context, Application app) {
         setResults(mResults);
@@ -62,6 +68,61 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
     }
 
 
+
+    /**
+     * Updates mAdapterConti items list
+     * @param results ArrayList to show
+     */
+    public void setResults(List<EntityMovimento> results){
+        mResults = results;
+        notifyDataSetChanged();
+    }
+
+    static class DateDashboardViewHolder extends RecyclerView.ViewHolder{
+        TextView dayScadenzaText;
+        TextView monthScadenzaText;
+        TextView yearScadenzaText;
+
+        DateDashboardViewHolder(View itemView) {
+            super(itemView);
+
+            dayScadenzaText = itemView.findViewById(R.id.id_card_scadenza_day);
+            monthScadenzaText = itemView.findViewById(R.id.id_card_scadenza_month);
+/*
+            yearScadenzaText = itemView.findViewById(R.id.id_card_scadenza_year);
+*/
+
+        }
+
+        void setData(String dayScadenza, String monthScadenza){
+            dayScadenzaText.setText(dayScadenza);
+            monthScadenzaText.setText(monthScadenza);
+/*
+            yearScadenzaText.setText(yearScadenza);
+*/
+
+        }
+    }
+
+
+    @Override
+    public void onBindViewHolder(final DateDashboardViewHolder dateViewholder, int position) {
+        position = dateViewholder.getAdapterPosition();
+        startTransactionRecyclerView(dateViewholder);
+
+        EntityMovimento current = mResults.get(position);
+        if(current != null) {
+            SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.ITALY);
+            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.ITALY);
+/*
+            SimpleDateFormat yearFormat = new SimpleDateFormat("YY", Locale.ITALY);
+*/
+
+            dateViewholder.setData(dayFormat.format(current.getScadenza()), monthFormat.format(current.getScadenza()).toUpperCase());
+        }
+    }
+
+
     /**
      *
      * @param dateViewholder viewholder
@@ -73,12 +134,52 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
 
         adapterMovimenti = new RviewAdapterMovimenti(app);
         adapterMovimenti.setHasStableIds(true);
+        // QUERY DB FOR RESULTS
+        movsVM.getDailyTransactionsByAccount(mResults.get(dateViewholder.getAdapterPosition()).getScadenza(),
+                mResults.get(dateViewholder.getAdapterPosition()).getIdConto())
+                .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
+                    @Override
+                    public void onChanged(@Nullable List<EntityMovimento> entityMovimentos) {
+                        adapterMovimenti.setResults(entityMovimentos);
+                    }
+                });
 
-        String nomeConto = mResults.get(dateViewholder.getAdapterPosition()).getNomeConto();
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
         rviewMovimenti.setAdapter(adapterMovimenti);
         // SET UP SWIPE
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT|ItemTouchHelper.LEFT) {
+
+/*
+            @Override
+            public void onChildDraw (Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive){
+*/
+/*
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+*//*
+
+                background = new ColorDrawable(context.getResources().getColor(R.color.grey_bg_soft));
+
+                Paint paint = new Paint();
+                paint.setColor(Color.WHITE);
+                paint.setStyle(Paint.Style.FILL);
+                c.drawPaint(paint);
+
+                paint.setColor(Color.BLACK);
+                paint.setTextSize(20);
+                c.drawText("Some Text", 10, 25, paint);
+
+*/
+/*
+                background.setBounds(viewHolder.itemView.getRight() + (int) dX, viewHolder.itemView.getTop(), viewHolder.itemView.getRight(), viewHolder.itemView.getBottom());
+                background.draw(c);
+*//*
+
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+
+            }
+*/
 
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -88,16 +189,11 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
-                if (direction == ItemTouchHelper.RIGHT) {
+                if (direction == ItemTouchHelper.LEFT) {
                     try {
                         int transactionPosition = viewHolder.getAdapterPosition();
                         int id = (int)adapterMovimenti.getItemId(transactionPosition);
                         movsVM.deleteTransactionById(id);
-/*
-                        adapterMovimenti.notifyItemRemoved(transactionPosition);
-*/
-
-
                     } catch (ArrayIndexOutOfBoundsException e) {
                         Log.w("swipe", "Skip timestamp cause ther's no result");
                     }
@@ -123,55 +219,6 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
         itemTouchHelper.attachToRecyclerView(rviewMovimenti);
 
 
-        // QUERY DB FOR RESULTS
-        movsVM.getDailyTransactionsByAccount(mResults.get(dateViewholder.getAdapterPosition()).getScadenza(),
-                mResults.get(dateViewholder.getAdapterPosition()).getIdConto())
-                .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
-                    @Override
-                    public void onChanged(@Nullable List<EntityMovimento> entityMovimentos) {
-                        adapterMovimenti.setResults(entityMovimentos);
-                        Log.d("on change movimenti", " trovati  " + entityMovimentos.size() + "  movimenti per il conto  " + nomeConto);
-                    }
-                });
     }
 
-    /**
-     * Updates mAdapterConti items list
-     * @param results ArrayList to show
-     */
-    public void setResults(List<EntityMovimento> results){
-        mResults = results;
-        notifyDataSetChanged();
-    }
-
-    static class DateDashboardViewHolder extends RecyclerView.ViewHolder{
-        TextView dayScadenzaText;
-        TextView monthScadenzaText;
-
-        DateDashboardViewHolder(View itemView) {
-            super(itemView);
-
-            dayScadenzaText = itemView.findViewById(R.id.id_card_scadenza_day);
-            monthScadenzaText = itemView.findViewById(R.id.id_card_scadenza_month);
-
-        }
-
-        void setData(String dayScadenza, String monthScadenza){
-            dayScadenzaText.setText(dayScadenza);
-            monthScadenzaText.setText(monthScadenza);
-        }
-    }
-
-    @Override
-    public void onBindViewHolder(final DateDashboardViewHolder dateViewholder, int position) {
-        position = dateViewholder.getAdapterPosition();
-        startTransactionRecyclerView(dateViewholder);
-        EntityMovimento current = mResults.get(position);
-
-        if(current != null) {
-            SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.ITALY);
-            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.ITALY);
-            dateViewholder.setData(dayFormat.format(current.getScadenza()), monthFormat.format(current.getScadenza()).toUpperCase());
-        }
-    }
 }

@@ -45,4 +45,9 @@ public interface ContoDao {
     @TypeConverters(DateConverter.class)
     @Query("SELECT * FROM conto_table WHERE id IN (SELECT DISTINCT idConto FROM movimento_table WHERE scadenza <= :upTo AND checked ==  'unchecked')")
     LiveData<List<EntityConto>> getAllAccountsDist(Date upTo);
+
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT * FROM conto_table WHERE id IN (SELECT DISTINCT idConto FROM movimento_table WHERE scadenza <= :upTo AND checked ==  'unchecked')")
+    List<EntityConto> getAllAccountsDistAsync(Date upTo);
+
 }

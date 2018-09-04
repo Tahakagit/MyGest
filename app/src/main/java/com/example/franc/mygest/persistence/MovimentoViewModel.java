@@ -24,13 +24,13 @@ public class MovimentoViewModel extends AndroidViewModel {
     private MutableLiveData<String> checked = new MutableLiveData<>();
 
     private LiveData<List<EntityMovimento>> mAllMovimento;
-    private LiveData<List<EntityMovimento>> mActiveTransaction;
+    private LiveData<List<EntityMovimento>> mActiveDates;
 
     public MovimentoViewModel(Application application) {
         super(application);
         mRepository = new MovimentoRepo(application);
         mAllMovimento = mRepository.getAllMovimento();
-        mActiveTransaction = Transformations.switchMap(checked, check -> mRepository.getAllMovimentoChecked(check));
+        mActiveDates = Transformations.switchMap(checked, check -> mRepository.getAllDates(check));
     }
 
 /*
@@ -63,8 +63,10 @@ public class MovimentoViewModel extends AndroidViewModel {
 
 
 
+/*
     public LiveData<List<EntityMovimento>> getAllMovimentoChecked() {
         return mActiveTransaction; }
+*/
 
     public String getAllTransactionAmount(int accountId, java.util.Date upTo){
         List<EntityMovimento> allMovs = mRepository.getAllMovimentoUpToByAccount(upTo, accountId);
@@ -81,8 +83,15 @@ public class MovimentoViewModel extends AndroidViewModel {
 
     public LiveData<List<EntityMovimento>> getDailyTransactionsByAccount(java.util.Date upTo, int account) { return mRepository.getDailyTransactionsByAccount(upTo, account); }
 
-    public LiveData<List<EntityMovimento>> getAllDates(java.util.Date upTo, int account) { return mRepository.getAllDates(upTo, account); }
 
+    public LiveData<List<EntityMovimento>> getDailyTransactions(java.util.Date upTo) { return mRepository.getDailyTransactions(upTo); }
+
+    public LiveData<List<EntityMovimento>> getDailyTransactionsChecked(java.util.Date upTo, String checked) { return mRepository.getDailyTransactionsChecked(upTo, checked); }
+
+
+    public LiveData<List<EntityMovimento>> getAllDatesByAccount(java.util.Date upTo, int account) { return mRepository.getAllDatesByAccount(upTo, account); }
+
+    public LiveData<List<EntityMovimento>> getAllDates() { return mActiveDates; }
 
     public void insert(String beneficiario, String importo, java.util.Date scadenza, String nomeConto, int idConto, @Nullable final java.util.Date endDate, String recurrence, String tipo) {
 
