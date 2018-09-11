@@ -5,7 +5,13 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by franc on 23/04/2018.
@@ -47,8 +53,8 @@ public class MovimentoRepo {
     LiveData<List<EntityMovimento>> getDailyTransactions(java.util.Date upTo) {
         return mMovimentoDao.getDailyTransactions(upTo);
     }
-    LiveData<List<EntityMovimento>> getDailyTransactionsChecked(java.util.Date upTo, String checked) {
-        return mMovimentoDao.getDailyTransactionsChecked(upTo, checked);
+    LiveData<List<EntityMovimento>> getDailyTransactionsChecked(java.util.Date upTo, String checked, String beneficiario) {
+        return mMovimentoDao.getDailyTransactionsCheckedFilter(upTo, checked, beneficiario);
     }
 
     LiveData<List<EntityMovimento>> getAllDatesByAccount(java.util.Date upTo, int account) {
@@ -56,8 +62,32 @@ public class MovimentoRepo {
     }
 
 
-    LiveData<List<EntityMovimento>> getAllDates(String checked) {
-        return mMovimentoDao.getAllDates(checked);
+    LiveData<List<EntityMovimento>> getAllDates(String checked, String beneficiario) {
+        if(beneficiario==null||beneficiario.equalsIgnoreCase("")){
+            return mMovimentoDao.getAllDatesNoBeneGroup(checked);
+        }else {
+            return mMovimentoDao.getAllDates(checked, beneficiario);
+        }
+    }
+
+    LiveData<List<EntityMovimento>> getTransactionInDay(String upTo, String checked, String beneficiario) {
+        SimpleDateFormat format = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy",Locale.ENGLISH);
+        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        java.util.Date date = new java.util.Date();
+
+        try {
+            date = format.parse(upTo);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if(beneficiario==null||beneficiario.equalsIgnoreCase("")){
+            return mMovimentoDao.getDailyTransactionsChecked(date, checked);
+        }else {
+            return mMovimentoDao.getDailyTransactionsCheckedFilter(date, checked, beneficiario);
+        }
+
     }
 
     public void checkTransaction(int id){

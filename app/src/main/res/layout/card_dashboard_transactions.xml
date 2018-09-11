@@ -28,6 +28,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/id_card_saldato_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="pagato fino"
+        android:textAlignment="center"
+        android:textSize="10sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@+id/id_card_saldato_month"
+        app:layout_constraintEnd_toEndOf="@+id/id_card_saldato_month"
+        app:layout_constraintStart_toStartOf="@+id/id_card_saldato_day" />
+
+    <TextView
+        android:id="@+id/id_card_saldato_day"
+        android:layout_width="16dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:text="11"
+        app:layout_constraintBottom_toBottomOf="@+id/id_card_saldato_month"
+        app:layout_constraintEnd_toStartOf="@+id/id_card_saldato_month"
+        app:layout_constraintTop_toTopOf="@+id/id_card_saldato_month" />
+
+    <TextView
+        android:id="@+id/id_card_saldato_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp"
+        android:text="AGO"
+        app:layout_constraintBottom_toBottomOf="@+id/id_card_importo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/id_card_importo" />
+
     <ImageView
         android:id="@+id/ic_recurrence"
         android:layout_width="wrap_content"
@@ -44,10 +77,11 @@
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="32dp"
         android:padding="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/ic_beneficiario"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id_card_importo"
+        app:layout_constraintTop_toTopOf="@+id/ic_beneficiario"
         app:srcCompat="@drawable/ic_trans_out"
         tools:layout_conversion_absoluteHeight="54dp"
         tools:layout_conversion_absoluteWidth="28dp" />
@@ -57,23 +91,23 @@
         android:id="@+id/id_card_tipo"
         style="@style/text_style_tipo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="32dp"
         android:text="assegno"
         android:textAlignment="center"
         android:textSize="12sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/ic_beneficiario"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id_card_importo" />
+        app:layout_constraintTop_toTopOf="@+id/ic_beneficiario" />
 
     <ImageView
         android:id="@+id/ic_beneficiario"
         android:layout_width="wrap_content"
         android:layout_height="23dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/id_card_beneficiario"
         app:layout_constraintHorizontal_chainStyle="packed"

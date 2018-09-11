@@ -14,18 +14,22 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.ToggleButton;
 
 import com.example.franc.mygest.R;
 import com.example.franc.mygest.adapters.RviewAdapterAllTransactions;
 import com.example.franc.mygest.adapters.RviewAdapterGroupDates;
+import com.example.franc.mygest.persistence.DateViewModel;
 import com.example.franc.mygest.persistence.EntityMovimento;
-import com.example.franc.mygest.persistence.MovimentoViewModel;
+import com.example.franc.mygest.persistence.DateViewModel;
 
 import java.util.Calendar;
 import java.util.List;
@@ -36,7 +40,8 @@ public class AllTransactionActivity extends AppCompatActivity{
     private RviewAdapterAllTransactions adapterAllTransactions;
     private Context context;
     private static Calendar weekRange;
-    private MovimentoViewModel mWordViewModel;
+    private DateViewModel mWordViewModel;
+    static String beneficiario = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +49,7 @@ public class AllTransactionActivity extends AppCompatActivity{
 
         context = this;
         setContentView(R.layout.navigation_drawer_filter);
-        mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
+        mWordViewModel = ViewModelProviders.of(this).get(DateViewModel.class);
 
         mWordViewModel.viewUnchecked();
         mWordViewModel.getAllDates().observe(this, new Observer<List<EntityMovimento>>() {
@@ -55,6 +60,8 @@ public class AllTransactionActivity extends AppCompatActivity{
             }
         });
         Switch btnCheck = findViewById(R.id.btn_check);
+        EditText text = findViewById(R.id.id_filter_beneficiario);
+        Button btn = findViewById(R.id.btn_filter);
         btnCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -70,10 +77,37 @@ public class AllTransactionActivity extends AppCompatActivity{
             }
         });
 
+        text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mWordViewModel.filterBeneficiario(text.getText().toString());
+
+                beneficiario = text.getText().toString();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
         initUi();
 
     }
 
+    public String getBeneficiario(){
+        return beneficiario;
+    }
     //START USER INTERFACE
     private void initUi(){
         DividerItemDecoration mDividerItemDecoration;
@@ -86,7 +120,7 @@ public class AllTransactionActivity extends AppCompatActivity{
         mDividerItemDecoration = new DividerItemDecoration(rview.getContext(),
                 RecyclerView.VERTICAL);
 
-        adapterAllTransactions = new RviewAdapterAllTransactions(this, getApplication());
+        adapterAllTransactions = new RviewAdapterAllTransactions(this, this, getApplication());
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapterAllTransactions);
         rview.addItemDecoration(mDividerItemDecoration);

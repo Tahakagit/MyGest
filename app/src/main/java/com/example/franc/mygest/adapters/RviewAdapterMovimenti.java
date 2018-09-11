@@ -18,7 +18,9 @@ import com.example.franc.mygest.persistence.MovimentoViewModel;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovimenti.TransactionViewHolder> {
 
@@ -40,10 +42,16 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
             holder.icRecurrence.setVisibility(View.VISIBLE);
         }
         if(movimento != null) {
+
+            SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.ITALY);
+            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.ITALY);
+
             BigDecimal raw = new BigDecimal(String.valueOf(movimento.getImporto()));
             String importoFormatted = NumberFormat.getCurrencyInstance().format(raw);
-            holder.setData(movimento.getId(), movimento.getBeneficiario(), importoFormatted,
-                        movimento.getTipo());
+        holder.setData(movimento.getId(), movimento.getBeneficiario(), importoFormatted,
+                movimento.getTipo(),
+                dayFormat.format(movimento.getSaldato()),
+                monthFormat.format(movimento.getSaldato()).toUpperCase());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -85,6 +93,9 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
     static class TransactionViewHolder extends RecyclerView.ViewHolder{
         TextView beneficiario;
         TextView importo;
+        TextView saldatoDay;
+        TextView saldatoMonth;
+
         TextView tipo;
         int transId;
         ImageView icRecurrence;
@@ -99,17 +110,21 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
             tipo = itemView.findViewById(R.id.id_card_tipo);
             icBeneficiario = itemView.findViewById(R.id.ic_beneficiario);
             hiddenMenu = itemView.findViewById(R.id.hidden_transaction_group);
+            saldatoDay = itemView.findViewById(R.id.id_card_saldato_day);
+            saldatoMonth = itemView.findViewById(R.id.id_card_saldato_month);
 
         }
 
         public int getTransId(){
             return transId;
         }
-        void setData(int id, String textbeneficiario, String textimporto, String type){
+        void setData(int id, String textbeneficiario, String textimporto, String type, String day, String month){
             beneficiario.setText(textbeneficiario);
             importo.setText(textimporto);
             tipo.setText(type);
             transId = id;
+            saldatoDay.setText(day);
+            saldatoMonth.setText(month);
         }
     }
 

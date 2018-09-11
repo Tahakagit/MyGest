@@ -35,6 +35,8 @@ public class DialogActivity extends AppCompatActivity {
     static BigDecimal importo2 = null;
     static Date scadenza2 = null;
     static Date endDate2 = null;
+    static Date saldatoDate2 = null;
+
     static String conto2 = null;
     static String recurrence2 = null;
     static String tipo2 = null;
@@ -100,9 +102,10 @@ public class DialogActivity extends AppCompatActivity {
         ft2.commit();
     }
 
-    public void getScadenza(Date scadenza, Date endDate, String recurrence) {
+    public void getScadenza(Date scadenza, Date endDate, Date saldatoDate, String recurrence) {
         scadenza2 = scadenza;
         endDate2 = endDate;
+        saldatoDate2 = saldatoDate;
         recurrence2 = recurrence;
         ++i;
         FragmentTransaction ft2 = fragmentManager.beginTransaction();
@@ -135,7 +138,10 @@ public class DialogActivity extends AppCompatActivity {
         }
 
         int accountId = mContoViewModel.getAccountIdByName(conto2).getId();
-        mMovimentoViewModel.insert(beneficiario2, importo2.toString(), scadenza2, conto2, accountId, endDate2, recurrence2, tipo2);
+        if(saldatoDate2 == null){
+            saldatoDate2 = scadenza2;
+        }
+        mMovimentoViewModel.insert(beneficiario2, importo2.toString(), scadenza2, saldatoDate2, conto2, accountId, endDate2, recurrence2, tipo2);
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
         i = 0;

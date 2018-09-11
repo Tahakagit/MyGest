@@ -5,11 +5,13 @@ package com.example.franc.mygest.adapters;
  *
  * Creates account overview card, each one displaying his own transactions up to the chosen date
  */
+import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.franc.mygest.R;
+import com.example.franc.mygest.activities.AllTransactionActivity;
 import com.example.franc.mygest.persistence.EntityMovimento;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
 
@@ -33,13 +36,15 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
 
     private List<EntityMovimento> mResults;
     private Context context;
-    MovimentoViewModel movsVM;
+    private MovimentoViewModel movsVM;
     private Application app;
+    AllTransactionActivity activity;
 
-    public RviewAdapterAllTransactions(Context context, Application app) {
+    public RviewAdapterAllTransactions(AppCompatActivity activit, Context context, Application app) {
         setResults(mResults);
-        this.context = context;
+        this.activity = (AllTransactionActivity)activit;
         this.app = app;
+        this.context = context;
         movsVM = new MovimentoViewModel(app);
 
 
@@ -76,6 +81,7 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
         TextView dayScadenzaText;
         TextView monthScadenzaText;
         TextView yearScadenzaText;
+        String beneficiario = null;
 
         DateDashboardViewHolder(View itemView) {
             super(itemView);
@@ -88,9 +94,10 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
 
         }
 
-        void setData(String dayScadenza, String monthScadenza){
+        void setData(String dayScadenza, String monthScadenza, String bene){
             dayScadenzaText.setText(dayScadenza);
             monthScadenzaText.setText(monthScadenza);
+            beneficiario = bene;
 /*
             yearScadenzaText.setText(yearScadenza);
 */
@@ -112,7 +119,8 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
             SimpleDateFormat yearFormat = new SimpleDateFormat("YY", Locale.ITALY);
 */
 
-            dateViewholder.setData(dayFormat.format(current.getScadenza()), monthFormat.format(current.getScadenza()).toUpperCase());
+
+            dateViewholder.setData(dayFormat.format(current.getScadenza()), monthFormat.format(current.getScadenza()).toUpperCase(), current.getBeneficiario());
         }
     }
 
@@ -126,18 +134,31 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
         RecyclerView rviewMovimenti = dateViewholder.itemView.findViewById(R.id.rv_movimenti);
         RviewAdapterMovimenti adapterMovimenti;
 
+        String bene = activity.getBeneficiario();
+
         adapterMovimenti = new RviewAdapterMovimenti(app);
         adapterMovimenti.setHasStableIds(true);
-        // QUERY DB FOR RESULTS
-        //todo come faccio a sapere checked unchecked?
-        movsVM.getDailyTransactionsChecked(mResults.get(dateViewholder.getAdapterPosition()).getScadenza(),
-                    mResults.get(dateViewholder.getAdapterPosition()).getChecked())
+        String dateStr = mResults.get(dateViewholder.getAdapterPosition()).getScadenza().toString();
+        movsVM.getDailyTransactionsChecked(dateStr,
+                    mResults.get(dateViewholder.getAdapterPosition()).getChecked(),
+                    bene)
                 .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
                     @Override
                     public void onChanged(@Nullable List<EntityMovimento> entityMovimentos) {
                         adapterMovimenti.setResults(entityMovimentos);
                     }
                 });
+
+/*
+        movsVM.filterDate(dateStr);
+*/
+        // QUERY DB FOR RESULTS
+        //todo come faccio a sapere checked unchecked?
+        movsVM.viewUnchecked();
+/*
+        movsVM.filterBeneficiario("");
+*/
+
 
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
         rviewMovimenti.setAdapter(adapterMovimenti);

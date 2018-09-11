@@ -22,87 +22,66 @@ import java.util.List;
  * Created by franc on 23/04/2018.
  */
 
-public class MovimentoViewModel extends AndroidViewModel {
+public class DateViewModel extends AndroidViewModel {
 
     private MovimentoRepo mRepository;
+    private MutableLiveData<String> checked = new MutableLiveData<>();
+    private MutableLiveData<String> beneficiario = new MutableLiveData<>();
+/*
     private MutableLiveData<String> data2 = new MutableLiveData<>();
     private MutableLiveData<String> checked2 = new MutableLiveData<>();
     private MutableLiveData<String> beneficiario2 = new MutableLiveData<>();
+*/
 
     /*
     String checked;
     String beneficiario;
 */
+    CustomLiveData trigger = new CustomLiveData(checked, beneficiario);
+/*
     CustomLiveData2 trigger2 = new CustomLiveData2(data2, checked2, beneficiario2);
+*/
 
 
     private LiveData<List<EntityMovimento>> mAllMovimento;
     private LiveData<List<EntityMovimento>> mActiveDates;
-    private LiveData<List<EntityMovimento>> mActiveTransactions;
 
-    public MovimentoViewModel(Application application) {
+    public DateViewModel(Application application) {
         super(application);
         mRepository = new MovimentoRepo(application);
         mAllMovimento = mRepository.getAllMovimento();
-        mActiveTransactions = Transformations.switchMap(trigger2, values -> mRepository.getTransactionInDay(values.get(0), values.get(1), values.get(2)));
-
+        mActiveDates = Transformations.switchMap(trigger, value -> mRepository.getAllDates(value.second, value.first));
     }
 
-//todo convertire data to string e vice versa
-    class CustomLiveData2 extends MediatorLiveData<List<String>> {
-
-
-        public CustomLiveData2(MutableLiveData<String> data2, MutableLiveData<String> checked2, MutableLiveData<String> beneficiario2) {
-
-            addSource(checked2, new Observer<String>() {
-                public void onChanged(@Nullable String a) {
-                    List<String> list = new ArrayList<>();
-
-                    list.add(data2.getValue());
-                    list.add(a);
-                    list.add(beneficiario2.getValue());
-                    setValue(list);
+    class CustomLiveData extends MediatorLiveData<Pair<String, String>> {
+        public CustomLiveData(MutableLiveData<String> checked, MutableLiveData<String> beneficiario) {
+            addSource(checked, new Observer<String>() {
+                public void onChanged(@Nullable String first) {
+                    setValue(Pair.create(beneficiario.getValue(), first));
                 }
             });
-            addSource(beneficiario2, new Observer<String>() {
-                public void onChanged(@Nullable String b) {
-                    List<String> list = new ArrayList<>();
-
-                    list.add(data2.getValue());
-                    list.add(checked2.getValue());
-                    list.add(b);
-                    setValue(list);
+            addSource(beneficiario, new Observer<String>() {
+                public void onChanged(@Nullable String second) {
+                    setValue(Pair.create(second, checked.getValue()));
                 }
             });
-            addSource(data2, new Observer<String>() {
-                public void onChanged(@Nullable String c) {
-                    List<String> list = new ArrayList<>();
-
-                    list.add(c);
-                    list.add(checked2.getValue());
-                    list.add(beneficiario2.getValue());
-                    setValue(list);
-                }
-            });
-
 
         }
     }
-
+//todo convertire data to string e vice versa
     public void viewChecked(){
-        this.checked2.setValue("checked");
+        this.checked.setValue("checked");
     }
 
     public void viewUnchecked(){
-        this.checked2.setValue("unchecked");
+        this.checked.setValue("unchecked");
     }
 
     public void filterBeneficiario(String beneficiario){
-        this.beneficiario2.setValue(beneficiario);
+        this.beneficiario.setValue(beneficiario);
     }
 
     public void filterDate(String data){
-        this.data2.setValue(data);
     }
 
     public void deleteTransactionById(int id){
@@ -131,15 +110,12 @@ public class MovimentoViewModel extends AndroidViewModel {
 
     public LiveData<List<EntityMovimento>> getDailyTransactions(java.util.Date upTo) { return mRepository.getDailyTransactions(upTo); }
 
-/*
-    public LiveData<List<EntityMovimento>> getDailyTransactionsChecked() { return mActiveTransactions; }
-*/
-    public LiveData<List<EntityMovimento>> getDailyTransactionsChecked(String date, String checked, String beneficiario) {
+    /*
+        public LiveData<List<EntityMovimento>> getDailyTransactionsChecked() { return mActiveTransactions; }
+    */
+    public LiveData<List<EntityMovimento>> getDailyTransactionsChecked(java.util.Date date, String checked, String beneficiario) {
 
-        return mRepository.getTransactionInDay(date, checked, beneficiario);
-/*
-        return mActiveTransactions;
-*/
+        return mRepository.getDailyTransactionsChecked(date, checked, beneficiario);
     }
 
 
