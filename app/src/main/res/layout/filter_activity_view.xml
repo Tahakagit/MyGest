@@ -1,105 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:expanded="false">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.7" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@id/toolbar_creacontoactivity"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:layout_collapseMode="pin" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
 
 
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <Switch
-                android:id="@+id/btn_check"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Switch" />
-
-            <EditText
-                android:id="@+id/id_filter_beneficiario"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                />
-
-            <Button
-                android:id="@+id/btn_filter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Button" />
-        </LinearLayout>
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <android.support.v7.widget.RecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            tools:context=".activities.AllTransactionActivity"
-
-
-            android:id="@+id/recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical">
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        tools:context=".activities.AllTransactionActivity">
 
 
-
-
-
-
-        </android.support.v7.widget.RecyclerView>
-
-    </android.support.v4.widget.NestedScrollView>
-
+    </android.support.v7.widget.RecyclerView>
 
 
     <include
         android:id="@+id/include"
         layout="@layout/fab_insert_transaction"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
 
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:visibility="invisible"
+        />
+    <include layout="@layout/filter_menu" />
 
 
 </android.support.design.widget.CoordinatorLayout>

@@ -4,11 +4,8 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
-import java.sql.Date;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -36,14 +33,13 @@ public class MovimentoRepo {
         return mMovimentoDao.getAllTransactionsChecked(checked);
     }
 
-/*
-    LiveData<List<String>> getAllMovimentoUpTo(java.util.Date upTo) {
-        return mMovimentoDao.getTransactionUpTo(upTo);
-    }
-*/
 
     List<EntityMovimento> getAllMovimentoUpToByAccount(java.util.Date upTo, int account) {
         return mMovimentoDao.getTransactionUpToByAccount(upTo, account);
+    }
+
+    int getTotMovimentoUpToByAccount(java.util.Date upTo, int account) {
+        return mMovimentoDao.getTotalTransactionsUpToByAccount(upTo, account);
     }
 
     LiveData<List<EntityMovimento>> getDailyTransactionsByAccount(java.util.Date upTo, int account) {
@@ -62,11 +58,17 @@ public class MovimentoRepo {
     }
 
 
-    LiveData<List<EntityMovimento>> getAllDates(String checked, String beneficiario) {
-        if(beneficiario==null||beneficiario.equalsIgnoreCase("")){
-            return mMovimentoDao.getAllDatesNoBeneGroup(checked);
+    LiveData<List<EntityMovimento>> getAllDates(String account, String checked, String beneficiario) {
+        if((beneficiario==null||beneficiario.equalsIgnoreCase(""))&&(account== null||account.equalsIgnoreCase(""))){
+            return mMovimentoDao.getAllDatesCheckedNoBeneNoAccountGroup(checked);
+        }else if (account== null||account.equalsIgnoreCase("")){
+            return mMovimentoDao.getAllDatesCheckedBeneNoACcount(checked, beneficiario);
+        }else if (beneficiario==null||beneficiario.equalsIgnoreCase("")){
+            return mMovimentoDao.getAllDatesCheckedNoBeneAccount(checked,Integer.valueOf(account));
         }else {
-            return mMovimentoDao.getAllDates(checked, beneficiario);
+
+            return mMovimentoDao.getAllDatesCheckedBeneAccount(Integer.valueOf(account),checked,beneficiario);
+
         }
     }
 

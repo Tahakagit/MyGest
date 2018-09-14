@@ -99,6 +99,13 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                 });
     }
 
+    private int getTotalTransactions(int account){
+
+        return  movsVM.getTotalTransaction(account, MainActivity.getDateToSend().getTime());
+
+    }
+
+
     /**
      * Subtract all transactions to current balance up to the selected date
      * @param account EntityAccount
@@ -108,7 +115,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         BigDecimal oldBalance = new BigDecimal(String.valueOf(account.getSaldoConto()));
         BigDecimal totExpences = new BigDecimal("0");
         totExpences = totExpences.add(new BigDecimal(String.valueOf(movsVM.getAllTransactionAmount(account.getId(),
-                    MainActivity.getDateToSend().getTime()))));
+                MainActivity.getDateToSend().getTime()))));
         BigDecimal newBalance = oldBalance.subtract(totExpences);
         return newBalance;
     }
@@ -122,11 +129,19 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             BigDecimal futureBalanceBigD = calculateNewBalance(mResults.get(position));
             String currentBalance = NumberFormat.getCurrencyInstance(Locale.ITALY).format(currentBalanceBigD);
             String futureBalance = NumberFormat.getCurrencyInstance(Locale.ITALY).format(futureBalanceBigD);
+
+
+            String accountName = mResults.get(position).getNomeConto();
+
+            String totalTransactions = "Tutte le transazioni (" + String.valueOf(getTotalTransactions(mResults.get(position).getId()) + ")");
+
+
             // FILL CARD WITH DATA
-            accountViewHolder.setData(mResults.get(position).getNomeConto(),
+            accountViewHolder.setData(accountName,
                     currentBalance,
-                    futureBalance
-            );
+                    futureBalance,
+                    totalTransactions
+                    );
             accountViewHolder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
             // STARTS DATES GROUPING RV
             startDatesRecyclerView(accountViewHolder);
@@ -173,6 +188,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         TextView accountFutureBalance;
         TextView accountCurrentBalance;
         TextView accountName;
+        TextView totalTransactions;
         ImageView moreIc;
         RecyclerView hiddenRv;
 
@@ -186,13 +202,15 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             accountCurrentBalance = itemView.findViewById(R.id.id_account_current_balance);
             moreIc = itemView.findViewById(R.id.ic_more);
             hiddenRv = itemView.findViewById(R.id.rv_dates);
+            totalTransactions = itemView.findViewById(R.id.id_account_total);
 
         }
 
-        void setData(String textscadenza, String currentBalance, String futureBalance){
+        void setData(String textscadenza, String currentBalance, String futureBalance, String total){
             accountName.setText(textscadenza);
             accountFutureBalance.setText(futureBalance);
             accountCurrentBalance.setText(currentBalance);
+            totalTransactions.setText(total);
 
 
 

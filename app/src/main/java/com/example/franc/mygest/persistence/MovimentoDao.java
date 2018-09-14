@@ -43,12 +43,23 @@ public interface MovimentoDao {
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @TypeConverters(DateConverter.class)
     @Query("SELECT * FROM movimento_table WHERE checked == :checked and beneficiario == :beneficiario GROUP BY scadenza")
-    LiveData<List<EntityMovimento>> getAllDates(String checked, String beneficiario);
+    LiveData<List<EntityMovimento>> getAllDatesCheckedBeneNoACcount(String checked, String beneficiario);
+
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT * FROM movimento_table WHERE checked == :checked and idConto == :account GROUP BY scadenza")
+    LiveData<List<EntityMovimento>> getAllDatesCheckedNoBeneAccount(String checked, int account);
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT * FROM movimento_table WHERE checked == :checked and beneficiario == :beneficiario AND idConto == :account GROUP BY scadenza")
+    LiveData<List<EntityMovimento>> getAllDatesCheckedBeneAccount(int account, String checked, String beneficiario);
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @TypeConverters(DateConverter.class)
     @Query("SELECT * FROM movimento_table WHERE checked == :checked GROUP BY scadenza")
-    LiveData<List<EntityMovimento>> getAllDatesNoBeneGroup(String checked);
+    LiveData<List<EntityMovimento>> getAllDatesCheckedNoBeneNoAccountGroup(String checked);
 
 
 
@@ -62,6 +73,11 @@ public interface MovimentoDao {
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM movimento_table WHERE scadenza <= (:dayet) AND checked == 'unchecked' AND idConto  LIKE (:account)")
     List<EntityMovimento> getTransactionUpToByAccount(Date dayet, int account);
+
+    @TypeConverters(DateConverter.class)
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT COUNT(*) FROM movimento_table WHERE scadenza <= (:dayet) AND checked == 'unchecked' AND idConto  LIKE (:account)")
+    int getTotalTransactionsUpToByAccount(Date dayet, int account);
 
     @TypeConverters(DateConverter.class)
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)

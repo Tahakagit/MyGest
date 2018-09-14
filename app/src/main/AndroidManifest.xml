@@ -19,8 +19,8 @@
         </activity>
         <activity
             android:name=".activities.AllTransactionActivity"
-            android:label="@string/new_record"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:parentActivityName="com.example.franc.mygest.activities.MainActivity"
+            android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".activities.DialogActivity"
             android:label="@string/new_record"

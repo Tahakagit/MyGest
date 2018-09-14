@@ -50,7 +50,9 @@ public class DateViewModel extends AndroidViewModel {
         super(application);
         mRepository = new MovimentoRepo(application);
         mAllMovimento = mRepository.getAllMovimento();
-        mActiveDates = Transformations.switchMap(trigger, value -> mRepository.getAllDates(value.second, value.first));
+/*
+        mActiveDates = Transformations.switchMap(trigger, value -> mRepository.getAllDates(value.value.second, value.first));
+*/
     }
 
     class CustomLiveData extends MediatorLiveData<Pair<String, String>> {

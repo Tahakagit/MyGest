@@ -1,5 +1,6 @@
 package com.example.franc.mygest.activities;
 
+import android.app.Application;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,19 +20,22 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.ToggleButton;
 
+import com.example.franc.mygest.MyApplication;
 import com.example.franc.mygest.R;
 import com.example.franc.mygest.adapters.RviewAdapterAllTransactions;
-import com.example.franc.mygest.adapters.RviewAdapterGroupDates;
-import com.example.franc.mygest.persistence.DateViewModel;
+import com.example.franc.mygest.persistence.ContoViewModel;
+import com.example.franc.mygest.persistence.EntityConto;
 import com.example.franc.mygest.persistence.EntityMovimento;
-import com.example.franc.mygest.persistence.DateViewModel;
+import com.example.franc.mygest.persistence.MovimentoViewModel;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -40,16 +45,20 @@ public class AllTransactionActivity extends AppCompatActivity{
     private RviewAdapterAllTransactions adapterAllTransactions;
     private Context context;
     private static Calendar weekRange;
-    private DateViewModel mWordViewModel;
-    static String beneficiario = null;
+    private MovimentoViewModel mWordViewModel;
+    static String conto = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.navigation_drawer_filter);
+
+        Switch btnCheck = findViewById(R.id.btn_check);
+        EditText edittextBeneficiario = findViewById(R.id.id_edittext_filter_beneficiario);
+        EditText edittextConto = findViewById(R.id.id_edittext_filter_conto);
 
         context = this;
-        setContentView(R.layout.navigation_drawer_filter);
-        mWordViewModel = ViewModelProviders.of(this).get(DateViewModel.class);
+        mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
 
         mWordViewModel.viewUnchecked();
         mWordViewModel.getAllDates().observe(this, new Observer<List<EntityMovimento>>() {
@@ -59,9 +68,7 @@ public class AllTransactionActivity extends AppCompatActivity{
                 adapterAllTransactions.setResults(movimentos);
             }
         });
-        Switch btnCheck = findViewById(R.id.btn_check);
-        EditText text = findViewById(R.id.id_filter_beneficiario);
-        Button btn = findViewById(R.id.btn_filter);
+
         btnCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -76,8 +83,7 @@ public class AllTransactionActivity extends AppCompatActivity{
                 }
             }
         });
-
-        text.addTextChangedListener(new TextWatcher() {
+        edittextBeneficiario.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -85,9 +91,9 @@ public class AllTransactionActivity extends AppCompatActivity{
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mWordViewModel.filterBeneficiario(text.getText().toString());
+                mWordViewModel.filterBeneficiario(edittextBeneficiario.getText().toString());
 
-                beneficiario = text.getText().toString();
+                conto = edittextBeneficiario.getText().toString();
 
             }
 
@@ -96,30 +102,54 @@ public class AllTransactionActivity extends AppCompatActivity{
 
             }
         });
-        btn.setOnClickListener(new View.OnClickListener() {
+/*
+        edittextConto.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View view) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mWordViewModel.filterConto(edittextConto.getText().toString());
+
+                conto = edittextConto.getText().toString();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
+*/
+
         initUi();
 
     }
 
     public String getBeneficiario(){
-        return beneficiario;
+        return conto;
     }
     //START USER INTERFACE
     private void initUi(){
         DividerItemDecoration mDividerItemDecoration;
+        Spinner accountSpinner = findViewById(R.id.spinner);
 
         RecyclerView rview = findViewById(R.id.recyclerview);
-        Toolbar myToolbar = findViewById(R.id.toolbar_creacontoactivity);
+        ActionBar myToolbar = getSupportActionBar();
+/*
         setSupportActionBar(myToolbar);
+*/
+
+
+        myToolbar.setDisplayHomeAsUpEnabled(true);
 
         final Intent intent = new Intent(this, DialogActivity.class);
         mDividerItemDecoration = new DividerItemDecoration(rview.getContext(),
                 RecyclerView.VERTICAL);
 
+        populateAccountSpinner(accountSpinner);
         adapterAllTransactions = new RviewAdapterAllTransactions(this, this, getApplication());
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapterAllTransactions);
@@ -170,5 +200,36 @@ public class AllTransactionActivity extends AppCompatActivity{
 
 
     }
+
+    void populateAccountSpinner(Spinner spinner){
+        Application appCtx = (MyApplication) context.getApplicationContext();
+
+        ContoViewModel contoVM = new ContoViewModel(appCtx);
+
+        ArrayList<String> list = new ArrayList<>();
+        List<EntityConto> arraylist = new ArrayList<>();
+        arraylist = contoVM.getAllAccountsList();
+        for (EntityConto s:arraylist) {
+            list.add(s.getNomeConto());
+        }
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(appCtx, android.R.layout.simple_spinner_dropdown_item, list);
+        spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+/*
+                contos = parent.getItemAtPosition(position).toString();
+*/
+                mWordViewModel.filterConto(String.valueOf(contoVM.getAccountIdByName(parent.getItemAtPosition(position).toString()).getId()));
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+    }
+
 
 }

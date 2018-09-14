@@ -4,4 +4,7 @@
     <item name="toolbar_creacontoactivity" type="id"/>
     <item name="fragment_container" type="id"/>
     <item name="cv_account_dashboard" type="id"/>
+    <item name="id_edittext_filter_beneficiario" type="id"/>
+    <item name="id_edittext_filter_conto" type="id"/>
+
 </resources>

@@ -8,11 +8,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.support.annotation.Nullable;
-import android.util.Pair;
-import android.widget.Switch;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -25,15 +22,16 @@ import java.util.List;
 public class MovimentoViewModel extends AndroidViewModel {
 
     private MovimentoRepo mRepository;
-    private MutableLiveData<String> data2 = new MutableLiveData<>();
-    private MutableLiveData<String> checked2 = new MutableLiveData<>();
-    private MutableLiveData<String> beneficiario2 = new MutableLiveData<>();
+    private MutableLiveData<String> data = new MutableLiveData<>();
+    private MutableLiveData<String> checked = new MutableLiveData<>();
+    private MutableLiveData<String> beneficiario = new MutableLiveData<>();
+    private MutableLiveData<String> account = new MutableLiveData<>();
 
     /*
     String checked;
     String beneficiario;
 */
-    CustomLiveData2 trigger2 = new CustomLiveData2(data2, checked2, beneficiario2);
+    CustomLiveData2 trigger2 = new CustomLiveData2(account, checked, beneficiario);
 
 
     private LiveData<List<EntityMovimento>> mAllMovimento;
@@ -44,43 +42,42 @@ public class MovimentoViewModel extends AndroidViewModel {
         super(application);
         mRepository = new MovimentoRepo(application);
         mAllMovimento = mRepository.getAllMovimento();
-        mActiveTransactions = Transformations.switchMap(trigger2, values -> mRepository.getTransactionInDay(values.get(0), values.get(1), values.get(2)));
+        mActiveDates = Transformations.switchMap(trigger2, values -> mRepository.getAllDates(values.get(0), values.get(1), values.get(2)));
 
     }
 
-//todo convertire data to string e vice versa
     class CustomLiveData2 extends MediatorLiveData<List<String>> {
 
 
-        public CustomLiveData2(MutableLiveData<String> data2, MutableLiveData<String> checked2, MutableLiveData<String> beneficiario2) {
+        public CustomLiveData2(MutableLiveData<String> account, MutableLiveData<String> checked, MutableLiveData<String> beneficiario) {
 
-            addSource(checked2, new Observer<String>() {
+            addSource(checked, new Observer<String>() {
                 public void onChanged(@Nullable String a) {
                     List<String> list = new ArrayList<>();
 
-                    list.add(data2.getValue());
+                    list.add(account.getValue());
                     list.add(a);
-                    list.add(beneficiario2.getValue());
+                    list.add(beneficiario.getValue());
                     setValue(list);
                 }
             });
-            addSource(beneficiario2, new Observer<String>() {
+            addSource(beneficiario, new Observer<String>() {
                 public void onChanged(@Nullable String b) {
                     List<String> list = new ArrayList<>();
 
-                    list.add(data2.getValue());
-                    list.add(checked2.getValue());
+                    list.add(account.getValue());
+                    list.add(checked.getValue());
                     list.add(b);
                     setValue(list);
                 }
             });
-            addSource(data2, new Observer<String>() {
+            addSource(account, new Observer<String>() {
                 public void onChanged(@Nullable String c) {
                     List<String> list = new ArrayList<>();
 
                     list.add(c);
-                    list.add(checked2.getValue());
-                    list.add(beneficiario2.getValue());
+                    list.add(checked.getValue());
+                    list.add(beneficiario.getValue());
                     setValue(list);
                 }
             });
@@ -90,19 +87,23 @@ public class MovimentoViewModel extends AndroidViewModel {
     }
 
     public void viewChecked(){
-        this.checked2.setValue("checked");
+        this.checked.setValue("checked");
     }
 
     public void viewUnchecked(){
-        this.checked2.setValue("unchecked");
+        this.checked.setValue("unchecked");
     }
 
     public void filterBeneficiario(String beneficiario){
-        this.beneficiario2.setValue(beneficiario);
+        this.beneficiario.setValue(beneficiario);
+    }
+
+    public void filterConto(String conto){
+        this.account.setValue(conto);
     }
 
     public void filterDate(String data){
-        this.data2.setValue(data);
+        this.data.setValue(data);
     }
 
     public void deleteTransactionById(int id){
@@ -124,6 +125,11 @@ public class MovimentoViewModel extends AndroidViewModel {
         }
         return amount.toString();
     }
+
+    public int getTotalTransaction(int accountId, java.util.Date upTo){
+        return mRepository.getTotMovimentoUpToByAccount(upTo, accountId);
+    }
+
 
     public List<EntityMovimento> getAllMovimentoDistByAccount(java.util.Date upTo, int account) { return mRepository.getAllMovimentoUpToByAccount(upTo, account); }
 
