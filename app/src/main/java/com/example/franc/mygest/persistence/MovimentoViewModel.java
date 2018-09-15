@@ -136,7 +136,9 @@ public class MovimentoViewModel extends AndroidViewModel {
     public LiveData<List<EntityMovimento>> getDailyTransactionsByAccount(java.util.Date upTo, int account) { return mRepository.getDailyTransactionsByAccount(upTo, account); }
 
     public LiveData<List<EntityMovimento>> getDailyTransactions(java.util.Date upTo) { return mRepository.getDailyTransactions(upTo); }
-
+    public List<String> getKnownBeneficiari(){
+        return mRepository.getKnownBeneficiari();
+    }
 /*
     public LiveData<List<EntityMovimento>> getDailyTransactionsChecked() { return mActiveTransactions; }
 */

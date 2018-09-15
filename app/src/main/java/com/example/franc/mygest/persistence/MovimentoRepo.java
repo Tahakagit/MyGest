@@ -46,6 +46,9 @@ public class MovimentoRepo {
         return mMovimentoDao.getDailyTransactionsByAccount(upTo, account);
     }
 
+    List<String> getKnownBeneficiari(){
+        return mMovimentoDao.getKnownBeneficiari();
+    }
     LiveData<List<EntityMovimento>> getDailyTransactions(java.util.Date upTo) {
         return mMovimentoDao.getDailyTransactions(upTo);
     }

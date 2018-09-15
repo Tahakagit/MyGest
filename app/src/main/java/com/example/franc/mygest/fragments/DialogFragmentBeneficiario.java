@@ -1,5 +1,6 @@
 package com.example.franc.mygest.fragments;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -19,12 +22,13 @@ import android.widget.TextView;
 
 import com.example.franc.mygest.R;
 import com.example.franc.mygest.activities.DialogActivity;
+import com.example.franc.mygest.persistence.MovimentoViewModel;
 
 
 public class DialogFragmentBeneficiario extends Fragment {
 
 
-    EditText textBeneficiario;
+    AutoCompleteTextView textBeneficiario;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.fragment_dialog_fragment_beneficiario, container, false);
@@ -35,11 +39,15 @@ public class DialogFragmentBeneficiario extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         Button next;
         Button prev;
+        MovimentoViewModel mWordViewModel = ViewModelProviders.of(getActivity()).get(MovimentoViewModel.class);
 
         next = view.findViewById(R.id.next);
         prev = view.findViewById(R.id.prev);
-
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, mWordViewModel.getKnownBeneficiari());
         textBeneficiario = view.findViewById(R.id.inputBeneficiario);
+
+        textBeneficiario.setAdapter(adapter);
+
 
         textBeneficiario.setOnClickListener(new View.OnClickListener() {
             @Override

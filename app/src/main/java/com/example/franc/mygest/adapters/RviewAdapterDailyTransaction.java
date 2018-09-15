@@ -133,7 +133,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
             String accountName = mResults.get(position).getNomeConto();
 
-            String totalTransactions = "Tutte le transazioni (" + String.valueOf(getTotalTransactions(mResults.get(position).getId()) + ")");
+            String totalTransactions = String.valueOf(getTotalTransactions(mResults.get(position).getId()) + " movimenti in attesa");
 
 
             // FILL CARD WITH DATA

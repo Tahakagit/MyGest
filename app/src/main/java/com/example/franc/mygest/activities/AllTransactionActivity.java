@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -54,7 +55,7 @@ public class AllTransactionActivity extends AppCompatActivity{
         setContentView(R.layout.navigation_drawer_filter);
 
         Switch btnCheck = findViewById(R.id.btn_check);
-        EditText edittextBeneficiario = findViewById(R.id.id_edittext_filter_beneficiario);
+        AutoCompleteTextView edittextBeneficiario = findViewById(R.id.id_edittext_filter_beneficiario);
         EditText edittextConto = findViewById(R.id.id_edittext_filter_conto);
 
         context = this;
@@ -83,6 +84,10 @@ public class AllTransactionActivity extends AppCompatActivity{
                 }
             }
         });
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, mWordViewModel.getKnownBeneficiari());
+
+        edittextBeneficiario.setAdapter(adapter);
         edittextBeneficiario.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

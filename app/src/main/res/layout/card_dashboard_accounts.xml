@@ -7,6 +7,7 @@
 
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    card_view:cardBackgroundColor="@color/blue"
     card_view:cardCornerRadius="5dp"
     card_view:cardElevation="1dp"
     card_view:cardMaxElevation="15dp"
@@ -23,7 +24,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
+            android:text="Cassa di Risparmio di Volterra"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -49,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="32dp"
             android:text="SALDO ATTUALE"
             android:textColor="@color/white"
             android:textSize="14sp"
@@ -61,27 +63,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
+            android:text="35,87€"
             android:textAlignment="viewEnd"
             android:textColor="@color/white"
             android:textSize="30sp"
             card_view:layout_constraintBottom_toBottomOf="@+id/textView3"
-            card_view:layout_constraintEnd_toEndOf="parent" />
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintTop_toTopOf="@+id/textView3" />
 
 
         <TextView
             android:id="@+id/id_account_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:text="TextView"
+            android:layout_marginStart="16dp"
+            android:text="4 movimenti"
             android:textColor="@color/white"
             android:textSize="10sp"
             android:textStyle="italic"
-            card_view:layout_constraintBottom_toTopOf="@+id/divider"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintStart_toStartOf="parent" />
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toBottomOf="@+id/id_account_name" />
 
         <View
             android:id="@+id/divider"
@@ -106,13 +107,13 @@
 
         <TextView
             android:id="@+id/textView"
-            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="SALDO PREVISTO"
+            android:textColor="@color/white"
             android:textSize="14sp"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
@@ -123,6 +124,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
+            android:text="68,1€"
             android:textAlignment="viewEnd"
             android:textColor="@color/white"
             android:textSize="30sp"

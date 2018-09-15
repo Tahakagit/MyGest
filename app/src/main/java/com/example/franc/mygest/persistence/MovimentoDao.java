@@ -32,6 +32,10 @@ public interface MovimentoDao {
     @Query("SELECT * from movimento_table WHERE checked == 'unchecked'")
     LiveData<List<EntityMovimento>> getAllTransactions();
 
+
+    @Query("SELECT DISTINCT(beneficiario) from movimento_table")
+    List<String> getKnownBeneficiari();
+
     @Query("SELECT * from movimento_table WHERE checked == :checked")
     LiveData<List<EntityMovimento>> getAllTransactionsChecked(String checked);
 
