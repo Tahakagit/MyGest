@@ -1,3 +1,4 @@
+/*
 package com.example.franc.mygest.fragments;
 
 import android.app.DatePickerDialog;
@@ -78,26 +79,32 @@ public class DialogFragmentScadenza extends Fragment{
 
     }
 
-    /**
+    */
+/**
      * Starts date selection, waits for user choice and gets back selected date
      * todo trasformare editext in button?
-     */
+     *//*
+
     private void showStartDatePicker(View view) {
         startDateText = view.findViewById(R.id.select_date);
 
         final DatePickerFragment date = new DatePickerFragment();
-        /**
+        */
+/**
          * Set Up Current Date Into dialog
-         */
+         *//*
+
         Calendar calender = Calendar.getInstance();
         Bundle args = new Bundle();
         args.putInt("year", calender.get(Calendar.YEAR));
         args.putInt("month", calender.get(Calendar.MONTH));
         args.putInt("day", calender.get(Calendar.DAY_OF_MONTH));
         date.setArguments(args);
-        /**
+        */
+/**
          * Set Call back to capture selected date
-         */
+         *//*
+
 
         DatePickerDialog.OnDateSetListener ondate = new DatePickerDialog.OnDateSetListener() {
 
@@ -126,30 +133,38 @@ public class DialogFragmentScadenza extends Fragment{
             }
         });
 
+*/
 /*
         date.show(getFragmentManager(), "Date Picker");
-*/
+*//*
+
     }
-    /**
+    */
+/**
      * Starts date selection, waits for user choice and gets back selected date
      * todo trasformare editext in button?
-     */
+     *//*
+
     private void showEndDatePicker(View view) {
         endDateText = view.findViewById(R.id.select_end_date);
 
         final DatePickerFragment date = new DatePickerFragment();
-        /**
+        */
+/**
          * Set Up Current Date Into dialog
-         */
+         *//*
+
         Calendar calender = Calendar.getInstance();
         Bundle args = new Bundle();
         args.putInt("year", calender.get(Calendar.YEAR));
         args.putInt("month", calender.get(Calendar.MONTH));
         args.putInt("day", calender.get(Calendar.DAY_OF_MONTH));
         date.setArguments(args);
-        /**
+        */
+/**
          * Set Call back to capture selected date
-         */
+         *//*
+
 
         DatePickerDialog.OnDateSetListener ondate = new DatePickerDialog.OnDateSetListener() {
 
@@ -178,30 +193,38 @@ public class DialogFragmentScadenza extends Fragment{
             }
         });
 
+*/
 /*
         date.show(getFragmentManager(), "Date Picker");
-*/
+*//*
+
     }
-    /**
+    */
+/**
      * Starts date selection, waits for user choice and gets back selected date
      * todo trasformare editext in button?
-     */
+     *//*
+
     private void showSaldatoDatePicker(View view) {
         saldatoDateText = view.findViewById(R.id.select_saldato);
 
         final DatePickerFragment date = new DatePickerFragment();
-        /**
+        */
+/**
          * Set Up Current Date Into dialog
-         */
+         *//*
+
         Calendar calender = Calendar.getInstance();
         Bundle args = new Bundle();
         args.putInt("year", calender.get(Calendar.YEAR));
         args.putInt("month", calender.get(Calendar.MONTH));
         args.putInt("day", calender.get(Calendar.DAY_OF_MONTH));
         date.setArguments(args);
-        /**
+        */
+/**
          * Set Call back to capture selected date
-         */
+         *//*
+
 
         DatePickerDialog.OnDateSetListener ondate = new DatePickerDialog.OnDateSetListener() {
 
@@ -230,9 +253,11 @@ public class DialogFragmentScadenza extends Fragment{
             }
         });
 
+*/
 /*
         date.show(getFragmentManager(), "Date Picker");
-*/
+*//*
+
     }
 
     public void getRecurrenceFromSpinner(View view){
@@ -258,4 +283,4 @@ public class DialogFragmentScadenza extends Fragment{
         });
     }
 
-}
+}*/

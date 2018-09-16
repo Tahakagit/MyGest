@@ -6,13 +6,20 @@
 package com.example.franc.mygest.activities;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.DatePickerDialog;
+import android.app.DialogFragment;
+import android.app.FragmentTransaction;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -21,28 +28,46 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
 
+import com.example.franc.mygest.MoneyTextWatcher;
+import com.example.franc.mygest.MyApplication;
 import com.example.franc.mygest.fragments.DatePickerFragment;
 import com.example.franc.mygest.R;
 import com.example.franc.mygest.adapters.RviewAdapterDailyTransaction;
 import com.example.franc.mygest.UIController;
+import com.example.franc.mygest.fragments.MyDialogFragment;
 import com.example.franc.mygest.persistence.ContoViewModel;
 import com.example.franc.mygest.persistence.EntityConto;
+import com.example.franc.mygest.persistence.EntityMovimento;
+import com.example.franc.mygest.persistence.MovimentoViewModel;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements UIController.onAccountListener {
+public class MainActivity extends AppCompatActivity implements UIController.onAccountListener, MyDialogFragment.DialogListener {
 
     static RviewAdapterDailyTransaction adapterDailyTransaction;
+    static MovimentoViewModel movimentoViewModel;
     private ContoViewModel mAcountsViewModel;
     DrawerLayout mDrawerLayout;
     static Calendar dateToSend;
+    Button edittext;
 
 
     @Override
@@ -52,11 +77,17 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         mAcountsViewModel = new ContoViewModel(getApplication());
         UIController onAccountModifiedListener = new UIController(this);
 
+        edittext = findViewById(R.id.selectdate);
         dateToSend = Calendar.getInstance();
         dateToSend.set(Calendar.HOUR_OF_DAY, 23);
         dateToSend.set(Calendar.SECOND, 59);
         // START MAIN RECYCLERVIEW, FAB AND ACTIONBAR
         initUi();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
+
+        String formattedDate = sdf.format(dateToSend.getTime());
+
+        edittext.setText(formattedDate);
         mAcountsViewModel.setDate(dateToSend.getTime());
         mAcountsViewModel.getActiveAccounts().observe(this,
                     new Observer<List<EntityConto>>() {
@@ -103,7 +134,11 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
             @Override
             public void onClick(View view)
             {
+/*
                 startActivityForResult(intent, 1);
+*/
+                showDialog();
+
             }
         });
 
@@ -132,14 +167,13 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
      */
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
-        final Button edittext = findViewById(R.id.selectdate);
         final DatePickerFragment datePickerFragment;
 
         datePickerFragment = initDatePicker(calendar.get(calendar.DAY_OF_MONTH),calendar.get(calendar.MONTH), calendar.get(calendar.YEAR));
         edittext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                datePickerFragment.show(getSupportFragmentManager(), "Date Picker");
+                datePickerFragment.show(getFragmentManager(), "Date Picker");
             }
         });
 
@@ -170,6 +204,14 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
             }
         };
         datePickerFragment.setCallBack(ondate);
+    }
+
+    @Override
+    public void OnTransactionAdded(String beneficiario, String importo, java.util.Date scadenza, java.util.Date saldato, String nomeConto, int idConto, @Nullable final java.util.Date endDate, String recurrence, String tipo) {
+        movimentoViewModel = new MovimentoViewModel(getApplication());
+
+        movimentoViewModel.insert(beneficiario, importo, scadenza, saldato, nomeConto, idConto, endDate, recurrence, tipo);
+
     }
 
     /**
@@ -249,4 +291,14 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         }
 
     }
+
+
+    void showDialog() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        DialogFragment newFragment = MyDialogFragment.newInstance();
+        newFragment.show(ft, "dialog");
+    }
+
+
 }
+

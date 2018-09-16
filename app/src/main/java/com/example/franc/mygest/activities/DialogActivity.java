@@ -13,7 +13,9 @@ import android.widget.Button;
 import com.example.franc.mygest.fragments.DialogFragmentBeneficiario;
 import com.example.franc.mygest.fragments.DialogFragmentConto;
 import com.example.franc.mygest.fragments.DialogFragmentImporto;
+/*
 import com.example.franc.mygest.fragments.DialogFragmentScadenza;
+*/
 import com.example.franc.mygest.R;
 import com.example.franc.mygest.persistence.ContoViewModel;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
@@ -58,7 +60,9 @@ public class DialogActivity extends AppCompatActivity {
 
 
         fragments.add(new DialogFragmentBeneficiario());
+/*
         fragments.add(new DialogFragmentScadenza());
+*/
         fragments.add(new DialogFragmentImporto());
         fragments.add(new DialogFragmentConto());
 
