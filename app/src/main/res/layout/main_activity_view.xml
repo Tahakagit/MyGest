@@ -39,6 +39,7 @@
                 tools:layout_editor_absoluteY="4dp">
 
                 <TextView
+                    android:textColor="@color/almost_black"
                     android:id="@+id/textView5"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -49,6 +50,7 @@
 
                 <Button
 
+                    android:textColor="@color/almost_black"
                     android:id="@+id/selectdate"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

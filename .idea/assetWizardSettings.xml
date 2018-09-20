@@ -28,8 +28,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_fab_add" />
-                            <entry key="sourceFile" value="C:\Users\franc" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_logo" />
+                            <entry key="sourceFile" value="C:\Users\franc\Desktop\Untitled-1.svg" />
                           </map>
                         </option>
                       </PersistentState>

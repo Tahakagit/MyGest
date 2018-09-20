@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         rview.getRecycledViewPool().setMaxRecycledViews(0, 0);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_logo);
 
         final Intent intent = new Intent(this, DialogActivity.class);
 

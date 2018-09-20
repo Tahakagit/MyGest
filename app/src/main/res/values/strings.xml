@@ -16,6 +16,7 @@
     <string name="insert">Inserisci</string>
     <string name="cancel">Cancella</string>
     <string name="title_activity_dialog">DialogActivity</string>
+    <string name="title_filter_activity">Tutte le transazioni</string>
 
     <string name="title_activity_crea_conto">CreaContoActivity</string>
     <string name="title_dialog_select_colors">Seleziona colore conto</string>

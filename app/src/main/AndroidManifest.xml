@@ -20,6 +20,7 @@
         <activity
             android:name=".activities.AllTransactionActivity"
             android:parentActivityName="com.example.franc.mygest.activities.MainActivity"
+            android:label="@string/title_filter_activity"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".activities.DialogActivity"

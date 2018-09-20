@@ -143,23 +143,36 @@ public class MyDialogFragment extends DialogFragment {
                 if(saldatoDateToSend == null){
                     saldatoDateToSend = startDateToSend;
                 }
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(startDateToSend);
+                cal.set(Calendar.HOUR_OF_DAY, 00);
+                cal.set(Calendar.MINUTE, 00);
+                cal.set(Calendar.SECOND, 00);
+                cal.set(Calendar.MILLISECOND, 00);
+                startDateToSend = cal.getTime();
 
+                if (endDateToSend!= null){
+                    Calendar cal2 = Calendar.getInstance();
+                    cal2.setTime(endDateToSend);
+                    cal2.set(Calendar.HOUR_OF_DAY, 00);
+                    cal2.set(Calendar.MINUTE, 00);
+                    cal2.set(Calendar.SECOND, 00);
+                    cal2.set(Calendar.MILLISECOND, 00);
+                    endDateToSend = cal2.getTime();
+
+                }
+
+                if(saldatoDateToSend == null){
+                    saldatoDateToSend = startDateToSend;
+                }
 
                 ContoViewModel mContoViewModel = new ContoViewModel(getActivity().getApplication());
                 int accountId = mContoViewModel.getAccountIdByName(contos).getId();
 
-/*
-                EntityMovimento mov = new EntityMovimento(beneficiarioValue,
-                        importoValue.toString(),
-                        startDateToSend,
-                        saldatoDateToSend,
-                        accountId,
-                        contos,
-                        endDateToSend, recurrence,
-                        type);
-*/
                 mListener.OnTransactionAdded(beneficiarioValue, importoValue.toString(), startDateToSend, saldatoDateToSend, contos, accountId, endDateToSend, recurrence, type);
 
+
+                dismiss();
             }
         });
 
