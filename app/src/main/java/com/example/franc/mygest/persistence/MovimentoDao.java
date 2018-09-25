@@ -46,7 +46,7 @@ public interface MovimentoDao {
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @TypeConverters(DateConverter.class)
-    @Query("SELECT * FROM movimento_table WHERE scadenza  == :upTo AND idConto == (:account) AND checked == :checked AND beneficiario == :beneficiario")
+    @Query("SELECT * FROM movimento_table WHERE scadenza  == :upTo AND idConto == :account AND checked == :checked AND beneficiario == :beneficiario")
     LiveData<List<EntityMovimento>> getAllDayFiltered(Date upTo, int account, String checked, String beneficiario);
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
