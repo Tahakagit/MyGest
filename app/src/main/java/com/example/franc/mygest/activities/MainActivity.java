@@ -6,20 +6,16 @@
 package com.example.franc.mygest.activities;
 
 import android.app.Activity;
-import android.app.Application;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -27,21 +23,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.Spinner;
 
-import com.example.franc.mygest.MoneyTextWatcher;
-import com.example.franc.mygest.MyApplication;
 import com.example.franc.mygest.fragments.DatePickerFragment;
 import com.example.franc.mygest.R;
 import com.example.franc.mygest.adapters.RviewAdapterDailyTransaction;
@@ -49,15 +35,10 @@ import com.example.franc.mygest.UIController;
 import com.example.franc.mygest.fragments.MyDialogFragment;
 import com.example.franc.mygest.persistence.ContoViewModel;
 import com.example.franc.mygest.persistence.EntityConto;
-import com.example.franc.mygest.persistence.EntityMovimento;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements UIController.onAccountListener, MyDialogFragment.DialogListener {
@@ -111,10 +92,10 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
      */
     private void initUi(){
 
-        FloatingActionButton fab = findViewById(R.id.fab_insert_transaction);
+        FloatingActionButton fab = findViewById(R.id.fab_main);
 
-        RecyclerView rview = findViewById(R.id.recyclerview_filter);
-        Toolbar myToolbar = findViewById(R.id.toolbar_mainactivity);
+        RecyclerView rview = findViewById(R.id.recyclerview_main_accounts);
+        Toolbar myToolbar = findViewById(R.id.toolbar_main);
         myToolbar.setTitle("");
         setSupportActionBar(myToolbar);
         // don't reuse viewholder because i need to restart everything in it everytimes rview updates
@@ -240,9 +221,9 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
     private void startNavDrawer(){
         final Intent creaConto = new Intent(this, AccountsManageActivity.class);
         final Intent allTransaction = new Intent(this, AllTransactionActivity.class);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.navigationview_main);
 
-        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_main);
 
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(

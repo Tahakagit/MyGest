@@ -6,5 +6,10 @@
     <item name="cv_account_dashboard" type="id"/>
     <item name="id_edittext_filter_beneficiario" type="id"/>
     <item name="id_edittext_filter_conto" type="id"/>
+    <item name="recyclerview_main_accounts" type="id"/>
+    <item name="toolbar_main" type="id"/>
+    <item name="drawer_main" type="id"/>
+    <item name="navigationview_main" type="id"/>
+    <item name="fab_main" type="id"/>
 
 </resources>

@@ -109,7 +109,6 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
     @Override
     public void onBindViewHolder(final DateDashboardViewHolder dateViewholder, int position) {
         position = dateViewholder.getAdapterPosition();
-        startTransactionRecyclerView(dateViewholder);
 
         EntityMovimento current = mResults.get(position);
         if(current != null) {
@@ -122,6 +121,8 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
 
             dateViewholder.setData(dayFormat.format(current.getScadenza()), monthFormat.format(current.getScadenza()).toUpperCase(), current.getBeneficiario());
         }
+        startTransactionRecyclerView(dateViewholder);
+
     }
 
 
@@ -134,32 +135,33 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
         RecyclerView rviewMovimenti = dateViewholder.itemView.findViewById(R.id.rv_movimenti);
         RviewAdapterMovimenti adapterMovimenti;
 
-        String bene = activity.getBeneficiario();
+        String bene = mResults.get(dateViewholder.getAdapterPosition()).getBeneficiario();
+        String account = String.valueOf(mResults.get(dateViewholder.getAdapterPosition()).getIdConto());
+        Date dateStr = mResults.get(dateViewholder.getAdapterPosition()).getScadenza();
+        String checked = mResults.get(dateViewholder.getAdapterPosition()).getChecked();
 
         adapterMovimenti = new RviewAdapterMovimenti(app);
         adapterMovimenti.setHasStableIds(true);
-        String dateStr = mResults.get(dateViewholder.getAdapterPosition()).getScadenza().toString();
-        movsVM.getDailyTransactionsChecked(dateStr,
-                    mResults.get(dateViewholder.getAdapterPosition()).getChecked(),
-                    bene)
+/*
+        movsVM.filterConto(account);
+        movsVM.filterBeneficiario(bene);
+        movsVM.filterDate(dateStr);
+        if (checked.equalsIgnoreCase("unchecked")){
+            movsVM.viewUnchecked();
+        }else{
+            movsVM.viewChecked();
+        }
+*/
+/*
+        movsVM.setChecked(mResults.get(dateViewholder.getAdapterPosition()).getChecked());
+*/
+        movsVM.getAllTransactionsDates(dateStr, Integer.valueOf(account), checked, bene)
                 .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
                     @Override
                     public void onChanged(@Nullable List<EntityMovimento> entityMovimentos) {
                         adapterMovimenti.setResults(entityMovimentos);
                     }
                 });
-
-/*
-        movsVM.filterDate(dateStr);
-*/
-        // QUERY DB FOR RESULTS
-        //todo come faccio a sapere checked unchecked?
-        movsVM.viewUnchecked();
-/*
-        movsVM.filterBeneficiario("");
-*/
-
-
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
         rviewMovimenti.setAdapter(adapterMovimenti);
         // SET UP SWIPE

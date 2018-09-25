@@ -51,7 +51,9 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         holder.setData(movimento.getId(), movimento.getBeneficiario(), importoFormatted,
                 movimento.getTipo(),
                 dayFormat.format(movimento.getSaldato()),
-                monthFormat.format(movimento.getSaldato()).toUpperCase());
+                monthFormat.format(movimento.getSaldato()).toUpperCase(),
+                movimento.getNomeConto()
+                );
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -95,6 +97,7 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         TextView importo;
         TextView saldatoDay;
         TextView saldatoMonth;
+        TextView account;
 
         TextView tipo;
         int transId;
@@ -104,6 +107,8 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
 
         TransactionViewHolder(View itemView) {
             super(itemView);
+            account = itemView.findViewById(R.id.id_card_account);
+
             beneficiario = itemView.findViewById(R.id.id_card_beneficiario);
             importo = itemView.findViewById(R.id.id_card_importo);
             icRecurrence = itemView.findViewById(R.id.ic_recurrence);
@@ -118,13 +123,15 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         public int getTransId(){
             return transId;
         }
-        void setData(int id, String textbeneficiario, String textimporto, String type, String day, String month){
+        void setData(int id, String textbeneficiario, String textimporto, String type, String day, String month, String textAccount){
             beneficiario.setText(textbeneficiario);
             importo.setText(textimporto);
             tipo.setText(type);
             transId = id;
             saldatoDay.setText(day);
             saldatoMonth.setText(month);
+            account.setText(textAccount);
+
         }
     }
 

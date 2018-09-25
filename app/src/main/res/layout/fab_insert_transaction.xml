@@ -6,11 +6,11 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_insert_transaction"
+        android:id="@id/fab_main"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_gravity="end|bottom"
-        app:backgroundTint="?attr/colorPrimaryDark"
+        app:backgroundTint="@color/almost_black"
         android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"/>

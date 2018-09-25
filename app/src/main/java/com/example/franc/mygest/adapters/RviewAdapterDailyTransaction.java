@@ -10,6 +10,7 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -84,7 +85,9 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                 RecyclerView.VERTICAL);
         adapterDates = new RviewAdapterGroupDates(context, app);
         adapterDates.setHasStableIds(true);
+/*
         rviewDates.addItemDecoration(mDividerItemDecoration);
+*/
         rviewDates.setLayoutManager(new LinearLayoutManager(context));
         rviewDates.setAdapter(adapterDates);
         int accountId = mResults.get(accountViewHolder.getAdapterPosition()).getId();
@@ -142,7 +145,13 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                     futureBalance,
                     totalTransactions
                     );
+/*
             accountViewHolder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
+*/
+
+            accountViewHolder.bg1.setBackgroundColor(mResults.get(position).getColoreConto());
+            accountViewHolder.bg2.setBackgroundColor(mResults.get(position).getColoreConto());
+
             // STARTS DATES GROUPING RV
             startDatesRecyclerView(accountViewHolder);
             // STARTING EXPAND COLLAPSE ACCOUNT CARDS
@@ -152,11 +161,15 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                 public void onClick(View v) {
                     if(accountViewHolder.hiddenRv.getVisibility()==View.GONE){
                         accountViewHolder.hiddenRv.setVisibility(View.VISIBLE);
+/*
                         accountViewHolder.cv.setCardElevation(15f);
+*/
                     }
                     else {
                         accountViewHolder.hiddenRv.setVisibility(View.GONE);
+/*
                         accountViewHolder.cv.setCardElevation(1f);
+*/
                     }
                 }
             });
@@ -191,11 +204,14 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         TextView totalTransactions;
         ImageView moreIc;
         RecyclerView hiddenRv;
-
+        ConstraintLayout bg1;
+        ConstraintLayout bg2;
         CardView cv;
 
         AccountDashboardViewHolder(View itemView) {
             super(itemView);
+            bg1 = itemView.findViewById(R.id.id_card_bg1);
+            bg2 = itemView.findViewById(R.id.id_card_bg2);
             cv = itemView.findViewById(R.id.cv_account_dashboard);
             accountName = itemView.findViewById(R.id.id_account_name);
             accountFutureBalance = itemView.findViewById(R.id.id_account_future_balance);

@@ -46,24 +46,59 @@ public interface MovimentoDao {
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @TypeConverters(DateConverter.class)
+    @Query("SELECT * FROM movimento_table WHERE scadenza  == :upTo AND idConto == (:account) AND checked == :checked AND beneficiario == :beneficiario")
+    LiveData<List<EntityMovimento>> getAllDayFiltered(Date upTo, int account, String checked, String beneficiario);
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @TypeConverters(DateConverter.class)
     @Query("SELECT * FROM movimento_table WHERE checked == :checked and beneficiario == :beneficiario GROUP BY scadenza")
     LiveData<List<EntityMovimento>> getAllDatesCheckedBeneNoACcount(String checked, String beneficiario);
-
-
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @TypeConverters(DateConverter.class)
     @Query("SELECT * FROM movimento_table WHERE checked == :checked and idConto == :account GROUP BY scadenza")
     LiveData<List<EntityMovimento>> getAllDatesCheckedNoBeneAccount(String checked, int account);
-
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT * FROM movimento_table WHERE checked == :checked GROUP BY scadenza")
+    LiveData<List<EntityMovimento>> getAllDatesCheckedNoBeneAllAccount(String checked);
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @TypeConverters(DateConverter.class)
     @Query("SELECT * FROM movimento_table WHERE checked == :checked and beneficiario == :beneficiario AND idConto == :account GROUP BY scadenza")
     LiveData<List<EntityMovimento>> getAllDatesCheckedBeneAccount(int account, String checked, String beneficiario);
-
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT * FROM movimento_table WHERE checked == :checked and beneficiario == :beneficiario GROUP BY scadenza")
+    LiveData<List<EntityMovimento>> getAllDatesCheckedBeneAllAccount(String checked, String beneficiario);
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @TypeConverters(DateConverter.class)
     @Query("SELECT * FROM movimento_table WHERE checked == :checked GROUP BY scadenza")
     LiveData<List<EntityMovimento>> getAllDatesCheckedNoBeneNoAccountGroup(String checked);
+
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT * FROM movimento_table WHERE checked == :checked and beneficiario == :beneficiario AND scadenza == :date")
+    LiveData<List<EntityMovimento>> getDailyCheckedBeneNoACcount(String checked, String beneficiario, Date date);
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT * FROM movimento_table WHERE checked == :checked and idConto == :account AND scadenza == :date")
+    LiveData<List<EntityMovimento>> getDailyCheckedNoBeneAccount(String checked, int account, Date date);
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT * FROM movimento_table WHERE checked == :checked AND scadenza == :date")
+    LiveData<List<EntityMovimento>> getDailyCheckedNoBeneAllAccount(String checked, Date date);
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT * FROM movimento_table WHERE checked == :checked and beneficiario == :beneficiario AND idConto == :account AND scadenza == :date")
+    LiveData<List<EntityMovimento>> getDailyCheckedBeneAccount(int account, String checked, String beneficiario, Date date);
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT * FROM movimento_table WHERE checked == :checked and beneficiario == :beneficiario AND scadenza == :date")
+    LiveData<List<EntityMovimento>> getDailyCheckedBeneAllAccount(String checked, String beneficiario, Date date);
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT * FROM movimento_table WHERE checked == :checked AND scadenza == :date ")
+    LiveData<List<EntityMovimento>> getDailyCheckedNoBeneNoAccountGroup(String checked, Date date);
 
 
 
@@ -98,6 +133,16 @@ public interface MovimentoDao {
     @Query("SELECT * FROM movimento_table WHERE scadenza == :dayet AND checked == :checked")
     LiveData<List<EntityMovimento>> getDailyTransactionsChecked(Date dayet, String checked);
 
+
+    @TypeConverters(DateConverter.class)
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM movimento_table WHERE scadenza == :dayet AND checked == :checked AND idConto == :account")
+    LiveData<List<EntityMovimento>> getDailyTransactionsNoBeneAccount(Date dayet, String checked, String account);
+
+    @TypeConverters(DateConverter.class)
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM movimento_table WHERE scadenza == :dayet AND checked == :checked AND idConto == :account AND beneficiario ==  :beneficiario")
+    LiveData<List<EntityMovimento>> getDailyTransactionsBeneAccount(Date dayet, String checked, String beneficiario, String account);
 
     @TypeConverters(DateConverter.class)
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)

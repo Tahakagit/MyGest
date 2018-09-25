@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -47,7 +46,10 @@ public class AllTransactionActivity extends AppCompatActivity{
     private Context context;
     private static Calendar weekRange;
     private MovimentoViewModel mWordViewModel;
+    static String beneficiario = null;
     static String conto = null;
+    static String checked = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class AllTransactionActivity extends AppCompatActivity{
         context = this;
         mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
 
+        setAccount(String.valueOf(10));
         mWordViewModel.viewUnchecked();
         mWordViewModel.getAllDates().observe(this, new Observer<List<EntityMovimento>>() {
             @Override
@@ -74,12 +77,19 @@ public class AllTransactionActivity extends AppCompatActivity{
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (btnCheck.isChecked()){
+                    checked = "Checked";
                     mWordViewModel.viewChecked();
+/*
                     adapterAllTransactions.notifyDataSetChanged();
+*/
                 }
                 else {
+                    checked = "Unchecked";
+
                     mWordViewModel.viewUnchecked();
+/*
                     adapterAllTransactions.notifyDataSetChanged();
+*/
 
                 }
             }
@@ -98,7 +108,7 @@ public class AllTransactionActivity extends AppCompatActivity{
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mWordViewModel.filterBeneficiario(edittextBeneficiario.getText().toString());
 
-                conto = edittextBeneficiario.getText().toString();
+                beneficiario = edittextBeneficiario.getText().toString();
 
             }
 
@@ -118,7 +128,7 @@ public class AllTransactionActivity extends AppCompatActivity{
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mWordViewModel.filterConto(edittextConto.getText().toString());
 
-                conto = edittextConto.getText().toString();
+                beneficiario = edittextConto.getText().toString();
 
             }
 
@@ -134,8 +144,20 @@ public class AllTransactionActivity extends AppCompatActivity{
     }
 
     public String getBeneficiario(){
+        return beneficiario;
+    }
+    public String getAccount(){
         return conto;
     }
+
+    public void setAccount(String account){
+        conto = account;
+    }
+
+    public String getChecked(){
+        return checked;
+    }
+
     //START USER INTERFACE
     private void initUi(){
         DividerItemDecoration mDividerItemDecoration;
@@ -158,8 +180,10 @@ public class AllTransactionActivity extends AppCompatActivity{
         adapterAllTransactions = new RviewAdapterAllTransactions(this, this, getApplication());
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapterAllTransactions);
+/*
         rview.addItemDecoration(mDividerItemDecoration);
-        FloatingActionButton fab = findViewById(R.id.fab_insert_transaction);
+*/
+        FloatingActionButton fab = findViewById(R.id.fab_main);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -180,7 +204,7 @@ public class AllTransactionActivity extends AppCompatActivity{
         final Intent creaConto = new Intent(this, AccountsManageActivity.class);
 
         mDrawerLayout = findViewById(R.id.drawer_layout_filter);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.navigationview_main);
 
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(
@@ -217,6 +241,7 @@ public class AllTransactionActivity extends AppCompatActivity{
         for (EntityConto s:arraylist) {
             list.add(s.getNomeConto());
         }
+        list.add("Tutte");
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(appCtx, android.R.layout.simple_spinner_dropdown_item, list);
         spinner.setAdapter(dataAdapter);
@@ -226,7 +251,21 @@ public class AllTransactionActivity extends AppCompatActivity{
 /*
                 contos = parent.getItemAtPosition(position).toString();
 */
-                mWordViewModel.filterConto(String.valueOf(contoVM.getAccountIdByName(parent.getItemAtPosition(position).toString()).getId()));
+
+                if (parent.getItemAtPosition(position).toString().equalsIgnoreCase("Tutte")){
+                    conto = String.valueOf(10);
+                }else {
+                    conto = String.valueOf(contoVM.getAccountIdByName(parent.getItemAtPosition(position).toString()).getId());
+
+                }
+
+                if (parent.getItemAtPosition(position).toString().equalsIgnoreCase("Tutte")){
+                    mWordViewModel.filterConto(String.valueOf(10));
+                }else {
+                    mWordViewModel.filterConto(String.valueOf(contoVM.getAccountIdByName(parent.getItemAtPosition(position).toString()).getId()));
+
+                }
+
 
             }
             @Override
