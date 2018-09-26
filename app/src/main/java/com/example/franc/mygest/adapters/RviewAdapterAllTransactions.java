@@ -135,26 +135,14 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
         RecyclerView rviewMovimenti = dateViewholder.itemView.findViewById(R.id.rv_movimenti);
         RviewAdapterMovimenti adapterMovimenti;
 
-        String bene = mResults.get(dateViewholder.getAdapterPosition()).getBeneficiario();
-        String account = String.valueOf(mResults.get(dateViewholder.getAdapterPosition()).getIdConto());
-        Date dateStr = mResults.get(dateViewholder.getAdapterPosition()).getScadenza();
-        String checked = mResults.get(dateViewholder.getAdapterPosition()).getChecked();
+        String bene = activity.getBeneficiario();
+        String account = activity.getAccount();
+        String dateStr = mResults.get(dateViewholder.getAdapterPosition()).getScadenza().toString();
+        String checked = activity.getChecked();
 
         adapterMovimenti = new RviewAdapterMovimenti(app);
         adapterMovimenti.setHasStableIds(true);
-/*
-        movsVM.filterConto(account);
-        movsVM.filterBeneficiario(bene);
-        movsVM.filterDate(dateStr);
-        if (checked.equalsIgnoreCase("unchecked")){
-            movsVM.viewUnchecked();
-        }else{
-            movsVM.viewChecked();
-        }
-*/
-/*
-        movsVM.setChecked(mResults.get(dateViewholder.getAdapterPosition()).getChecked());
-*/
+
         movsVM.getAllTransactionsDates(dateStr, Integer.valueOf(account), checked, bene)
                 .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
                     @Override

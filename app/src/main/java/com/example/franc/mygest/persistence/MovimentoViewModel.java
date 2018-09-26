@@ -221,8 +221,8 @@ public class MovimentoViewModel extends AndroidViewModel {
 
     public LiveData<List<EntityMovimento>> getAllDates() { return mActiveDates; }
 
-    public LiveData<List<EntityMovimento>> getAllTransactionsDates(java.util.Date upTo, int account, String checked, String beneficiario) {
-        return mRepository.getAllInDayFiltered(upTo, account, checked, beneficiario); }
+    public LiveData<List<EntityMovimento>> getAllTransactionsDates(String upTo, int account, String checked, String beneficiario) {
+        return mRepository.getTransactionInDay(String.valueOf(account), checked, beneficiario, upTo);}
 
 
     public void insert(String beneficiario, String importo, java.util.Date scadenza, java.util.Date saldato, String nomeConto, int idConto, @Nullable final java.util.Date endDate, String recurrence, String tipo) {

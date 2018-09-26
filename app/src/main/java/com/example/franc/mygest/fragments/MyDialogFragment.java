@@ -140,9 +140,6 @@ public class MyDialogFragment extends DialogFragment {
 
                 }
                 beneficiarioValue = beneficiario.getText().toString();
-                if(saldatoDateToSend == null){
-                    saldatoDateToSend = startDateToSend;
-                }
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(startDateToSend);
                 cal.set(Calendar.HOUR_OF_DAY, 00);

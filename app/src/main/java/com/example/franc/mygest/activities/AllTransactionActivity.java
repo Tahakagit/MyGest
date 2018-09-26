@@ -64,6 +64,7 @@ public class AllTransactionActivity extends AppCompatActivity{
         mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
 
         setAccount(String.valueOf(10));
+        checked = "unchecked";
         mWordViewModel.viewUnchecked();
         mWordViewModel.getAllDates().observe(this, new Observer<List<EntityMovimento>>() {
             @Override
@@ -77,14 +78,14 @@ public class AllTransactionActivity extends AppCompatActivity{
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (btnCheck.isChecked()){
-                    checked = "Checked";
+                    checked = "checked";
                     mWordViewModel.viewChecked();
 /*
                     adapterAllTransactions.notifyDataSetChanged();
 */
                 }
                 else {
-                    checked = "Unchecked";
+                    checked = "unchecked";
 
                     mWordViewModel.viewUnchecked();
 /*
