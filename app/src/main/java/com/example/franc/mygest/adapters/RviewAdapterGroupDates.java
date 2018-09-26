@@ -16,6 +16,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -131,7 +132,13 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
     private void startTransactionRecyclerView(DateDashboardViewHolder dateViewholder){
         RecyclerView rviewMovimenti = dateViewholder.itemView.findViewById(R.id.rv_movimenti);
         RviewAdapterMovimenti adapterMovimenti;
+        rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
 
+/*
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rviewMovimenti.getContext(),
+                DividerItemDecoration.VERTICAL);
+        rviewMovimenti.addItemDecoration(dividerItemDecoration);
+*/
         adapterMovimenti = new RviewAdapterMovimenti(app);
         adapterMovimenti.setHasStableIds(true);
         // QUERY DB FOR RESULTS
@@ -144,7 +151,6 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
                     }
                 });
 
-        rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
         rviewMovimenti.setAdapter(adapterMovimenti);
         // SET UP SWIPE
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT|ItemTouchHelper.LEFT) {
