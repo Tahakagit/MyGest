@@ -27,7 +27,7 @@ public class ContoViewModel extends AndroidViewModel {
         mAllAccounts = mRepository.getAllAccounts();
     }
     public void setDate(Date date){
-        this.mDate.setValue(date); ;
+        this.mDate.setValue(date);
     }
 
     public LiveData<List<EntityConto>> getAllAccounts() { return mAllAccounts; }

@@ -102,7 +102,6 @@ public class DialogFragmentImporto extends Fragment {
         popup.setFocusable(true);
         // Show anchored to button
         Drawable drawBackground = ContextCompat.getDrawable(context, R.drawable.dialog_background);
-        ;
         popup.setBackgroundDrawable(drawBackground);
         popup.showAtLocation(anchorView, Gravity.TOP, 150, 0);
     }

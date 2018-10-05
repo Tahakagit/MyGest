@@ -91,20 +91,18 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
      * Starts UI
      */
     private void initUi(){
-
+        ActionBar actionbar;
         FloatingActionButton fab = findViewById(R.id.fab_main);
-
         RecyclerView rview = findViewById(R.id.recyclerview_main_accounts);
         Toolbar myToolbar = findViewById(R.id.toolbar_main);
+
         myToolbar.setTitle("");
         setSupportActionBar(myToolbar);
         // don't reuse viewholder because i need to restart everything in it everytimes rview updates
         rview.getRecycledViewPool().setMaxRecycledViews(0, 0);
-        ActionBar actionbar = getSupportActionBar();
+        actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_logo);
-
-        final Intent intent = new Intent(this, DialogActivity.class);
 
         adapterDailyTransaction = new RviewAdapterDailyTransaction(this, getApplication());
         rview.setLayoutManager(new LinearLayoutManager(this));
@@ -115,9 +113,6 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
             @Override
             public void onClick(View view)
             {
-/*
-                startActivityForResult(intent, 1);
-*/
                 showDialog();
 
             }
@@ -150,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         Calendar calendar = Calendar.getInstance();
         final DatePickerFragment datePickerFragment;
 
-        datePickerFragment = initDatePicker(calendar.get(calendar.DAY_OF_MONTH),calendar.get(calendar.MONTH), calendar.get(calendar.YEAR));
+        datePickerFragment = initDatePicker(calendar.get(Calendar.DAY_OF_MONTH),calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
         edittext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

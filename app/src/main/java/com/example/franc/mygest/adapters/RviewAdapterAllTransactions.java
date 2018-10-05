@@ -80,7 +80,6 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
     static class DateDashboardViewHolder extends RecyclerView.ViewHolder{
         TextView dayScadenzaText;
         TextView monthScadenzaText;
-        TextView yearScadenzaText;
         String beneficiario = null;
 
         DateDashboardViewHolder(View itemView) {
@@ -114,11 +113,6 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
         if(current != null) {
             SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.ITALY);
             SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.ITALY);
-/*
-            SimpleDateFormat yearFormat = new SimpleDateFormat("YY", Locale.ITALY);
-*/
-
-
             dateViewholder.setData(dayFormat.format(current.getScadenza()), monthFormat.format(current.getScadenza()).toUpperCase(), current.getBeneficiario());
         }
         startTransactionRecyclerView(dateViewholder);
@@ -166,7 +160,7 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
                 if (direction == ItemTouchHelper.LEFT) {
                     try {
                         movsVM.deleteTransactionById((int)viewHolder.getItemId());
-                        adapterMovimenti.notifyItemRemoved(viewHolder.getAdapterPosition());
+                        notifyItemRemoved(viewHolder.getAdapterPosition());
 
 
                     } catch (ArrayIndexOutOfBoundsException e) {
@@ -177,7 +171,7 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
                         int transactionPosition = viewHolder.getAdapterPosition();
                         int id = (int)adapterMovimenti.getItemId(transactionPosition);
                         movsVM.checkTransaction(id);
-                        adapterMovimenti.notifyItemRemoved(transactionPosition);
+                        notifyItemRemoved(transactionPosition);
 
 
                     } catch (ArrayIndexOutOfBoundsException e) {

@@ -41,7 +41,7 @@ public class DialogFragmentConto extends Fragment {
     }
 
     private ArrayList<String> getAccountList(){
-        Application appCtx = (MyApplication) getActivity().getApplication();
+        Application appCtx = getActivity().getApplication();
         ContoViewModel contoVM = new ContoViewModel(appCtx);
 
         ArrayList<String> list = new ArrayList<>();
@@ -65,7 +65,7 @@ public class DialogFragmentConto extends Fragment {
 
 
     void populateAccountSpinner(Spinner spinner){
-        Application appCtx = (MyApplication) getActivity().getApplication();
+        Application appCtx = getActivity().getApplication();
         ContoViewModel contoVM = new ContoViewModel(appCtx);
 
         ArrayList<String> list = new ArrayList<>();

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cv_account_dashboard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="1dp"
-    card_view:cardMaxElevation="1dp"
-    android:layout_margin="1dp">
+    app:cardCornerRadius="5dp"
+    app:cardUseCompatPadding="true"
+    card_view:cardMaxElevation="5dp"
+    card_view:contentPadding="10dp">
 
 
     <android.support.constraint.ConstraintLayout
@@ -22,10 +23,9 @@
             android:layout_height="wrap_content"
 
 
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Cassa di Risparmi di Volterra"
+            android:layout_marginEnd="8dp"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             card_view:layout_constraintEnd_toEndOf="parent"
@@ -38,9 +38,8 @@
             android:layout_height="wrap_content"
 
 
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:text="254,24 €"
+            android:layout_marginEnd="8dp"
             android:textColor="@android:color/white"
             android:textSize="35sp"
             card_view:layout_constraintEnd_toEndOf="parent"
@@ -52,23 +51,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:adjustViewBounds="true"
             android:cropToPadding="false"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintHorizontal_bias="0.5"
             card_view:layout_constraintStart_toEndOf="@+id/img_delete_account"
             card_view:layout_constraintTop_toTopOf="@+id/img_delete_account"
-            card_view:srcCompat="@drawable/ic_edit" />
+            card_view:srcCompat="@drawable/ic_edit"
+            android:contentDescription="TODO" />
 
         <ImageView
             android:id="@+id/img_delete_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
             android:adjustViewBounds="true"
             android:cropToPadding="false"
             card_view:layout_constraintBottom_toBottomOf="parent"
@@ -82,10 +82,9 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:text="Saldo attuale"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
             android:textColor="@android:color/white"
             android:textSize="12sp"
             card_view:layout_constraintBottom_toBottomOf="parent"

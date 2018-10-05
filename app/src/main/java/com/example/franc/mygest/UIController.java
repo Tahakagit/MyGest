@@ -87,11 +87,7 @@ public class UIController {
         final Dialog d = new Dialog(mContext);
 
         final Boolean exists;
-        if (conto == null){
-            exists = false;
-        }else {
-            exists = true;
-        }
+        exists = conto != null;
         d.setTitle("Save to Realm");
         d.setContentView(R.layout.input_dialog_creaconto);
 

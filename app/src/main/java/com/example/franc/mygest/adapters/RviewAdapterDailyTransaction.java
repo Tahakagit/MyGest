@@ -76,18 +76,11 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
      * */
     private void startDatesRecyclerView(AccountDashboardViewHolder accountViewHolder){
         RecyclerView rviewDates;
-        DividerItemDecoration mDividerItemDecoration;
         RviewAdapterGroupDates adapterDates;
-        String nomeConto = mResults.get(accountViewHolder.getAdapterPosition()).getNomeConto();//DEBUG
 
         rviewDates = accountViewHolder.itemView.findViewById(R.id.rv_dates);
-        mDividerItemDecoration = new DividerItemDecoration(rviewDates.getContext(),
-                RecyclerView.VERTICAL);
         adapterDates = new RviewAdapterGroupDates(context, app);
         adapterDates.setHasStableIds(true);
-/*
-        rviewDates.addItemDecoration(mDividerItemDecoration);
-*/
         rviewDates.setLayoutManager(new LinearLayoutManager(context));
         rviewDates.setAdapter(adapterDates);
         int accountId = mResults.get(accountViewHolder.getAdapterPosition()).getId();
@@ -130,12 +123,10 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             // CALCULATE BALANCES
             BigDecimal currentBalanceBigD = new BigDecimal(String.valueOf(mResults.get(position).getSaldoConto()));
             BigDecimal futureBalanceBigD = calculateNewBalance(mResults.get(position));
+
             String currentBalance = NumberFormat.getCurrencyInstance(Locale.ITALY).format(currentBalanceBigD);
             String futureBalance = NumberFormat.getCurrencyInstance(Locale.ITALY).format(futureBalanceBigD);
-
-
             String accountName = mResults.get(position).getNomeConto();
-
             String totalTransactions = String.valueOf(getTotalTransactions(mResults.get(position).getId()) + " movimenti in attesa");
 
 
@@ -145,10 +136,6 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                     futureBalance,
                     totalTransactions
                     );
-/*
-            accountViewHolder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
-*/
-
             accountViewHolder.bg1.setBackgroundColor(mResults.get(position).getColoreConto());
             accountViewHolder.bg2.setBackgroundColor(mResults.get(position).getColoreConto());
 

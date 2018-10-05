@@ -155,38 +155,6 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
         // SET UP SWIPE
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT|ItemTouchHelper.LEFT) {
 
-/*
-            @Override
-            public void onChildDraw (Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive){
-*/
-/*
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-*//*
-
-                background = new ColorDrawable(context.getResources().getColor(R.color.grey_bg_soft));
-
-                Paint paint = new Paint();
-                paint.setColor(Color.WHITE);
-                paint.setStyle(Paint.Style.FILL);
-                c.drawPaint(paint);
-
-                paint.setColor(Color.BLACK);
-                paint.setTextSize(20);
-                c.drawText("Some Text", 10, 25, paint);
-
-*/
-/*
-                background.setBounds(viewHolder.itemView.getRight() + (int) dX, viewHolder.itemView.getTop(), viewHolder.itemView.getRight(), viewHolder.itemView.getBottom());
-                background.draw(c);
-*//*
-
-
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-
-
-            }
-*/
-
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;

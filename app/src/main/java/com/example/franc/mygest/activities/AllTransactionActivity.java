@@ -5,8 +5,11 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -18,12 +21,15 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Switch;
 
@@ -40,7 +46,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class AllTransactionActivity extends AppCompatActivity{
+public class AllTransactionActivity extends AppCompatActivity implements View.OnClickListener{
 
     private RviewAdapterAllTransactions adapterAllTransactions;
     private Context context;
@@ -49,16 +55,34 @@ public class AllTransactionActivity extends AppCompatActivity{
     static String beneficiario = null;
     static String conto = null;
     static String checked = null;
-
-
+    BottomSheetBehavior sheetBehavior;
+    LinearLayout bottomSheet;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation_drawer_filter);
 
-        Switch btnCheck = findViewById(R.id.btn_check);
-        AutoCompleteTextView edittextBeneficiario = findViewById(R.id.id_edittext_filter_beneficiario);
-        EditText edittextConto = findViewById(R.id.id_edittext_filter_conto);
+
+        bottomSheet = findViewById(R.id.bottom_sheet);
+
+        findViewById(R.id.bg).setOnClickListener(this);
+
+        sheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED)
+
+                    findViewById(R.id.bg).setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                findViewById(R.id.bg).setVisibility(View.VISIBLE);
+                findViewById(R.id.bg).setAlpha(slideOffset);
+
+            }
+        });
 
         context = this;
         mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
@@ -74,73 +98,59 @@ public class AllTransactionActivity extends AppCompatActivity{
             }
         });
 
-        btnCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (btnCheck.isChecked()){
-                    checked = "checked";
-                    mWordViewModel.viewChecked();
-/*
-                    adapterAllTransactions.notifyDataSetChanged();
-*/
-                }
-                else {
-                    checked = "unchecked";
-
-                    mWordViewModel.viewUnchecked();
-/*
-                    adapterAllTransactions.notifyDataSetChanged();
-*/
-
-                }
-            }
-        });
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, mWordViewModel.getKnownBeneficiari());
-
-        edittextBeneficiario.setAdapter(adapter);
-        edittextBeneficiario.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mWordViewModel.filterBeneficiario(edittextBeneficiario.getText().toString());
-
-                beneficiario = edittextBeneficiario.getText().toString();
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-/*
-        edittextConto.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mWordViewModel.filterConto(edittextConto.getText().toString());
-
-                beneficiario = edittextConto.getText().toString();
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-*/
 
         initUi();
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bottom_sheet: {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                break;
+            }
+            case R.id.bg: {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                Rect outRect = new Rect();
+                bottomSheet.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    return true;
+                }
+
+            }
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+
+
+    /**
+     *
+     * Starts ui elements
+     */
+    private void initUi(){
+        RecyclerView rview = findViewById(R.id.recyclerview);
+        ActionBar myToolbar = getSupportActionBar();
+
+        myToolbar.setDisplayHomeAsUpEnabled(true);
+
+        startFilterMenu();
+        adapterAllTransactions = new RviewAdapterAllTransactions(this, this, getApplication());
+        rview.setLayoutManager(new LinearLayoutManager(this));
+        rview.setAdapter(adapterAllTransactions);
+
+        startNavDrawer();
 
     }
 
@@ -150,55 +160,13 @@ public class AllTransactionActivity extends AppCompatActivity{
     public String getAccount(){
         return conto;
     }
-
     public void setAccount(String account){
         conto = account;
     }
-
     public String getChecked(){
         return checked;
     }
 
-    //START USER INTERFACE
-    private void initUi(){
-        DividerItemDecoration mDividerItemDecoration;
-        Spinner accountSpinner = findViewById(R.id.spinner);
-
-        RecyclerView rview = findViewById(R.id.recyclerview);
-        ActionBar myToolbar = getSupportActionBar();
-/*
-        setSupportActionBar(myToolbar);
-*/
-
-
-        myToolbar.setDisplayHomeAsUpEnabled(true);
-
-        final Intent intent = new Intent(this, DialogActivity.class);
-        mDividerItemDecoration = new DividerItemDecoration(rview.getContext(),
-                RecyclerView.VERTICAL);
-
-        populateAccountSpinner(accountSpinner);
-        adapterAllTransactions = new RviewAdapterAllTransactions(this, this, getApplication());
-        rview.setLayoutManager(new LinearLayoutManager(this));
-        rview.setAdapter(adapterAllTransactions);
-/*
-        rview.addItemDecoration(mDividerItemDecoration);
-*/
-        FloatingActionButton fab = findViewById(R.id.fab_main);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                startActivity(intent);
-            }
-        });
-
-
-
-
-        startNavDrawer();
-
-    }
     //NAVIGATION DRAWER
     private void startNavDrawer(){
         final DrawerLayout mDrawerLayout;
@@ -276,5 +244,52 @@ public class AllTransactionActivity extends AppCompatActivity{
 
     }
 
+    public void startFilterMenu(){
+        Switch btnCheck = findViewById(R.id.btn_check);
+        AutoCompleteTextView edittextBeneficiario = findViewById(R.id.id_edittext_filter_beneficiario);
+        Spinner accountSpinner = findViewById(R.id.spinner);
+
+        btnCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (btnCheck.isChecked()){
+                    checked = "checked";
+                    mWordViewModel.viewChecked();
+                }
+                else {
+                    checked = "unchecked";
+
+                    mWordViewModel.viewUnchecked();
+                }
+            }
+        });
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, mWordViewModel.getKnownBeneficiari());
+
+        edittextBeneficiario.setAdapter(adapter);
+        edittextBeneficiario.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mWordViewModel.filterBeneficiario(edittextBeneficiario.getText().toString());
+
+                beneficiario = edittextBeneficiario.getText().toString();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+        populateAccountSpinner(accountSpinner);
+
+    }
 
 }
