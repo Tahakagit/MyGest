@@ -68,6 +68,13 @@
 
         </android.support.v7.widget.Toolbar>
 
+        <View
+            android:id="@+id/bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#99000000"
+            android:elevation="1dp"
+            android:visibility="gone" />
 
         <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -93,18 +100,7 @@
 
 
 
-
-
-    <include
-        android:id="@+id/include"
-        layout="@layout/fab_insert_transaction"
-        android:layout_width="match_parent"
-
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <include layout="@layout/menu_bottom_insert"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

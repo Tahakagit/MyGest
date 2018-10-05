@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/id_menu_bottom_insert"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="55dp"
+    android:elevation="3dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:cardBackgroundColor="@color/grey_bg_soft"
+        app:cardCornerRadius="25dp"
+        app:cardMaxElevation="5dp"
+        app:cardUseCompatPadding="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Inserisci"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <FrameLayout
+            android:padding="10dp"
+            android:id="@+id/container_bottom_insert"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>

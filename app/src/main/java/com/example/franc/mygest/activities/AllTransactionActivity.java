@@ -56,6 +56,7 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
     static String conto = null;
     static String checked = null;
     BottomSheetBehavior sheetBehavior;
+
     LinearLayout bottomSheet;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,29 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
 
         bottomSheet = findViewById(R.id.bottom_sheet);
 
+        startBottomMenu(bottomSheet);
+        context = this;
+        mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
+
+        setAccount(String.valueOf(10));
+        checked = "unchecked";
+        mWordViewModel.viewUnchecked();
+        mWordViewModel.getAllDates().observe(this, new Observer<List<EntityMovimento>>() {
+            @Override
+            public void onChanged(@Nullable final List<EntityMovimento> movimentos) {
+                // Update the cached copy of the movimentos in the adapter.
+                adapterAllTransactions.setResults(movimentos);
+            }
+        });
+
+
+        initUi();
+
+    }
+
+    private void startBottomMenu(View bottomSheet){
+
+        // Parent activity must implements View.OnClickListener
         findViewById(R.id.bg).setOnClickListener(this);
 
         sheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -83,23 +107,6 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
 
             }
         });
-
-        context = this;
-        mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
-
-        setAccount(String.valueOf(10));
-        checked = "unchecked";
-        mWordViewModel.viewUnchecked();
-        mWordViewModel.getAllDates().observe(this, new Observer<List<EntityMovimento>>() {
-            @Override
-            public void onChanged(@Nullable final List<EntityMovimento> movimentos) {
-                // Update the cached copy of the movimentos in the adapter.
-                adapterAllTransactions.setResults(movimentos);
-            }
-        });
-
-
-        initUi();
 
     }
 
