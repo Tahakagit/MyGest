@@ -36,6 +36,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.franc.mygest.MoneyTextWatcher;
 import com.example.franc.mygest.fragments.DatePickerFragment;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
     DrawerLayout mDrawerLayout;
     static Calendar dateToSend;
     Button edittext;
+    TextView title;
 
     BottomSheetBehavior sheetBehavior;
 
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         startBottomMenu(bottomSheet);
         String formattedDate = sdf.format(dateToSend.getTime());
 
+        title = findViewById(R.id.id_title_bottom_insert);
         edittext.setText(formattedDate);
         mAcountsViewModel.setDate(dateToSend.getTime());
         mAcountsViewModel.getActiveAccounts().observe(this,
@@ -109,14 +112,18 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         findViewById(R.id.bg).setOnClickListener(this);
 
 
-        showDialog();
         sheetBehavior = BottomSheetBehavior.from(bottomSheet);
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED)
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
 
                     findViewById(R.id.bg).setVisibility(View.GONE);
+                    title.setVisibility(View.VISIBLE);
+                }else {
+                    title.setVisibility(View.GONE);
+
+                }
             }
 
             @Override
@@ -126,102 +133,29 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
 
             }
         });
+        showDialog();
+
 
     }
 
-/*
-    private void initMenu(){
-
-        EditText importo = view.findViewById(R.id.inputimporto2);
-        AutoCompleteTextView beneficiario = view.findViewById(R.id.inputBeneficiario);
-        Button save = view.findViewById(R.id.btn_save_transaction);
-        importo.addTextChangedListener(new MoneyTextWatcher(importo));
-        MovimentoViewModel mWordViewModel = new MovimentoViewModel(getActivity().getApplication());
-
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, mWordViewModel.getKnownBeneficiari());
-        beneficiario.setAdapter(adapter);
-        showStartDatePicker(view);
-        showEndDatePicker(view);
-        showSaldatoDatePicker(view);
-        getRecurrenceFromSpinner(view);
-        accountSpinner = view.findViewById(R.id.spinner_accounts2);
-        typeSpinner = view.findViewById(R.id.spinner_transaction_types2);
-
-*/
-/*
-        List<String> list = new ArrayList<>();
-*//*
-
-        populateAccountSpinner(accountSpinner);
-        populateTypeSpinner(typeSpinner);
-
-
-*/
-/*
-            EntityMovimento mov = new EntityMovimento(beneficiario, importo, scadenza.getTime(), saldato, idConto, nomeConto, endDate, tipo);
-*//*
-
-
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String cleanString = importo.getText().toString().replaceAll("[ €,.\\s]", "");
-
-                if(!cleanString.matches(""))
-                    importoValue = new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
-                else{
-                    importo.setHintTextColor(ContextCompat.getColor(getContext(), R.color.red));
-
-                }
-                beneficiarioValue = beneficiario.getText().toString();
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(startDateToSend);
-                cal.set(Calendar.HOUR_OF_DAY, 00);
-                cal.set(Calendar.MINUTE, 00);
-                cal.set(Calendar.SECOND, 00);
-                cal.set(Calendar.MILLISECOND, 00);
-                startDateToSend = cal.getTime();
-
-                if (endDateToSend!= null){
-                    Calendar cal2 = Calendar.getInstance();
-                    cal2.setTime(endDateToSend);
-                    cal2.set(Calendar.HOUR_OF_DAY, 00);
-                    cal2.set(Calendar.MINUTE, 00);
-                    cal2.set(Calendar.SECOND, 00);
-                    cal2.set(Calendar.MILLISECOND, 00);
-                    endDateToSend = cal2.getTime();
-
-                }
-
-                if(saldatoDateToSend == null){
-                    saldatoDateToSend = startDateToSend;
-                }
-
-                ContoViewModel mContoViewModel = new ContoViewModel(getActivity().getApplication());
-                int accountId = mContoViewModel.getAccountIdByName(contos).getId();
-
-                mListener.OnTransactionAdded(beneficiarioValue, importoValue.toString(), startDateToSend, saldatoDateToSend, contos, accountId, endDateToSend, recurrence, type);
-
-
-                dismiss();
-            }
-        });
-
-    }
-*/
     @Override
     public void onClick(View v) {
+/*
         switch (v.getId()) {
             case R.id.bottom_sheet: {
                 sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                title.setVisibility(View.GONE);
+
                 break;
             }
             case R.id.bg: {
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                title.setVisibility(View.VISIBLE);
+
                 break;
             }
         }
+*/
     }
 
     @Override
@@ -230,12 +164,18 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
             if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
                 Rect outRect = new Rect();
                 bottomSheet.getGlobalVisibleRect(outRect);
+
                 if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
                     return true;
                 }
 
+
             }
+
+        }else {
+
         }
         return super.dispatchTouchEvent(event);
     }
@@ -343,7 +283,9 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         movimentoViewModel = new MovimentoViewModel(getApplication());
 
         movimentoViewModel.insert(beneficiario, importo, scadenza, saldato, nomeConto, idConto, endDate, recurrence, tipo);
+        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
+        showDialog();
     }
 
     /**
@@ -431,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
 /*
         newFragment.show(ft, "dialog");
 */
+
         ft.add(R.id.container_bottom_insert, newFragment).commit();
 
     }

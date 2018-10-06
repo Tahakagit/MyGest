@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.example.franc.mygest.MyApplication;
 import com.example.franc.mygest.R;
@@ -55,6 +56,7 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
     static String beneficiario = null;
     static String conto = null;
     static String checked = null;
+    TextView title;
     BottomSheetBehavior sheetBehavior;
 
     LinearLayout bottomSheet;
@@ -70,6 +72,7 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
         context = this;
         mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
 
+        title = findViewById(R.id.id_title_bottom_filter);
         setAccount(String.valueOf(10));
         checked = "unchecked";
         mWordViewModel.viewUnchecked();
@@ -95,9 +98,14 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED)
-
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED){
                     findViewById(R.id.bg).setVisibility(View.GONE);
+                    title.setVisibility(View.VISIBLE);
+                }else {
+                    title.setVisibility(View.GONE);
+
+                }
+
             }
 
             @Override

@@ -13,66 +13,72 @@
     tools:layout_editor_absoluteY="212dp">
 
 
-    <TextView
-        android:id="@+id/id_card_scadenza_day"
-        android:layout_width="wrap_content"
-        android:layout_height="52dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="10"
-        android:textAlignment="center"
-        android:textColor="@color/almost_black"
-        android:textSize="36sp"
-        app:layout_constraintEnd_toStartOf="@+id/id_card_scadenza_month"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
     <android.support.v7.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="15dp"
         app:cardElevation="1dp"
         app:cardMaxElevation="1dp"
         app:cardUseCompatPadding="true"
         app:contentPadding="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id_card_scadenza_day">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_movimenti"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:backgroundTint="@android:color/transparent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/id_card_scadenza_day" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/id_card_scadenza_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="10"
+                android:textAlignment="center"
+                android:textColor="@color/almost_black"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toStartOf="@+id/id_card_scadenza_month"
+                app:layout_constraintHorizontal_bias="0.51"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/id_card_scadenza_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:padding="0dp"
+                android:text="AGO"
+                android:textAlignment="center"
+                android:textColor="@color/almost_black"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="@+id/id_card_scadenza_day"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/id_card_scadenza_day"
+                app:layout_constraintTop_toTopOf="@+id/id_card_scadenza_day" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_movimenti"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/id_card_scadenza_day" />
+        </android.support.constraint.ConstraintLayout>
+
     </android.support.v7.widget.CardView>
-
-
-    <TextView
-        android:id="@+id/id_card_scadenza_month"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:padding="0dp"
-        android:text="AGO"
-        android:textAlignment="center"
-        android:textColor="@color/almost_black"
-        android:textSize="36sp"
-        app:layout_constraintBottom_toBottomOf="@+id/id_card_scadenza_day"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/id_card_scadenza_day"
-        app:layout_constraintTop_toTopOf="@+id/id_card_scadenza_day" />
 
 
 </android.support.constraint.ConstraintLayout>

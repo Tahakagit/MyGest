@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.franc.mygest.MoneyTextWatcher;
 import com.example.franc.mygest.R;
@@ -103,10 +104,11 @@ public class MyDialogFragment extends DialogFragment {
 */
         EditText importo = view.findViewById(R.id.inputimporto2);
         AutoCompleteTextView beneficiario = view.findViewById(R.id.inputBeneficiario);
-        Button save = view.findViewById(R.id.btn_save_transaction);
+        TextView save = view.findViewById(R.id.btn_save_transaction);
         importo.addTextChangedListener(new MoneyTextWatcher(importo));
         MovimentoViewModel mWordViewModel = new MovimentoViewModel(getActivity().getApplication());
 
+        TextView title = view.findViewById(R.id.id_menu_bottom_insert);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, mWordViewModel.getKnownBeneficiari());
         beneficiario.setAdapter(adapter);

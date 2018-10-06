@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/white"
+    android:background="@color/grey"
+    android:backgroundTint="@color/grey"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.MainActivity">
 
@@ -12,7 +13,7 @@
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        >
 
         <android.support.v7.widget.Toolbar
             android:id="@id/toolbar_main"
@@ -85,6 +86,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="40dp"
             android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -92,11 +94,11 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar_main"
             tools:context=".activities.MainActivity"
             tools:layout_conversion_absoluteHeight="511dp"
-            tools:layout_conversion_absoluteWidth="384dp" />
+            tools:layout_conversion_absoluteWidth="384dp">
 
+        </android.support.v7.widget.RecyclerView>
 
     </android.support.constraint.ConstraintLayout>
-
 
 
 

@@ -9,6 +9,7 @@ import android.app.Application;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
@@ -136,6 +137,9 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                     futureBalance,
                     totalTransactions
                     );
+
+
+            accountViewHolder.cv.setCardBackgroundColor(adjustAlpha(mResults.get(position).getColoreConto(), 0.4f));
             accountViewHolder.bg1.setBackgroundColor(mResults.get(position).getColoreConto());
             accountViewHolder.bg2.setBackgroundColor(mResults.get(position).getColoreConto());
 
@@ -174,6 +178,14 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
 
     }
+    public static int adjustAlpha( int color, float factor) {
+        int alpha = Math.round(Color.alpha(color) * factor);
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        return Color.argb(alpha, red, green, blue);
+    }
+
 
     /**
      * Updates mAdapterConti items list
