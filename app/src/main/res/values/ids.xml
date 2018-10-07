@@ -12,4 +12,8 @@
     <item name="navigationview_main" type="id"/>
     <item name="fab_main" type="id"/>
 
+    <item name="view_filter_scrim" type="id"/>
+    <item name="recyclerview_filter_content" type="id"/>
+
+
 </resources>
