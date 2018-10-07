@@ -19,7 +19,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -30,15 +29,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.franc.mygest.MoneyTextWatcher;
 import com.example.franc.mygest.fragments.DatePickerFragment;
 import com.example.franc.mygest.R;
 import com.example.franc.mygest.adapters.RviewAdapterDailyTransaction;
@@ -48,7 +43,6 @@ import com.example.franc.mygest.persistence.ContoViewModel;
 import com.example.franc.mygest.persistence.EntityConto;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -74,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         mAcountsViewModel = new ContoViewModel(getApplication());
         UIController onAccountModifiedListener = new UIController(this);
 
-        edittext = findViewById(R.id.selectdate);
+        edittext = findViewById(R.id.btn_mainactivity_toolbar_date);
         dateToSend = Calendar.getInstance();
         dateToSend.set(Calendar.HOUR_OF_DAY, 23);
         dateToSend.set(Calendar.SECOND, 59);
@@ -109,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
     private void startBottomMenu(View bottomSheet){
 
         // Parent activity must implements View.OnClickListener
-        findViewById(R.id.bg).setOnClickListener(this);
+        findViewById(R.id.view_mainactivity_scrim).setOnClickListener(this);
 
 
         sheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -118,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
 
-                    findViewById(R.id.bg).setVisibility(View.GONE);
+                    findViewById(R.id.view_mainactivity_scrim).setVisibility(View.GONE);
                     title.setVisibility(View.VISIBLE);
                 }else {
                     title.setVisibility(View.GONE);
@@ -128,8 +122,8 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                findViewById(R.id.bg).setVisibility(View.VISIBLE);
-                findViewById(R.id.bg).setAlpha(slideOffset);
+                findViewById(R.id.view_mainactivity_scrim).setVisibility(View.VISIBLE);
+                findViewById(R.id.view_mainactivity_scrim).setAlpha(slideOffset);
 
             }
         });
@@ -187,8 +181,8 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
     private void initUi(){
         ActionBar actionbar;
         FloatingActionButton fab = findViewById(R.id.fab_main);
-        RecyclerView rview = findViewById(R.id.recyclerview_main_accounts);
-        Toolbar myToolbar = findViewById(R.id.toolbar_main);
+        RecyclerView rview = findViewById(R.id.recyclerview_mainactivity_content);
+        Toolbar myToolbar = findViewById(R.id.toolbar_mainactivity);
 
         myToolbar.setTitle("");
         setSupportActionBar(myToolbar);

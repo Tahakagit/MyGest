@@ -92,14 +92,14 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
     private void startBottomMenu(View bottomSheet){
 
         // Parent activity must implements View.OnClickListener
-        findViewById(R.id.bg).setOnClickListener(this);
+        findViewById(R.id.view_alltransactionactivity_scrim).setOnClickListener(this);
 
         sheetBehavior = BottomSheetBehavior.from(bottomSheet);
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED){
-                    findViewById(R.id.bg).setVisibility(View.GONE);
+                    findViewById(R.id.view_alltransactionactivity_scrim).setVisibility(View.GONE);
                     title.setVisibility(View.VISIBLE);
                 }else {
                     title.setVisibility(View.GONE);
@@ -110,8 +110,8 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                findViewById(R.id.bg).setVisibility(View.VISIBLE);
-                findViewById(R.id.bg).setAlpha(slideOffset);
+                findViewById(R.id.view_alltransactionactivity_scrim).setVisibility(View.VISIBLE);
+                findViewById(R.id.view_alltransactionactivity_scrim).setAlpha(slideOffset);
 
             }
         });
@@ -125,7 +125,7 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
                 sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 break;
             }
-            case R.id.bg: {
+            case R.id.view_alltransactionactivity_scrim: {
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 break;
             }
@@ -155,7 +155,7 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
      * Starts ui elements
      */
     private void initUi(){
-        RecyclerView rview = findViewById(R.id.recyclerview);
+        RecyclerView rview = findViewById(R.id.recyclerview_alltransactionactivity_content);
         ActionBar myToolbar = getSupportActionBar();
 
         myToolbar.setDisplayHomeAsUpEnabled(true);

@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="toolbar_mainactivity" type="id"/>
     <item name="toolbar_creacontoactivity" type="id"/>
     <item name="fragment_container" type="id"/>
     <item name="cv_account_dashboard" type="id"/>
     <item name="id_edittext_filter_beneficiario" type="id"/>
     <item name="id_edittext_filter_conto" type="id"/>
     <item name="recyclerview_main_accounts" type="id"/>
-    <item name="toolbar_main" type="id"/>
     <item name="drawer_main" type="id"/>
     <item name="navigationview_main" type="id"/>
     <item name="fab_main" type="id"/>
 
-    <item name="view_filter_scrim" type="id"/>
-    <item name="recyclerview_filter_content" type="id"/>
+    <item name="view_alltransactionactivity_scrim" type="id"/>
+    <item name="recyclerview_alltransactionactivity_content" type="id"/>
+
+    <item name="toolbar_mainactivity" type="id"/>
+    <item name="btn_mainactivity_toolbar_date" type="id"/>
+    <item name="view_mainactivity_scrim" type="id"/>
+    <item name="recyclerview_mainactivity_content" type="id"/>
+
+    <item name="recyclerview_mainactivity_content" type="id"/>
+
 
 
 </resources>
