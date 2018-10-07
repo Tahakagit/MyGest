@@ -89,7 +89,7 @@ public class UIController {
         final Boolean exists;
         exists = conto != null;
         d.setTitle("Save to Realm");
-        d.setContentView(R.layout.input_dialog_creaconto);
+        d.setContentView(R.layout.dialog_insert_account);
 
         Button saveBtn= d.findViewById(R.id.saveconto);
 
@@ -165,7 +165,7 @@ public class UIController {
         if(cleanstring.matches("")) {
             Log.w(this.getClass().getName(), "WARNING:: saldo null");
 /*
-            displayErrorAlert(mContext, nomeConto, "Inserisci il saldo!");
+            DisplayAnchoredPopup(mContext, nomeConto, "Inserisci il saldo!");
 */
             saldoConto.setError("Inserisci il saldo!");
             return false;
@@ -175,7 +175,7 @@ public class UIController {
 /*
             nomeConto.setHintTextColor(ContextCompat.getColor(mContext, R.color.red));
 */
-            /*displayErrorAlert(mContext, nomeConto, "Inserisci il nome del EntityConto!");*/
+            /*DisplayAnchoredPopup(mContext, nomeConto, "Inserisci il nome del EntityConto!");*/
             nomeConto.setError("Inserisci il nome!");
             return false;
         }else{
@@ -224,7 +224,7 @@ public class UIController {
      * @param anchorView Anchor view
      * @param helpText Custom Message
      */
-    private void displayErrorAlert(Context context, View anchorView, String helpText) {
+    private void DisplayAnchoredPopup(Context context, View anchorView, String helpText) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View layout = inflater.inflate(R.layout.popup_content, null);
 

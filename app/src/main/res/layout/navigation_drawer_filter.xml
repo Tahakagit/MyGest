@@ -9,7 +9,7 @@
 
 
         <include
-            layout="@layout/filter_activity_view"
+            layout="@layout/activity_filter"
             />
 
 

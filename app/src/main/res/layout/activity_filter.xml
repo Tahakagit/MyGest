@@ -47,7 +47,7 @@
 
 
 
-    <include layout="@layout/filter_menu"
+    <include layout="@layout/menu_filter"
         />
 
 </android.support.design.widget.CoordinatorLayout>
