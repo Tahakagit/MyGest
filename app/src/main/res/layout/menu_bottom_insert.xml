@@ -8,7 +8,7 @@
     android:background="@android:color/transparent"
     android:elevation="3dp"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="60dp"
+    app:behavior_peekHeight="70dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <android.support.v7.widget.CardView
@@ -28,17 +28,17 @@
             <TextView
                 android:id="@+id/id_title_bottom_insert"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="60dp"
                 android:gravity="center_vertical"
-                android:text="Inserisci"
+                android:text="Trascina per inserire una scadenza..."
                 android:textAlignment="center"
-                android:textSize="24sp"
+                android:textSize="14sp"
                 android:visibility="visible" />
 
             <FrameLayout
                 android:id="@+id/container_bottom_insert"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="10dp">
 
             </FrameLayout>

@@ -17,6 +17,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -104,7 +105,7 @@ public class MyDialogFragment extends DialogFragment {
 */
         EditText importo = view.findViewById(R.id.inputimporto2);
         AutoCompleteTextView beneficiario = view.findViewById(R.id.inputBeneficiario);
-        TextView save = view.findViewById(R.id.btn_save_transaction);
+        ImageView save = view.findViewById(R.id.btn_save_transaction);
         importo.addTextChangedListener(new MoneyTextWatcher(importo));
         MovimentoViewModel mWordViewModel = new MovimentoViewModel(getActivity().getApplication());
 
