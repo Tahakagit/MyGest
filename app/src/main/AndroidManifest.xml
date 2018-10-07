@@ -23,10 +23,6 @@
             android:label="@string/title_filter_activity"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
-            android:name=".activities.DialogActivity"
-            android:label="@string/new_record"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" />
-        <activity
             android:name=".activities.AccountsManageActivity"
             android:label="@string/title_activity_crea_conto"
             android:theme="@style/Theme.AppCompat.Light"></activity>

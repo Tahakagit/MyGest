@@ -8,7 +8,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.franc.mygest.R;
@@ -29,7 +28,7 @@ public class AccountsManageActivity extends AppCompatActivity implements UIContr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.creaconto_activity_view);
+        setContentView(R.layout.activity_accountmanage);
 
         contoVM = new ContoViewModel(getApplication());
 
