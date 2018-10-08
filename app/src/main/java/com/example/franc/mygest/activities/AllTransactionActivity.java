@@ -10,12 +10,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -27,9 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -155,7 +151,7 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
      * Starts ui elements
      */
     private void initUi(){
-        RecyclerView rview = findViewById(R.id.recyclerview_alltransactionactivity_content);
+        RecyclerView rview = findViewById(R.id.rv_alltransactionactivity_content);
         ActionBar myToolbar = getSupportActionBar();
 
         myToolbar.setDisplayHomeAsUpEnabled(true);

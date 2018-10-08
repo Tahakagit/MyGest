@@ -11,14 +11,22 @@
     <item name="fab_main" type="id"/>
 
     <item name="view_alltransactionactivity_scrim" type="id"/>
-    <item name="recyclerview_alltransactionactivity_content" type="id"/>
+    <item name="rv_alltransactionactivity_content" type="id"/>
 
     <item name="toolbar_mainactivity" type="id"/>
     <item name="btn_mainactivity_toolbar_date" type="id"/>
     <item name="view_mainactivity_scrim" type="id"/>
-    <item name="recyclerview_mainactivity_content" type="id"/>
+    <item name="rv_mainactivity_content" type="id"/>
 
-    <item name="recyclerview_mainactivity_content" type="id"/>
+    <item name="rv_accountmanage_content" type="id"/>
+    <item name="cv_accountmanage" type="id"/>
+    <item name="tv_accountmanage_accountname" type="id"/>
+    <item name="tv_accountmanage_accountbalance" type="id"/>
+    <item name="img_edit_account" type="id"/>
+    <item name="img_delete_account" type="id"/>
+    <item name="group_accountmanage_cardconti" type="id"/>
+
+
 
 
 

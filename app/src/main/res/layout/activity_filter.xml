@@ -22,7 +22,7 @@
             android:visibility="gone" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@id/recyclerview_alltransactionactivity_content"
+            android:id="@id/rv_alltransactionactivity_content"
 
 
             android:layout_width="match_parent"

@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
     private void initUi(){
         ActionBar actionbar;
         FloatingActionButton fab = findViewById(R.id.fab_main);
-        RecyclerView rview = findViewById(R.id.recyclerview_mainactivity_content);
+        RecyclerView rview = findViewById(R.id.rv_mainactivity_content);
         Toolbar myToolbar = findViewById(R.id.toolbar_mainactivity);
 
         myToolbar.setTitle("");
