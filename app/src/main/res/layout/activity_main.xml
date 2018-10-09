@@ -100,7 +100,7 @@
 
 
 
-    <include layout="@layout/menu_insert_transaction"/>
+    <include layout="@layout/bottomsheet_mainactivity_container"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

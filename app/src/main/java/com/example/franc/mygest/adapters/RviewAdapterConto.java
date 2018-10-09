@@ -103,7 +103,7 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Ac
                 @Override
                 public void onClick(View view) {
                     UIController uiController = new UIController(context);
-                    uiController.displaySaveAccountDialog(mResults.get(position));
+                    uiController.displayAccountManageDialog(mResults.get(position));
                 }
             });
             holder.deleteAccount.setOnClickListener(new View.OnClickListener() {

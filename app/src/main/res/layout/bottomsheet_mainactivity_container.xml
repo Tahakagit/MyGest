@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/id_menu_bottom_insert"
+    android:id="@+id/bottomsheet_mainactivity_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
@@ -26,17 +26,17 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/id_title_bottom_insert"
+                android:id="@id/tv_mainactivity_bottomsheet_label"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:gravity="center_vertical"
-                android:text="Trascina per inserire una scadenza..."
+                android:text="@string/drag_to_insert"
                 android:textAlignment="center"
                 android:textSize="14sp"
                 android:visibility="visible" />
 
             <FrameLayout
-                android:id="@+id/container_bottom_insert"
+                android:id="@id/fl_mainactivity_bottomsheet_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp">

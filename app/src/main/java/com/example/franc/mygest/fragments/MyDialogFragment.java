@@ -92,7 +92,7 @@ public class MyDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_menu_insert, container, false);
+        View v = inflater.inflate(R.layout.fragment_mainactivity_insert, container, false);
         return v;
     }
 

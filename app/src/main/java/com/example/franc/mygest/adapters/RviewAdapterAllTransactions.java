@@ -58,7 +58,7 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
     public long getItemId(int position){ return  0;}
     @Override
     public DateDashboardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_mainactivity_dates, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_all_dates, parent, false);
 
         return new DateDashboardViewHolder(view);
     }

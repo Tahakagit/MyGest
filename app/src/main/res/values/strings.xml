@@ -21,8 +21,10 @@
     <string name="title_activity_crea_conto">Gestisci i conti</string>
     <string name="title_dialog_select_colors">Seleziona colore conto</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="balances_up_to">VEDI CONTI FINO AL</string>
+    <string name="drag_to_insert">Trascina per inserire una scadenza...</string>
+
+
 
     <string name="img_del_description">Cancella</string>
     <string name="img_edit_description">Modifica</string>

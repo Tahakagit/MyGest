@@ -60,7 +60,7 @@ public class AccountsManageActivity extends AppCompatActivity implements UIContr
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                uiController.displaySaveAccountDialog(null);
+                uiController.displayAccountManageDialog(null);
             }
         });
         rv.setLayoutManager(new LinearLayoutManager(this));

@@ -167,7 +167,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                 @Override
                 public void onClick(View view) {
                     UIController uiController = new UIController(context);
-                    uiController.displaySaveAccountDialog(mResults.get(accountViewHolder.getAdapterPosition()));
+                    uiController.displayAccountManageDialog(mResults.get(accountViewHolder.getAdapterPosition()));
                 }
             });
 

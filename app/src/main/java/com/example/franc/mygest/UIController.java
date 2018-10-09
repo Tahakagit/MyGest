@@ -75,7 +75,7 @@ public class UIController {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                displaySaveAccountDialog(null);
+                displayAccountManageDialog(null);
             }
         });
         rv.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -83,7 +83,7 @@ public class UIController {
     }
 
     //DISPLAY INPUT DIALOG AND SAVE ACCOUNT
-    public void displaySaveAccountDialog(@Nullable EntityConto conto )    {
+    public void displayAccountManageDialog(@Nullable EntityConto conto )    {
         final Dialog d = new Dialog(mContext);
 
         final Boolean exists;

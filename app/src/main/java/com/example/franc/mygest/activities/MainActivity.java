@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         startBottomMenu(bottomSheet);
         String formattedDate = sdf.format(dateToSend.getTime());
 
-        title = findViewById(R.id.id_title_bottom_insert);
+        title = findViewById(R.id.tv_mainactivity_bottomsheet_label);
         edittext.setText(formattedDate);
         mAcountsViewModel.setDate(dateToSend.getTime());
         mAcountsViewModel.getActiveAccounts().observe(this,
@@ -368,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         newFragment.show(ft, "dialog");
 */
 
-        ft.add(R.id.container_bottom_insert, newFragment).commit();
+        ft.add(R.id.fl_mainactivity_bottomsheet_content, newFragment).commit();
 
     }
 
