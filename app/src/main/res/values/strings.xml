@@ -26,5 +26,10 @@
 
     <string name="img_del_description">Cancella</string>
     <string name="img_edit_description">Modifica</string>
+    <string name="img_more_description">Altro</string>
+
+    <!--card_mainactivity_account-->
+    <string name="current_balance">SALDO ATTUALE</string>
+    <string name="estimated_balance">SALDO PREVISTO</string>
 
 </resources>

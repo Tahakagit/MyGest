@@ -13,10 +13,8 @@ import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +62,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     public long getItemId(int position){ return  0;}
     @Override
     public AccountDashboardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dashboard_accounts, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_mainactivity_account, parent, false);
 
         return new AccountDashboardViewHolder(view);
     }
@@ -79,7 +77,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         RecyclerView rviewDates;
         RviewAdapterGroupDates adapterDates;
 
-        rviewDates = accountViewHolder.itemView.findViewById(R.id.rv_dates);
+        rviewDates = accountViewHolder.itemView.findViewById(R.id.rv_mainactivity_dates);
         adapterDates = new RviewAdapterGroupDates(context, app);
         adapterDates.setHasStableIds(true);
         rviewDates.setLayoutManager(new LinearLayoutManager(context));
@@ -209,14 +207,14 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
         AccountDashboardViewHolder(View itemView) {
             super(itemView);
-            bg1 = itemView.findViewById(R.id.id_card_bg1);
-            bg2 = itemView.findViewById(R.id.id_card_bg2);
-            cv = itemView.findViewById(R.id.cv_account_dashboard);
+            bg1 = itemView.findViewById(R.id.constraintlayout_mainactivity_bgtop);
+            bg2 = itemView.findViewById(R.id.constraintlayout_mainactivity_bgbottom);
+            cv = itemView.findViewById(R.id.cv_mainactivity_account);
             accountName = itemView.findViewById(R.id.id_account_name);
             accountFutureBalance = itemView.findViewById(R.id.id_account_future_balance);
             accountCurrentBalance = itemView.findViewById(R.id.id_account_current_balance);
             moreIc = itemView.findViewById(R.id.ic_more);
-            hiddenRv = itemView.findViewById(R.id.rv_dates);
+            hiddenRv = itemView.findViewById(R.id.rv_mainactivity_dates);
             totalTransactions = itemView.findViewById(R.id.id_account_total);
 
         }

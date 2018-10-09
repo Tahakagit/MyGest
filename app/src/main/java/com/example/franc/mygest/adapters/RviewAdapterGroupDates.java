@@ -9,14 +9,8 @@ import android.app.Application;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -31,7 +25,6 @@ import com.example.franc.mygest.persistence.EntityMovimento;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,7 +56,7 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
     public long getItemId(int position){ return  0;}
     @Override
     public DateDashboardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dashboard_dates, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_mainactivity_dates, parent, false);
 
         return new DateDashboardViewHolder(view);
     }

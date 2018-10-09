@@ -11,8 +11,8 @@
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/cv_account_dashboard"
-        android:layout_width="wrap_content"
+        android:id="@id/cv_mainactivity_account"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         card_view:cardCornerRadius="5dp"
@@ -28,7 +28,7 @@
             >
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/id_card_bg1"
+                android:id="@id/constraintlayout_mainactivity_bgtop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -42,7 +42,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:text="Cassa di Risparmio di Volterra"
                     android:textColor="@color/white"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -54,9 +53,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:layout_marginEnd="8dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
                     android:adjustViewBounds="true"
+                    android:contentDescription="@string/img_more_description"
                     android:cropToPadding="false"
                     card_view:layout_constraintEnd_toEndOf="parent"
                     card_view:layout_constraintTop_toTopOf="parent"
@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="32dp"
-                    android:text="SALDO ATTUALE"
+                    android:text="@string/current_balance"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     card_view:layout_constraintStart_toStartOf="parent"
@@ -80,7 +80,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:text="35,87€"
                     android:textAlignment="viewEnd"
                     android:textColor="@color/white"
                     android:textSize="30sp"
@@ -94,9 +93,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="4 movimenti"
                     android:textColor="@color/white"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:textStyle="italic"
                     card_view:layout_constraintStart_toStartOf="parent"
                     card_view:layout_constraintTop_toBottomOf="@+id/id_account_name" />
@@ -113,7 +111,7 @@
             </android.support.constraint.ConstraintLayout>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_dates"
+                android:id="@id/rv_mainactivity_dates"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
@@ -127,7 +125,7 @@
             </android.support.v7.widget.RecyclerView>
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/id_card_bg2"
+                android:id="@id/constraintlayout_mainactivity_bgbottom"
                 android:layout_width="match_parent"
 
                 android:layout_height="match_parent">
@@ -137,7 +135,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:text="68,1€"
                     android:textAlignment="viewEnd"
                     android:textColor="@color/white"
                     android:textSize="30sp"
@@ -149,15 +146,13 @@
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="SALDO PREVISTO"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/estimated_balance"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     card_view:layout_constraintBottom_toBottomOf="parent"
-                    card_view:layout_constraintStart_toStartOf="parent"
-                    />
+                    card_view:layout_constraintStart_toStartOf="parent" />
             </android.support.constraint.ConstraintLayout>
 
         </LinearLayout>
