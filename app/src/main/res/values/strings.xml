@@ -32,4 +32,12 @@
     <string name="current_balance">SALDO ATTUALE</string>
     <string name="estimated_balance">SALDO PREVISTO</string>
 
+    <!--card_mainactivity_transaction-->
+    <string name="payed_upto">pagato fino</string>
+    <string name="img_outgoing_description">Uscita</string>
+    <string name="all_dot">•</string>
+
+
+
+
 </resources>

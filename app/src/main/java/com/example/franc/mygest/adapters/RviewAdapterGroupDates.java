@@ -80,8 +80,8 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
         DateDashboardViewHolder(View itemView) {
             super(itemView);
 
-            dayScadenzaText = itemView.findViewById(R.id.id_card_scadenza_day);
-            monthScadenzaText = itemView.findViewById(R.id.id_card_scadenza_month);
+            dayScadenzaText = itemView.findViewById(R.id.tv_mainactivity_dates_day);
+            monthScadenzaText = itemView.findViewById(R.id.tv_mainactivity_dates_month);
 /*
             yearScadenzaText = itemView.findViewById(R.id.id_card_scadenza_year);
 */
@@ -123,7 +123,7 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
      *
      * */
     private void startTransactionRecyclerView(DateDashboardViewHolder dateViewholder){
-        RecyclerView rviewMovimenti = dateViewholder.itemView.findViewById(R.id.rv_movimenti);
+        RecyclerView rviewMovimenti = dateViewholder.itemView.findViewById(R.id.rv_mainactivity_transactions);
         RviewAdapterMovimenti adapterMovimenti;
         rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
 

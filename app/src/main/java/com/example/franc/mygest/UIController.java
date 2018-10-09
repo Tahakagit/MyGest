@@ -65,7 +65,7 @@ public class UIController {
     public void initUi(){
 
         Toolbar toolbar = mActivity.findViewById(R.id.toolbar_creacontoactivity);
-        RecyclerView rv = mActivity.findViewById(R.id.rv_account_manage);
+        RecyclerView rv = mActivity.findViewById(R.id.rv_accountmanage_content);
         FloatingActionButton fab = mActivity.findViewById(R.id.fab_account_create);
         mAdapterConti = new RviewAdapterConto(mActivity);
 

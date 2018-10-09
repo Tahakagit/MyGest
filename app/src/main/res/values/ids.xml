@@ -10,16 +10,41 @@
     <item name="navigationview_main" type="id"/>
     <item name="fab_main" type="id"/>
 
+<!--
+    FILTER ACTIVITY IDS
+-->
     <item name="view_alltransactionactivity_scrim" type="id"/>
     <item name="rv_alltransactionactivity_content" type="id"/>
 
+    <!--
+    MAIN ACTIVITY IDS
+-->
     <item name="toolbar_mainactivity" type="id"/>
     <item name="btn_mainactivity_toolbar_date" type="id"/>
     <item name="view_mainactivity_scrim" type="id"/>
     <item name="rv_mainactivity_account" type="id"/>
+
     <item name="cv_mainactivity_account" type="id"/>
     <item name="rv_mainactivity_dates" type="id"/>
-    <item name="cv_mainactivity_dates" type="id"/>
+
+    <item name="tv_mainactivity_dates_day" type="id"/>
+    <item name="tv_mainactivity_dates_month" type="id"/>
+    <item name="rv_mainactivity_transactions" type="id"/>
+
+<!--
+    CARD TRANSACTION ALL IDS
+-->
+    <item name="tv_all_dot" type="id"/>
+    <item name="tv_card_all_importo" type="id"/>
+    <item name="tv_card_all_beneficiario" type="id"/>
+    <item name="tv_card_all_account" type="id"/>
+    <item name="tv_card_all_saldato" type="id"/>
+    <item name="tv_card_all_saldatoday" type="id"/>
+    <item name="tv_card_all_saldatomonth" type="id"/>
+    <item name="tv_card_all_tipo" type="id"/>
+
+
+
 
     <item name="constraintlayout_mainactivity_bgtop" type="id"/>
     <item name="constraintlayout_mainactivity_bgbottom" type="id"/>

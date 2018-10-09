@@ -45,7 +45,7 @@ public class AccountsManageActivity extends AppCompatActivity implements UIContr
 
     private void startUi() {
         final UIController uiController = new UIController(this);
-        RecyclerView rv = findViewById(R.id.rv_account_manage);
+        RecyclerView rv = findViewById(R.id.rv_accountmanage_content);
         FloatingActionButton fab = findViewById(R.id.fab_account_create);
         mAdapterConti = new RviewAdapterConto(this);
 
