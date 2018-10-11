@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         initUi();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM");
 
-        bottomSheet = findViewById(R.id.id_menu_bottom_insert);
+        bottomSheet = findViewById(R.id.bottomsheet_mainactivity_container);
 
         startBottomMenu(bottomSheet);
         String formattedDate = sdf.format(dateToSend.getTime());

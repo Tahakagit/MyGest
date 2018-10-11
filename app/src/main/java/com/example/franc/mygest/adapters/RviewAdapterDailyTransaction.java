@@ -137,7 +137,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                     );
 
 
-            accountViewHolder.cv.setCardBackgroundColor(adjustAlpha(mResults.get(position).getColoreConto(), 0.4f));
+            accountViewHolder.cv.setCardBackgroundColor(adjustBrightness(mResults.get(position).getColoreConto(), 0.50f));
             accountViewHolder.bg1.setBackgroundColor(mResults.get(position).getColoreConto());
             accountViewHolder.bg2.setBackgroundColor(mResults.get(position).getColoreConto());
 
@@ -176,12 +176,15 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
 
     }
-    public static int adjustAlpha( int color, float factor) {
-        int alpha = Math.round(Color.alpha(color) * factor);
-        int red = Color.red(color);
-        int green = Color.green(color);
-        int blue = Color.blue(color);
-        return Color.argb(alpha, red, green, blue);
+    public int adjustBrightness( int color, float factor) {
+        float[] hsv = new float[3];
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        Color.RGBToHSV(r, g, b, hsv);
+
+        hsv[1] *= factor;
+        return Color.HSVToColor(hsv);
     }
 
 

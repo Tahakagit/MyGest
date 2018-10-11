@@ -108,7 +108,7 @@ public class MyDialogFragment extends DialogFragment {
         importo.addTextChangedListener(new MoneyTextWatcher(importo));
         MovimentoViewModel mWordViewModel = new MovimentoViewModel(getActivity().getApplication());
 
-        TextView title = view.findViewById(R.id.id_menu_bottom_insert);
+        TextView title = view.findViewById(R.id.bottomsheet_mainactivity_container);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, mWordViewModel.getKnownBeneficiari());
         beneficiario.setAdapter(adapter);
