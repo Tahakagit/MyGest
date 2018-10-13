@@ -28,6 +28,8 @@ import com.example.franc.mygest.persistence.EntityConto;
 import com.example.franc.mygest.persistence.EntityMovimento;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
 
+import org.w3c.dom.Text;
+
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.List;
@@ -128,18 +130,20 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             String accountName = mResults.get(position).getNomeConto();
             String totalTransactions = String.valueOf(getTotalTransactions(mResults.get(position).getId()) + " movimenti in attesa");
 
+            int accountColor = mResults.get(position).getColoreConto();
 
             // FILL CARD WITH DATA
             accountViewHolder.setData(accountName,
                     currentBalance,
                     futureBalance,
-                    totalTransactions
+                    totalTransactions,
+                    accountColor
                     );
 
 
-            accountViewHolder.cv.setCardBackgroundColor(adjustBrightness(mResults.get(position).getColoreConto(), 0.50f));
-            accountViewHolder.bg1.setBackgroundColor(mResults.get(position).getColoreConto());
-            accountViewHolder.bg2.setBackgroundColor(mResults.get(position).getColoreConto());
+            accountViewHolder.cv.setCardBackgroundColor(adjustBrightness(accountColor, 0.40f));
+            accountViewHolder.bg1.setBackgroundColor(Color.WHITE);
+            accountViewHolder.bg2.setBackgroundColor(Color.WHITE);
 
             // STARTS DATES GROUPING RV
             startDatesRecyclerView(accountViewHolder);
@@ -207,6 +211,8 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         ConstraintLayout bg1;
         ConstraintLayout bg2;
         CardView cv;
+        TextView currentLabel;
+        TextView futureLabel;
 
         AccountDashboardViewHolder(View itemView) {
             super(itemView);
@@ -219,14 +225,25 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             moreIc = itemView.findViewById(R.id.ic_more);
             hiddenRv = itemView.findViewById(R.id.rv_mainactivity_dates);
             totalTransactions = itemView.findViewById(R.id.id_account_total);
+            currentLabel = itemView.findViewById(R.id.tv_mainactivity_current);
+            futureLabel = itemView.findViewById(R.id.tv_mainactivity_estimated);
+
 
         }
 
-        void setData(String textscadenza, String currentBalance, String futureBalance, String total){
+        void setData(String textscadenza, String currentBalance, String futureBalance, String total, int color){
             accountName.setText(textscadenza);
             accountFutureBalance.setText(futureBalance);
             accountCurrentBalance.setText(currentBalance);
             totalTransactions.setText(total);
+            accountName.setTextColor(color);
+            accountCurrentBalance.setTextColor(color);
+            accountFutureBalance.setTextColor(color);
+            moreIc.setColorFilter(color);
+            currentLabel.setTextColor(color);
+            futureLabel.setTextColor(color);
+
+
 
 
 
