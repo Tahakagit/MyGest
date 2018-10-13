@@ -213,12 +213,12 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             bg1 = itemView.findViewById(R.id.constraintlayout_mainactivity_bgtop);
             bg2 = itemView.findViewById(R.id.constraintlayout_mainactivity_bgbottom);
             cv = itemView.findViewById(R.id.cv_mainactivity_account);
-            accountName = itemView.findViewById(R.id.id_account_name);
-            accountFutureBalance = itemView.findViewById(R.id.id_account_future_balance);
-            accountCurrentBalance = itemView.findViewById(R.id.id_account_current_balance);
+            accountName = itemView.findViewById(R.id.tv_card_all_account);
+            accountFutureBalance = itemView.findViewById(R.id.tv_mainactivity_estimated_label);
+            accountCurrentBalance = itemView.findViewById(R.id.tv_mainactivity_current_label);
             moreIc = itemView.findViewById(R.id.ic_more);
             hiddenRv = itemView.findViewById(R.id.rv_mainactivity_dates);
-            totalTransactions = itemView.findViewById(R.id.id_account_total);
+            totalTransactions = itemView.findViewById(R.id.tv_mainactivity_totaltrans);
 
         }
 

@@ -37,7 +37,7 @@
 
 
                 <TextView
-                    android:id="@+id/id_account_name"
+                    android:id="@id/tv_card_all_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -73,10 +73,10 @@
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/id_account_name" />
+                    card_view:layout_constraintTop_toBottomOf="@id/tv_card_all_account" />
 
                 <TextView
-                    android:id="@+id/id_account_current_balance"
+                    android:id="@id/tv_mainactivity_current_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
@@ -89,7 +89,7 @@
 
 
                 <TextView
-                    android:id="@+id/id_account_total"
+                    android:id="@id/tv_mainactivity_totaltrans"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -97,7 +97,7 @@
                     android:textSize="12sp"
                     android:textStyle="italic"
                     card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/id_account_name" />
+                    card_view:layout_constraintTop_toBottomOf="@id/tv_card_all_account" />
 
                 <View
                     android:id="@+id/divider"
@@ -131,7 +131,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/id_account_future_balance"
+                    android:id="@id/tv_mainactivity_estimated_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"

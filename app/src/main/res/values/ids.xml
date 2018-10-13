@@ -28,6 +28,11 @@
     <item name="tv_mainactivity_bottomsheet_label" type="id"/>
     <item name="fl_mainactivity_bottomsheet_content" type="id"/>
 
+    <item name="tv_mainactivity_current_label" type="id"/>
+    <item name="tv_mainactivity_estimated_label" type="id"/>
+    <item name="tv_mainactivity_totaltrans" type="id"/>
+
+
     <item name="cv_mainactivity_account" type="id"/>
     <item name="rv_mainactivity_dates" type="id"/>
     <item name="tv_mainactivity_dates_day" type="id"/>
