@@ -242,6 +242,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             moreIc.setColorFilter(color);
             currentLabel.setTextColor(color);
             futureLabel.setTextColor(color);
+            totalTransactions.setTextColor(color);
 
 
 

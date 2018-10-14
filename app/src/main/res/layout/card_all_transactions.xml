@@ -19,11 +19,13 @@
 
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:text="352,12€"
             android:textAlignment="center"
             android:textColor="@color/red"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:fontFamily="@font/kodchasan_extralight" />
 
     <TextView
         android:id="@id/tv_card_all_account"
@@ -119,11 +121,13 @@
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="38dp"
+        android:fontFamily="@font/hindvadodara_semibold"
         android:textAlignment="center"
         android:textColor="@color/almost_black"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_card_all_importo"
+        app:layout_constraintTop_toTopOf="parent"
         tools:layout_conversion_absoluteHeight="25dp"
         tools:layout_conversion_absoluteWidth="1dp" />
 
