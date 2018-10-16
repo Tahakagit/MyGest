@@ -65,7 +65,7 @@ public class UIController {
     public void initUi(){
 
         Toolbar toolbar = mActivity.findViewById(R.id.toolbar_creacontoactivity);
-        RecyclerView rv = mActivity.findViewById(R.id.rv_account_manage);
+        RecyclerView rv = mActivity.findViewById(R.id.rv_accountmanage_content);
         FloatingActionButton fab = mActivity.findViewById(R.id.fab_account_create);
         mAdapterConti = new RviewAdapterConto(mActivity);
 
@@ -75,7 +75,7 @@ public class UIController {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                displaySaveAccountDialog(null);
+                displayAccountManageDialog(null);
             }
         });
         rv.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -83,7 +83,7 @@ public class UIController {
     }
 
     //DISPLAY INPUT DIALOG AND SAVE ACCOUNT
-    public void displaySaveAccountDialog(@Nullable EntityConto conto )    {
+    public void displayAccountManageDialog(@Nullable EntityConto conto )    {
         final Dialog d = new Dialog(mContext);
 
         final Boolean exists;

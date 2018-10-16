@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -93,7 +92,7 @@ public class MyDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.activity_dialog, container, false);
+        View v = inflater.inflate(R.layout.fragment_mainactivity_insert, container, false);
         return v;
     }
 
@@ -109,7 +108,7 @@ public class MyDialogFragment extends DialogFragment {
         importo.addTextChangedListener(new MoneyTextWatcher(importo));
         MovimentoViewModel mWordViewModel = new MovimentoViewModel(getActivity().getApplication());
 
-        TextView title = view.findViewById(R.id.id_menu_bottom_insert);
+        TextView title = view.findViewById(R.id.bottomsheet_mainactivity_container);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, mWordViewModel.getKnownBeneficiari());
         beneficiario.setAdapter(adapter);

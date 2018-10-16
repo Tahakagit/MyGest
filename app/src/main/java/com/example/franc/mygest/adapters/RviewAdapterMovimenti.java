@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.franc.mygest.R;
@@ -38,9 +37,11 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         holder.hiddenMenu.setVisibility(View.GONE);
         EntityMovimento movimento = mResults.get(position);
 
+/*
         if (movimento.getEndscadenza()!= null){
             holder.icRecurrence.setVisibility(View.VISIBLE);
         }
+*/
         if(movimento != null) {
 
             SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.ITALY);
@@ -83,7 +84,7 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
 
     @Override
     public TransactionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dashboard_transactions, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_all_transactions, parent, false);
         return new TransactionViewHolder(view);
     }
 
@@ -101,22 +102,18 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
 
         TextView tipo;
         int transId;
-        ImageView icRecurrence;
-        ImageView icBeneficiario;
         Group hiddenMenu;
 
         TransactionViewHolder(View itemView) {
             super(itemView);
-            account = itemView.findViewById(R.id.id_card_account);
+            account = itemView.findViewById(R.id.tv_card_all_account);
 
-            beneficiario = itemView.findViewById(R.id.id_card_beneficiario);
-            importo = itemView.findViewById(R.id.id_card_importo);
-            icRecurrence = itemView.findViewById(R.id.ic_recurrence);
-            tipo = itemView.findViewById(R.id.id_card_tipo);
-            icBeneficiario = itemView.findViewById(R.id.ic_beneficiario);
+            beneficiario = itemView.findViewById(R.id.tv_card_all_beneficiario);
+            importo = itemView.findViewById(R.id.tv_card_all_importo);
+            tipo = itemView.findViewById(R.id.tv_card_all_tipo);
             hiddenMenu = itemView.findViewById(R.id.hidden_transaction_group);
-            saldatoDay = itemView.findViewById(R.id.id_card_saldato_day);
-            saldatoMonth = itemView.findViewById(R.id.id_card_saldato_month);
+            saldatoDay = itemView.findViewById(R.id.tv_card_all_saldatoday);
+            saldatoMonth = itemView.findViewById(R.id.tv_card_all_saldatomonth);
 
         }
 
