@@ -179,6 +179,12 @@ public class MyDialogFragment extends DialogFragment {
 
     }
 
+    void inOutSelector(){
+        Button income;
+        Button outcome;
+
+        getView().findViewById(R.id.)
+    }
     void populateAccountSpinner(Spinner spinner){
         Application appCtx = getActivity().getApplication();
         ContoViewModel contoVM = new ContoViewModel(appCtx);
