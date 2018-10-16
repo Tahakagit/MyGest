@@ -45,6 +45,7 @@ import com.example.franc.mygest.persistence.MovimentoViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements UIController.onAccountListener, MyDialogFragment.DialogListener, View.OnClickListener {
@@ -273,10 +274,10 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
     }
 
     @Override
-    public void OnTransactionAdded(String beneficiario, String importo, java.util.Date scadenza, java.util.Date saldato, String nomeConto, int idConto, @Nullable final java.util.Date endDate, String recurrence, String tipo) {
+    public void OnTransactionAdded(String beneficiario, String importo, Date scadenza, Date saldato, String nomeConto, int idConto, @Nullable final Date endDate, String recurrence, String tipo, String direction) {
         movimentoViewModel = new MovimentoViewModel(getApplication());
 
-        movimentoViewModel.insert(beneficiario, importo, scadenza, saldato, nomeConto, idConto, endDate, recurrence, tipo);
+        movimentoViewModel.insert(beneficiario, importo, scadenza, saldato, nomeConto, idConto, endDate, recurrence, tipo, direction);
         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         showDialog();

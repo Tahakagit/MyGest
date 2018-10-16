@@ -4,7 +4,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.Nullable;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 
@@ -29,7 +28,7 @@ public class EntityMovimento{
     private int id;
     private String checked = "unchecked";
 
-    public EntityMovimento(final String beneficiario, final String importo, final Date scadenza, final Date saldato, final int idConto, final String nomeConto, @Nullable final Date endscadenza, final String tipo){
+    public EntityMovimento(final String beneficiario, final String importo, final Date scadenza, final Date saldato, final int idConto, final String nomeConto, @Nullable final Date endscadenza, final String tipo, String direction){
         this.beneficiario = beneficiario;
         setImporto(importo);
         this.scadenza = scadenza;

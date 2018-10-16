@@ -39,6 +39,12 @@
     <string name="img_outgoing_description">Uscita</string>
     <string name="all_dot">•</string>
 
+<!--
+    BOTTOSHEET MAINACTIVITY
+-->
+    <string name="btn_mainactivity_income_label">ENTRATA</string>
+    <string name="btn_mainactivity_outcome_label">USCITA</string>
+
 
 
 

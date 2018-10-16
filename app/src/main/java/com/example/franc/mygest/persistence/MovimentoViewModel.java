@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -225,36 +226,36 @@ public class MovimentoViewModel extends AndroidViewModel {
         return mRepository.getTransactionInDay(String.valueOf(account), checked, beneficiario, upTo);}
 
 
-    public void insert(String beneficiario, String importo, java.util.Date scadenza, java.util.Date saldato, String nomeConto, int idConto, @Nullable final java.util.Date endDate, String recurrence, String tipo) {
+    public void insert(String beneficiario, String importo, Date scadenza, Date saldato, String nomeConto, int idConto, @Nullable final Date endDate, String recurrence, String tipo, String direction) {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(scadenza);
 
         if(recurrence.equalsIgnoreCase("NESSUNA")){
-            EntityMovimento mov = new EntityMovimento(beneficiario, importo, cal.getTime(), saldato, idConto, nomeConto, endDate, tipo);
+            EntityMovimento mov = new EntityMovimento(beneficiario, importo, cal.getTime(), saldato, idConto, nomeConto, endDate, tipo, direction);
 
             mRepository.insert(mov);
         }else if(recurrence.equalsIgnoreCase("DAILY")){
             while (cal.getTime().before(endDate)){
-                EntityMovimento mov = new EntityMovimento(beneficiario, importo, cal.getTime(), saldato, idConto, nomeConto, endDate, tipo);
+                EntityMovimento mov = new EntityMovimento(beneficiario, importo, cal.getTime(), saldato, idConto, nomeConto, endDate, tipo, direction);
                 mRepository.insert(mov);
                 cal.add(Calendar.DAY_OF_MONTH, 1);
             }
         }else if(recurrence.equalsIgnoreCase("WEEKLY")){
             while (cal.getTime().before(endDate)){
-                EntityMovimento mov = new EntityMovimento(beneficiario, importo, cal.getTime(), saldato, idConto, nomeConto, endDate, tipo);
+                EntityMovimento mov = new EntityMovimento(beneficiario, importo, cal.getTime(), saldato, idConto, nomeConto, endDate, tipo, direction);
                 mRepository.insert(mov);
                 cal.add(Calendar.WEEK_OF_YEAR, 1);
             }
         }else if(recurrence.equalsIgnoreCase("MONTHLY")){
             while (cal.getTime().before(endDate)){
-                EntityMovimento mov = new EntityMovimento(beneficiario, importo, cal.getTime(), saldato, idConto, nomeConto, endDate, tipo);
+                EntityMovimento mov = new EntityMovimento(beneficiario, importo, cal.getTime(), saldato, idConto, nomeConto, endDate, tipo, direction);
                 mRepository.insert(mov);
                 cal.add(Calendar.MONTH, 1);
             }
         }else if(recurrence.equalsIgnoreCase("YEARLY")){
             while (cal.getTime().before(endDate)){
-                EntityMovimento mov = new EntityMovimento(beneficiario, importo, cal.getTime(), saldato, idConto, nomeConto, endDate, tipo);
+                EntityMovimento mov = new EntityMovimento(beneficiario, importo, cal.getTime(), saldato, idConto, nomeConto, endDate, tipo, direction);
                 mRepository.insert(mov);
                 cal.add(Calendar.YEAR, 1);
             }

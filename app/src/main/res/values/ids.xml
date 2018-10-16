@@ -24,9 +24,15 @@
     <item name="view_mainactivity_scrim" type="id"/>
     <item name="rv_mainactivity_account" type="id"/>
 
+<!--
+    BOTTOMSHEET MENU INSERT
+-->
     <item name="bottomsheet_mainactivity_container" type="id"/>
     <item name="tv_mainactivity_bottomsheet_label" type="id"/>
     <item name="fl_mainactivity_bottomsheet_content" type="id"/>
+    <item name="btn_mainactivity_bottomsheet_income" type="id"/>
+    <item name="btn_mainactivity_bottomsheet_outcome" type="id"/>
+
 
     <item name="tv_mainactivity_current_label" type="id"/>
     <item name="tv_mainactivity_estimated_label" type="id"/>
