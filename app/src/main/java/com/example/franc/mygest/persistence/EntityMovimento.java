@@ -22,6 +22,8 @@ public class EntityMovimento{
     private Date saldato;
     private Date endscadenza;
     private int idConto;
+    private int vType;
+
     private String nomeConto;
     private String tipo;
     @android.arch.persistence.room.PrimaryKey(autoGenerate = true)
@@ -37,10 +39,24 @@ public class EntityMovimento{
         this.nomeConto = nomeConto;
         this.tipo = tipo;
 
+        this.direction = direction;
         this.endscadenza = endscadenza;
+        if (direction.equals("in")){
+            this.vType = 1;
+        }else {
+            this.vType = 0;
+        }
     }
     //todo attrs checked, direzione
 
+
+    public int getvType() {
+        return vType;
+    }
+
+    public void setvType(int vType) {
+        this.vType = vType;
+    }
 
     public String getChecked() {
         return checked;

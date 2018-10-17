@@ -191,7 +191,8 @@ public class MyDialogFragment extends DialogFragment {
 
         income = view.findViewById(R.id.btn_mainactivity_bottomsheet_income);
         outcome = view.findViewById(R.id.btn_mainactivity_bottomsheet_outcome);
-
+        outcome.setBackgroundColor(getResources().getColor(R.color.grey_bg_soft, getActivity().getTheme()));
+        direction = "out";
         income.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

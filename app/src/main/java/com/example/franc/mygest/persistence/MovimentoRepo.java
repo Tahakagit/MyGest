@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -34,9 +35,16 @@ public class MovimentoRepo {
     }
 
 
-    List<EntityMovimento> getAllMovimentoUpToByAccount(java.util.Date upTo, int account) {
-        return mMovimentoDao.getTransactionUpToByAccount(upTo, account);
+    List<EntityMovimento> getTransactionsUpToByAccount(Date upTo, int account, String direction) {
+        return mMovimentoDao.getTransactionsUpToByAccount(upTo, account, direction);
     }
+
+/*
+    List<EntityMovimento> getAllIncomingUpToByAccount(java.util.Date upTo, int account) {
+        return mMovimentoDao.getOutgoingUpToByAccount(upTo, account);
+    }
+*/
+
 
     int getTotMovimentoUpToByAccount(java.util.Date upTo, int account) {
         return mMovimentoDao.getTotalTransactionsUpToByAccount(upTo, account);

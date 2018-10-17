@@ -180,8 +180,19 @@ public class MovimentoViewModel extends AndroidViewModel {
 
     public LiveData<List<EntityMovimento>> getAllWords() { return mAllMovimento; }
 
-    public String getAllTransactionAmount(int accountId, java.util.Date upTo){
-        List<EntityMovimento> allMovs = mRepository.getAllMovimentoUpToByAccount(upTo, accountId);
+/*
+    public String getAllIncomingAmount(int accountId, java.util.Date upTo){
+        List<EntityMovimento> allMovs = mRepository.getAllIncomingUpToByAccount(upTo, accountId);
+        BigDecimal amount = new BigDecimal(0);
+
+        for (EntityMovimento res: allMovs) {
+            amount = amount.add(new BigDecimal(String.valueOf(res.getImporto())));
+        }
+        return amount.toString();
+    }
+*/
+    public String getTransactionsAmount(int accountId, Date upTo, String direction){
+        List<EntityMovimento> allMovs = mRepository.getTransactionsUpToByAccount(upTo, accountId, direction);
         BigDecimal amount = new BigDecimal(0);
 
         for (EntityMovimento res: allMovs) {
@@ -190,12 +201,15 @@ public class MovimentoViewModel extends AndroidViewModel {
         return amount.toString();
     }
 
+
     public int getTotalTransaction(int accountId, java.util.Date upTo){
         return mRepository.getTotMovimentoUpToByAccount(upTo, accountId);
     }
 
 
-    public List<EntityMovimento> getAllMovimentoDistByAccount(java.util.Date upTo, int account) { return mRepository.getAllMovimentoUpToByAccount(upTo, account); }
+/*
+    public List<EntityMovimento> getAllMovimentoDistByAccount(java.util.Date upTo, int account) { return mRepository.getTransactionsUpToByAccount(upTo, account, ); }
+*/
 
     public LiveData<List<EntityMovimento>> getDailyTransactionsByAccount(java.util.Date upTo, int account) { return mRepository.getDailyTransactionsByAccount(upTo, account); }
 

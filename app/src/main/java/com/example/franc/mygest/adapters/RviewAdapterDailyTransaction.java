@@ -109,9 +109,16 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     private BigDecimal calculateNewBalance(EntityConto account){
         BigDecimal oldBalance = new BigDecimal(String.valueOf(account.getSaldoConto()));
         BigDecimal totExpences = new BigDecimal("0");
-        totExpences = totExpences.add(new BigDecimal(String.valueOf(movsVM.getAllTransactionAmount(account.getId(),
-                MainActivity.getDateToSend().getTime()))));
+        BigDecimal totIncomes = new BigDecimal("0");
+
+        totExpences = totExpences.add(new BigDecimal(String.valueOf(movsVM.getTransactionsAmount(account.getId(),
+                MainActivity.getDateToSend().getTime(), "out"))));
+        totIncomes = totIncomes.add(new BigDecimal(String.valueOf(movsVM.getTransactionsAmount(account.getId(),
+                MainActivity.getDateToSend().getTime(), "in"))));
+
         BigDecimal newBalance = oldBalance.subtract(totExpences);
+        newBalance = newBalance.add(totIncomes);
+
         return newBalance;
     }
 
