@@ -46,10 +46,10 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Ac
 
         AccountViewHolder(View itemView) {
             super(itemView);
-            nome = itemView.findViewById(R.id.cardNomeconto);
-            saldo = itemView.findViewById(R.id.cardSaldoconto);
-            cv = itemView.findViewById(R.id.cv_account_dashboard);
-            hiddenlayout = itemView.findViewById(R.id.hidden_account_group);
+            nome = itemView.findViewById(R.id.tv_accountmanage_accountname);
+            saldo = itemView.findViewById(R.id.tv_accountmanage_accountbalance);
+            cv = itemView.findViewById(R.id.cv_accountmanage);
+            hiddenlayout = itemView.findViewById(R.id.group_accountmanage_cardconti);
             updateAccount = itemView.findViewById(R.id.img_edit_account);
             deleteAccount = itemView.findViewById(R.id.img_delete_account);
 
@@ -75,7 +75,7 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Ac
     }
 
     public AccountViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_conti, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_accountmanage_account, parent, false);
         return new AccountViewHolder(view);
     }
 
@@ -103,7 +103,7 @@ public class RviewAdapterConto extends RecyclerView.Adapter<RviewAdapterConto.Ac
                 @Override
                 public void onClick(View view) {
                     UIController uiController = new UIController(context);
-                    uiController.displaySaveAccountDialog(mResults.get(position));
+                    uiController.displayAccountManageDialog(mResults.get(position));
                 }
             });
             holder.deleteAccount.setOnClickListener(new View.OnClickListener() {

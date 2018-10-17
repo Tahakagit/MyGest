@@ -26,15 +26,15 @@
     <color name="blue_grey">#5e7C8b</color>
     <color name="red">#fff6402c</color>
 
-    <color name="red_bg_black_text">#e57373</color>
-    <color name="pink_bg_black_text">#f06292</color>
-    <color name="purple_bg_black_text">#ba68c8</color>
-    <color name="blue_bg_black_text">#64b5f6</color>
-    <color name="green_bg_black_text">#81c784</color>
+    <color name="red_bg_black_text">#d50000</color>
+    <color name="pink_bg_black_text">#c51162</color>
+    <color name="purple_bg_black_text">#aa00ff</color>
+    <color name="blue_bg_black_text">#2962ff</color>
+    <color name="green_bg_black_text">#4caf50</color>
     <color name="yellow_bg_black_text">#fff176</color>
-    <color name="orange_bg_black_text">#ffb74d</color>
-    <color name="brown_bg_black_text">#a1887f</color>
-    <color name="grey_bg_black_text">#90a4ae</color>
+    <color name="orange_bg_black_text">#dd2c00</color>
+    <color name="brown_bg_black_text">#5d4037</color>
+    <color name="grey_bg_black_text">#455a64</color>
     <color name="grey_bg_soft">#e0e0e0</color>
 
 

@@ -2,7 +2,6 @@ package com.example.franc.mygest.persistence;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.RoomWarnings;
@@ -110,8 +109,8 @@ public interface MovimentoDao {
 
     @TypeConverters(DateConverter.class)
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM movimento_table WHERE scadenza <= (:dayet) AND checked == 'unchecked' AND idConto  LIKE (:account)")
-    List<EntityMovimento> getTransactionUpToByAccount(Date dayet, int account);
+    @Query("SELECT * FROM movimento_table WHERE scadenza <= (:dayet) AND checked == 'unchecked' AND direction == (:direction) AND idConto LIKE (:account)")
+    List<EntityMovimento> getTransactionsUpToByAccount(Date dayet, int account, String direction);
 
     @TypeConverters(DateConverter.class)
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
