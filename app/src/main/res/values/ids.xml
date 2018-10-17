@@ -40,6 +40,9 @@
 
 
     <item name="cv_mainactivity_account" type="id"/>
+    <item name="tv_mainactivity_current" type="id"/>
+    <item name="tv_mainactivity_estimated" type="id"/>
+
     <item name="rv_mainactivity_dates" type="id"/>
     <item name="tv_mainactivity_dates_day" type="id"/>
     <item name="tv_mainactivity_dates_month" type="id"/>
