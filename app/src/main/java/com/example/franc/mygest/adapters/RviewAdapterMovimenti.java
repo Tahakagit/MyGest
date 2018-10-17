@@ -77,6 +77,27 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         else return 0;
     }
 
+    /**
+     * Return the view type of the item at <code>position</code> for the purposes
+     * of view recycling.
+     *
+     * <p>The default implementation of this method returns 0, making the assumption of
+     * a single view type for the adapter. Unlike ListView adapters, types need not
+     * be contiguous. Consider using id resources to uniquely identify item view types.
+     *
+     * @param position position to query
+     * @return integer value identifying the type of the view needed to represent the item at
+     * <code>position</code>. Type codes need not be contiguous.
+     */
+    @Override
+    public int getItemViewType(int position) {
+        if (mResults.get(position).getDirection().equals("in")){
+            return 0;
+        }else {
+            return 1;
+        }
+    }
+
     @Override
     public long getItemId(int position){
         return  (long)mResults.get(position).getId();
@@ -84,7 +105,14 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
 
     @Override
     public TransactionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_all_transactions, parent, false);
+        View view;
+        if (viewType == 0){
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_all_income, parent, false);
+
+        }else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_all_outcome, parent, false);
+
+        }
         return new TransactionViewHolder(view);
     }
 
