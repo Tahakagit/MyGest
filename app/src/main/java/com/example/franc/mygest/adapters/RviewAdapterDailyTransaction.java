@@ -231,7 +231,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             accountCurrentBalance = itemView.findViewById(R.id.tv_mainactivity_current_label);
             moreIc = itemView.findViewById(R.id.ic_more);
             hiddenRv = itemView.findViewById(R.id.rv_mainactivity_dates);
-            totalTransactions = itemView.findViewById(R.id.id_account_total);
+            totalTransactions = itemView.findViewById(R.id.tv_mainactivity_totaltrans);
             currentLabel = itemView.findViewById(R.id.tv_mainactivity_current);
             futureLabel = itemView.findViewById(R.id.tv_mainactivity_estimated);
 

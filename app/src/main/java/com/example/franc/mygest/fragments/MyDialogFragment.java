@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -119,7 +120,9 @@ public class MyDialogFragment extends DialogFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, mWordViewModel.getKnownBeneficiari());
         beneficiario.setAdapter(adapter);
         showStartDatePicker(view);
+/*
         showEndDatePicker(view);
+*/
         showSaldatoDatePicker(view);
         getRecurrenceFromSpinner(view);
         accountSpinner = view.findViewById(R.id.spinner_accounts2);
@@ -184,11 +187,14 @@ public class MyDialogFragment extends DialogFragment {
 
 
     }
+    TextInputLayout textToHide;
 
     void inOutSelector(View view){
         Button income;
         Button outcome;
 
+        textToHide  = view.findViewById(R.id.endDate);
+        showEndDatePicker(view);
         income = view.findViewById(R.id.btn_mainactivity_bottomsheet_income);
         outcome = view.findViewById(R.id.btn_mainactivity_bottomsheet_outcome);
         outcome.setBackgroundColor(getResources().getColor(R.color.grey_bg_soft, getActivity().getTheme()));
@@ -431,9 +437,9 @@ public class MyDialogFragment extends DialogFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 recurrence =  parent.getItemAtPosition(position).toString();
                 if (recurrence.equalsIgnoreCase("nessuna")){
-                    end.setVisibility(View.GONE);
+                    textToHide.setVisibility(View.GONE);
                 }else{
-                    end.setVisibility(View.VISIBLE);
+                    textToHide.setVisibility(View.VISIBLE);
                 }
             }
             @Override

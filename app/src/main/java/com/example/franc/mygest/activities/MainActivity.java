@@ -29,8 +29,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         mAcountsViewModel = new ContoViewModel(getApplication());
         UIController onAccountModifiedListener = new UIController(this);
 
+        activity = this;
         edittext = findViewById(R.id.btn_mainactivity_toolbar_date);
         dateToSend = Calendar.getInstance();
         dateToSend.set(Calendar.HOUR_OF_DAY, 23);
@@ -98,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         showDatePicker();
     }
 
+    Activity activity;
     public static Calendar getDateToSend(){
         return dateToSend;
     }
@@ -112,12 +116,15 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    hideKeyboard(activity);
 
                     findViewById(R.id.view_mainactivity_scrim).setVisibility(View.GONE);
                     title.setVisibility(View.VISIBLE);
-                }else {
+                }else if (newState == BottomSheetBehavior.STATE_EXPANDED){
                     title.setVisibility(View.GONE);
 
+                }else if (newState == BottomSheetBehavior.STATE_DRAGGING){
+                    title.setVisibility(View.GONE);
                 }
             }
 
@@ -162,7 +169,6 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
 
                 if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
                     return true;
                 }
 
@@ -173,6 +179,16 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
 
         }
         return super.dispatchTouchEvent(event);
+    }
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 
