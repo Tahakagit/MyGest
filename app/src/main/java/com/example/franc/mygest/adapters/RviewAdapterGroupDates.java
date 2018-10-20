@@ -155,10 +155,10 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int transactionPosition = viewHolder.getAdapterPosition();
 
                 if (direction == ItemTouchHelper.LEFT) {
                     try {
-                        int transactionPosition = viewHolder.getAdapterPosition();
                         int id = (int)adapterMovimenti.getItemId(transactionPosition);
                         movsVM.deleteTransactionById(id);
                     } catch (ArrayIndexOutOfBoundsException e) {
@@ -166,13 +166,11 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
                     }
                 }else {
                     try {
-                        int transactionPosition = viewHolder.getAdapterPosition();
                         int id = (int)adapterMovimenti.getItemId(transactionPosition);
 
                         Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(dateViewholder.getAdapterPosition()).getNomeConto());
 
                         movsVM.checkTransaction(id);
-                        adapterMovimenti.notifyItemRemoved(transactionPosition);
 
 
                     } catch (ArrayIndexOutOfBoundsException e) {
@@ -180,6 +178,10 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
                     }
 
                 }
+/*
+                adapterMovimenti.notifyItemRemoved(transactionPosition);
+*/
+
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);

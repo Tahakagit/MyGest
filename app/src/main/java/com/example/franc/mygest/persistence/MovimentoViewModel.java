@@ -27,32 +27,25 @@ public class MovimentoViewModel extends AndroidViewModel {
     private MutableLiveData<String> checked = new MutableLiveData<>();
     private MutableLiveData<String> beneficiario = new MutableLiveData<>();
     private MutableLiveData<String> account = new MutableLiveData<>();
+    private MutableLiveData<String> direction = new MutableLiveData<>();
 
-    /*
-    String checked;
-    String beneficiario;
-*/
+    //todo modificare direction
     CustomLiveData2 trigger2 = new CustomLiveData2(account, checked, beneficiario);
-    CustomLiveData3 trigger3 = new CustomLiveData3(account, checked, beneficiario, data);
 
 
-    private LiveData<List<EntityMovimento>> mAllMovimento;
     private LiveData<List<EntityMovimento>> mActiveDates;
-    private LiveData<List<EntityMovimento>> mActiveTransactions;
 
     public MovimentoViewModel(Application application) {
         super(application);
         mRepository = new MovimentoRepo(application);
-        mAllMovimento = mRepository.getAllMovimento();
         mActiveDates = Transformations.switchMap(trigger2, values -> mRepository.getAllDates(values.get(0), values.get(1), values.get(2)));
-        mActiveTransactions = Transformations.switchMap(trigger3, values -> mRepository.getTransactionInDay(values.get(0), values.get(1), values.get(2), values.get(3)));
 
     }
 
     class CustomLiveData2 extends MediatorLiveData<List<String>> {
 
-
-        public CustomLiveData2(MutableLiveData<String> account, MutableLiveData<String> checked, MutableLiveData<String> beneficiario) {
+        //todo modificare costruttore  direction
+        CustomLiveData2(MutableLiveData<String> account, MutableLiveData<String> checked, MutableLiveData<String> beneficiario) {
 
             addSource(checked, new Observer<String>() {
                 public void onChanged(@Nullable String a) {
@@ -81,62 +74,6 @@ public class MovimentoViewModel extends AndroidViewModel {
                     list.add(c);
                     list.add(checked.getValue());
                     list.add(beneficiario.getValue());
-                    setValue(list);
-                }
-            });
-
-
-        }
-    }
-
-    class CustomLiveData3 extends MediatorLiveData<List<String>> {
-
-
-        public CustomLiveData3(MutableLiveData<String> account, MutableLiveData<String> checked, MutableLiveData<String> beneficiario, MutableLiveData<String> data) {
-
-            addSource(account, new Observer<String>() {
-                public void onChanged(@Nullable String c) {
-                    List<String> list = new ArrayList<>();
-
-                    list.add(c);
-                    list.add(checked.getValue());
-                    list.add(beneficiario.getValue());
-                    list.add(data.getValue());
-                    setValue(list);
-                }
-            });
-            addSource(checked, new Observer<String>() {
-                public void onChanged(@Nullable String a) {
-                    List<String> list = new ArrayList<>();
-
-                    list.add(account.getValue());
-                    list.add(a);
-                    list.add(beneficiario.getValue());
-                    list.add(data.getValue());
-
-                    setValue(list);
-                }
-            });
-            addSource(beneficiario, new Observer<String>() {
-                public void onChanged(@Nullable String b) {
-                    List<String> list = new ArrayList<>();
-
-                    list.add(account.getValue());
-                    list.add(checked.getValue());
-                    list.add(b);
-                    list.add(data.getValue());
-
-                    setValue(list);
-                }
-            });
-            addSource(data, new Observer<String>() {
-                public void onChanged(@Nullable String d) {
-                    List<String> list = new ArrayList<>();
-
-                    list.add(account.getValue());
-                    list.add(checked.getValue());
-                    list.add(beneficiario.getValue());
-                    list.add(d);
                     setValue(list);
                 }
             });
@@ -165,6 +102,10 @@ public class MovimentoViewModel extends AndroidViewModel {
     public void filterConto(String conto){
         this.account.setValue(conto);
     }
+    public void filterDirezione(String direzione){
+        this.direction.setValue(direzione);
+    }
+
 
     public void filterDate(String data){
         this.data.setValue(data);
@@ -178,19 +119,13 @@ public class MovimentoViewModel extends AndroidViewModel {
         mRepository.checkTransaction(id);
     }
 
-    public LiveData<List<EntityMovimento>> getAllWords() { return mAllMovimento; }
-
-/*
-    public String getAllIncomingAmount(int accountId, java.util.Date upTo){
-        List<EntityMovimento> allMovs = mRepository.getAllIncomingUpToByAccount(upTo, accountId);
-        BigDecimal amount = new BigDecimal(0);
-
-        for (EntityMovimento res: allMovs) {
-            amount = amount.add(new BigDecimal(String.valueOf(res.getImporto())));
-        }
-        return amount.toString();
-    }
-*/
+    /**
+     *
+     * @param accountId account
+     * @param upTo up to this date
+     * @param direction IN, OUT
+     * @return total amount at selected time for account
+     */
     public String getTransactionsAmount(int accountId, Date upTo, String direction){
         List<EntityMovimento> allMovs = mRepository.getTransactionsUpToByAccount(upTo, accountId, direction);
         BigDecimal amount = new BigDecimal(0);
@@ -207,33 +142,18 @@ public class MovimentoViewModel extends AndroidViewModel {
     }
 
 
-/*
-    public List<EntityMovimento> getAllMovimentoDistByAccount(java.util.Date upTo, int account) { return mRepository.getTransactionsUpToByAccount(upTo, account, ); }
-*/
-
     public LiveData<List<EntityMovimento>> getDailyTransactionsByAccount(java.util.Date upTo, int account) { return mRepository.getDailyTransactionsByAccount(upTo, account); }
 
-    public LiveData<List<EntityMovimento>> getDailyTransactions(java.util.Date upTo) { return mRepository.getDailyTransactions(upTo); }
     public List<String> getKnownBeneficiari(){
         return mRepository.getKnownBeneficiari();
-    }
-/*
-    public LiveData<List<EntityMovimento>> getDailyTransactionsChecked() { return mActiveTransactions; }
-*/
-    public LiveData<List<EntityMovimento>> getDailyTransactionsChecked() {
-
-        return mActiveTransactions;
-/*
-        return mActiveTransactions;
-*/
-    }
-
-    public LiveData<List<EntityMovimento>> getAllInDayFiltered(java.util.Date upTo, int account, String checked, String beneficiario) {
-        return mRepository.getAllInDayFiltered(upTo, account, checked, beneficiario);
     }
 
     public LiveData<List<EntityMovimento>> getAllDatesByAccount(java.util.Date upTo, int account) { return mRepository.getAllDatesByAccount(upTo, account); }
 
+    /**
+     *
+     * @return all days with transactions in AllTransactionActivity
+     */
     public LiveData<List<EntityMovimento>> getAllDates() { return mActiveDates; }
 
     public LiveData<List<EntityMovimento>> getAllTransactionsDates(String upTo, int account, String checked, String beneficiario) {

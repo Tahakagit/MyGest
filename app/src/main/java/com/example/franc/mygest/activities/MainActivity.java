@@ -1,7 +1,6 @@
 /**
  * Activity showing accountdashboard
  *
- * FIXME Rename Class?
  */
 package com.example.franc.mygest.activities;
 
@@ -85,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         startBottomMenu(bottomSheet);
         String formattedDate = sdf.format(dateToSend.getTime());
 
-        title = findViewById(R.id.tv_mainactivity_bottomsheet_label);
         edittext.setText(formattedDate);
         mAcountsViewModel.setDate(dateToSend.getTime());
         mAcountsViewModel.getActiveAccounts().observe(this,
@@ -109,8 +107,10 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
 
         // Parent activity must implements View.OnClickListener
         findViewById(R.id.view_mainactivity_scrim).setOnClickListener(this);
+        title = findViewById(R.id.tv_mainactivity_bottomsheet_label);
 
 
+        ImageView saveBtn = bottomSheet.findViewById(R.id.btn_save_transaction);
         sheetBehavior = BottomSheetBehavior.from(bottomSheet);
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -246,7 +246,6 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
 
     /**
      * Starts date selection, waits for user choice and gets back selected date
-     * todo trasformare editext in button?
      */
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
