@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
 
 
 
+
     BottomSheetBehavior sheetBehavior;
 
     LinearLayout bottomSheet;
@@ -156,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
 
                 }else if (newState == BottomSheetBehavior.STATE_DRAGGING){
                     title.setVisibility(View.GONE);
+                    save.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -188,9 +190,6 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
         accountSpinner = bottomSheet.findViewById(R.id.spinner_accounts2);
         typeSpinner = bottomSheet.findViewById(R.id.spinner_transaction_types2);
 
-/*
-        List<String> list = new ArrayList<>();
-*/
         populateAccountSpinner(accountSpinner);
         populateTypeSpinner(typeSpinner);
 
@@ -202,7 +201,6 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
 
         save.setOnClickListener(new View.OnClickListener() {
             String beneficiarioValue;
-            String direction;
             BigDecimal importoValue = null;
 
 
