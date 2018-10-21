@@ -101,7 +101,7 @@
 
 
 
-    <include layout="@layout/bottomsheet_mainactivity_container"/>
+    <include layout="@layout/fragment_mainactivity_insert"/>
 
 
 </android.support.design.widget.CoordinatorLayout>
