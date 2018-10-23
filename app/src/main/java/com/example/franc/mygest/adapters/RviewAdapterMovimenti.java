@@ -92,9 +92,19 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
     @Override
     public int getItemViewType(int position) {
         if (mResults.get(position).getDirection().equals("in")){
-            return 0;
+            if (mResults.get(position).getChecked().equalsIgnoreCase("unchecked")){
+                return 0;
+
+            }else {
+                return 2;
+            }
         }else {
-            return 1;
+            if (mResults.get(position).getChecked().equalsIgnoreCase("unchecked")){
+                return 1;
+
+            }else {
+                return 3;
+            }
         }
     }
 
@@ -109,8 +119,14 @@ public class RviewAdapterMovimenti extends RecyclerView.Adapter<RviewAdapterMovi
         if (viewType == 0){
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_all_income, parent, false);
 
-        }else {
+        }else if (viewType ==1){
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_all_outcome, parent, false);
+
+        }else if (viewType == 2){
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_all_income_check, parent, false);
+
+        }else{
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_all_outcome_check, parent, false);
 
         }
         return new TransactionViewHolder(view);

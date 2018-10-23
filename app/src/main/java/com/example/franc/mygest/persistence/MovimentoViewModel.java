@@ -28,6 +28,8 @@ public class MovimentoViewModel extends AndroidViewModel {
     private MutableLiveData<String> beneficiario = new MutableLiveData<>();
     private MutableLiveData<String> account = new MutableLiveData<>();
     private MutableLiveData<String> direction = new MutableLiveData<>();
+    private MutableLiveData<String> type = new MutableLiveData<>();
+
 
     //todo modificare direction
     CustomLiveData2 trigger2 = new CustomLiveData2(account, checked, beneficiario);
@@ -102,10 +104,14 @@ public class MovimentoViewModel extends AndroidViewModel {
     public void filterConto(String conto){
         this.account.setValue(conto);
     }
+
+    public void filterTipo(String tipo){
+        this.type.setValue(tipo);
+    }
+
     public void filterDirezione(String direzione){
         this.direction.setValue(direzione);
     }
-
 
     public void filterDate(String data){
         this.data.setValue(data);
@@ -135,7 +141,6 @@ public class MovimentoViewModel extends AndroidViewModel {
         }
         return amount.toString();
     }
-
 
     public int getTotalTransaction(int accountId, java.util.Date upTo){
         return mRepository.getTotMovimentoUpToByAccount(upTo, accountId);

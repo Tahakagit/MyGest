@@ -171,13 +171,11 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
 
         Spinner accountSpinner;
         Spinner typeSpinner;
-
         EditText importo = bottomSheet.findViewById(R.id.inputimporto2);
         AutoCompleteTextView beneficiario = bottomSheet.findViewById(R.id.inputBeneficiario);
+
         importo.addTextChangedListener(new MoneyTextWatcher(importo));
         MovimentoViewModel mWordViewModel = new MovimentoViewModel(getApplication());
-
-        TextView title = bottomSheet.findViewById(R.id.bottomsheet_mainactivity_container);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, mWordViewModel.getKnownBeneficiari());
         beneficiario.setAdapter(adapter);
@@ -246,6 +244,10 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
 
                 movimentoViewModel.insert(beneficiarioValue, importoValue.toString(), startDateToSend, saldatoDateToSend, contos, accountId, endDateToSend, recurrence, type, direction);
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+
+                beneficiario.setText("");
+                importo.setText("");
 
 
             }
