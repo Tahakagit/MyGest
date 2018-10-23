@@ -134,11 +134,12 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
         String account = activity.getAccount();
         String dateStr = mResults.get(dateViewholder.getAdapterPosition()).getScadenza().toString();
         String checked = activity.getChecked();
+        String all = activity.getAll();
 
         adapterMovimenti = new RviewAdapterMovimenti(app);
         adapterMovimenti.setHasStableIds(true);
 
-        movsVM.getAllTransactionsDates(dateStr, Integer.valueOf(account), checked, bene)
+        movsVM.getAllTransactionsDates(dateStr, Integer.valueOf(account), checked, bene, all)
                 .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
                     @Override
                     public void onChanged(@Nullable List<EntityMovimento> entityMovimentos) {

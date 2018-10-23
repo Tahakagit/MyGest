@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -52,6 +53,7 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
     static String beneficiario = null;
     static String conto = null;
     static String checked = null;
+    static String all = "false";
     TextView title;
     BottomSheetBehavior sheetBehavior;
 
@@ -71,6 +73,9 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
         title = findViewById(R.id.id_title_bottom_filter);
         setAccount(String.valueOf(10));
         checked = "unchecked";
+        mWordViewModel.viewAllFalse();
+        mWordViewModel.filterBeneficiario("");
+        mWordViewModel.filterConto("10");
         mWordViewModel.viewUnchecked();
         mWordViewModel.getAllDates().observe(this, new Observer<List<EntityMovimento>>() {
             @Override
@@ -83,6 +88,14 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
 
         initUi();
 
+    }
+
+    public static String getAll() {
+        return all;
+    }
+
+    public static void setAll(String all) {
+        AllTransactionActivity.all = all;
     }
 
     private void startBottomMenu(View bottomSheet){
@@ -121,6 +134,7 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
         AutoCompleteTextView edittextBeneficiario = findViewById(R.id.id_edittext_filter_beneficiario);
         Spinner accountSpinner = findViewById(R.id.spinner);
 
+        CheckBox checkBox = findViewById(R.id.checkBox);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line,
                 mWordViewModel.getKnownBeneficiari());
@@ -141,6 +155,22 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
                 }
             }
         });
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (checkBox.isChecked()){
+                    btnCheck.setEnabled(false);
+                    all = "true";
+
+                    mWordViewModel.viewAllTrue();
+                }else {
+                    btnCheck.setEnabled(true);
+                    all = "false";
+                    mWordViewModel.viewAllFalse();
+                }
+            }
+        });
+
 
         // listen for payee filter
         edittextBeneficiario.addTextChangedListener(new TextWatcher() {

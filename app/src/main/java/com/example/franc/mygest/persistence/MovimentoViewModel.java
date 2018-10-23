@@ -29,10 +29,11 @@ public class MovimentoViewModel extends AndroidViewModel {
     private MutableLiveData<String> account = new MutableLiveData<>();
     private MutableLiveData<String> direction = new MutableLiveData<>();
     private MutableLiveData<String> type = new MutableLiveData<>();
+    private MutableLiveData<String> all = new MutableLiveData<>();
 
 
     //todo modificare direction
-    CustomLiveData2 trigger2 = new CustomLiveData2(account, checked, beneficiario);
+    CustomLiveData2 trigger2 = new CustomLiveData2(account, checked, beneficiario, all);
 
 
     private LiveData<List<EntityMovimento>> mActiveDates;
@@ -40,14 +41,14 @@ public class MovimentoViewModel extends AndroidViewModel {
     public MovimentoViewModel(Application application) {
         super(application);
         mRepository = new MovimentoRepo(application);
-        mActiveDates = Transformations.switchMap(trigger2, values -> mRepository.getAllDates(values.get(0), values.get(1), values.get(2)));
+        mActiveDates = Transformations.switchMap(trigger2, values -> mRepository.getAllDates(values.get(0), values.get(1), values.get(2), values.get(3)));
 
     }
 
     class CustomLiveData2 extends MediatorLiveData<List<String>> {
 
         //todo modificare costruttore  direction
-        CustomLiveData2(MutableLiveData<String> account, MutableLiveData<String> checked, MutableLiveData<String> beneficiario) {
+        CustomLiveData2(MutableLiveData<String> account, MutableLiveData<String> checked, MutableLiveData<String> beneficiario, MutableLiveData<String> all) {
 
             addSource(checked, new Observer<String>() {
                 public void onChanged(@Nullable String a) {
@@ -56,6 +57,7 @@ public class MovimentoViewModel extends AndroidViewModel {
                     list.add(account.getValue());
                     list.add(a);
                     list.add(beneficiario.getValue());
+                    list.add(all.getValue());
                     setValue(list);
                 }
             });
@@ -66,6 +68,8 @@ public class MovimentoViewModel extends AndroidViewModel {
                     list.add(account.getValue());
                     list.add(checked.getValue());
                     list.add(b);
+                    list.add(all.getValue());
+
                     setValue(list);
                 }
             });
@@ -76,14 +80,35 @@ public class MovimentoViewModel extends AndroidViewModel {
                     list.add(c);
                     list.add(checked.getValue());
                     list.add(beneficiario.getValue());
+                    list.add(all.getValue());
+
+                    setValue(list);
+                }
+            });
+            addSource(all, new Observer<String>() {
+                public void onChanged(@Nullable String d) {
+                    List<String> list = new ArrayList<>();
+
+                    list.add(account.getValue());
+                    list.add(checked.getValue());
+                    list.add(beneficiario.getValue());
+                    list.add(d);
                     setValue(list);
                 }
             });
 
 
+
         }
     }
 
+
+    public void viewAllTrue(){
+        this.all.setValue("true");
+    }
+    public void viewAllFalse(){
+        this.all.setValue("false");
+    }
 
     public void setChecked(String checked){
         this.checked.setValue(checked);
@@ -161,8 +186,8 @@ public class MovimentoViewModel extends AndroidViewModel {
      */
     public LiveData<List<EntityMovimento>> getAllDates() { return mActiveDates; }
 
-    public LiveData<List<EntityMovimento>> getAllTransactionsDates(String upTo, int account, String checked, String beneficiario) {
-        return mRepository.getTransactionInDay(String.valueOf(account), checked, beneficiario, upTo);}
+    public LiveData<List<EntityMovimento>> getAllTransactionsDates(String upTo, int account, String checked, String beneficiario, String all) {
+        return mRepository.getTransactionInDay(String.valueOf(account), checked, beneficiario, upTo, all);}
 
 
     public void insert(String beneficiario, String importo, Date scadenza, Date saldato, String nomeConto, int idConto, @Nullable final Date endDate, String recurrence, String tipo, String direction) {
