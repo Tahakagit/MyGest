@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -52,6 +53,7 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
     static String beneficiario = null;
     static String conto = null;
     static String checked = null;
+    static String all = "false";
     TextView title;
     BottomSheetBehavior sheetBehavior;
 
@@ -60,17 +62,20 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation_drawer_filter);
+        mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
+        context = this;
 
 
         bottomSheet = findViewById(R.id.bottom_sheet);
 
         startBottomMenu(bottomSheet);
-        context = this;
-        mWordViewModel = ViewModelProviders.of(this).get(MovimentoViewModel.class);
 
         title = findViewById(R.id.id_title_bottom_filter);
         setAccount(String.valueOf(10));
         checked = "unchecked";
+        mWordViewModel.viewAllFalse();
+        mWordViewModel.filterBeneficiario("");
+        mWordViewModel.filterConto("10");
         mWordViewModel.viewUnchecked();
         mWordViewModel.getAllDates().observe(this, new Observer<List<EntityMovimento>>() {
             @Override
@@ -83,6 +88,14 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
 
         initUi();
 
+    }
+
+    public static String getAll() {
+        return all;
+    }
+
+    public static void setAll(String all) {
+        AllTransactionActivity.all = all;
     }
 
     private void startBottomMenu(View bottomSheet){
@@ -111,6 +124,77 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
 
             }
         });
+        startFilterMenu();
+
+
+    }
+    //bind views and starts listeners
+    public void startFilterMenu(){
+        Switch btnCheck = findViewById(R.id.btn_check);
+        AutoCompleteTextView edittextBeneficiario = findViewById(R.id.id_edittext_filter_beneficiario);
+        Spinner accountSpinner = findViewById(R.id.spinner);
+
+        CheckBox checkBox = findViewById(R.id.checkBox);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line,
+                mWordViewModel.getKnownBeneficiari());
+        edittextBeneficiario.setAdapter(adapter);
+
+        // listen for completed-incompleted transactions filter
+        btnCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (btnCheck.isChecked()){
+                    checked = "checked";
+                    mWordViewModel.viewChecked();
+                }
+                else {
+                    checked = "unchecked";
+
+                    mWordViewModel.viewUnchecked();
+                }
+            }
+        });
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (checkBox.isChecked()){
+                    btnCheck.setEnabled(false);
+                    all = "true";
+
+                    mWordViewModel.viewAllTrue();
+                }else {
+                    btnCheck.setEnabled(true);
+                    all = "false";
+                    mWordViewModel.viewAllFalse();
+                }
+            }
+        });
+
+
+        // listen for payee filter
+        edittextBeneficiario.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mWordViewModel.filterBeneficiario(edittextBeneficiario.getText().toString());
+
+                beneficiario = edittextBeneficiario.getText().toString();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        // listen for account filter
+        populateAccountSpinner(accountSpinner);
 
     }
 
@@ -156,7 +240,6 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
 
         myToolbar.setDisplayHomeAsUpEnabled(true);
 
-        startFilterMenu();
         adapterAllTransactions = new RviewAdapterAllTransactions(this, this, getApplication());
         rview.setLayoutManager(new LinearLayoutManager(this));
         rview.setAdapter(adapterAllTransactions);
@@ -255,52 +338,5 @@ public class AllTransactionActivity extends AppCompatActivity implements View.On
 
     }
 
-    public void startFilterMenu(){
-        Switch btnCheck = findViewById(R.id.btn_check);
-        AutoCompleteTextView edittextBeneficiario = findViewById(R.id.id_edittext_filter_beneficiario);
-        Spinner accountSpinner = findViewById(R.id.spinner);
-
-        btnCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (btnCheck.isChecked()){
-                    checked = "checked";
-                    mWordViewModel.viewChecked();
-                }
-                else {
-                    checked = "unchecked";
-
-                    mWordViewModel.viewUnchecked();
-                }
-            }
-        });
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, mWordViewModel.getKnownBeneficiari());
-
-        edittextBeneficiario.setAdapter(adapter);
-        edittextBeneficiario.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mWordViewModel.filterBeneficiario(edittextBeneficiario.getText().toString());
-
-                beneficiario = edittextBeneficiario.getText().toString();
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-
-        populateAccountSpinner(accountSpinner);
-
-    }
 
 }

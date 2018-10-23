@@ -73,19 +73,39 @@ public class MovimentoRepo {
         return mMovimentoDao.getAllDayFiltered(upTo, account, checked, beneficiario);
     }
 
-    LiveData<List<EntityMovimento>> getAllDates(String account, String checked, String beneficiario) {
-        if((beneficiario==null||beneficiario.equalsIgnoreCase(""))&&(account== null||account.equalsIgnoreCase(""))){
+    LiveData<List<EntityMovimento>> getAllDates(String account, String checked, String beneficiario, String all) {
+
+
+        if((beneficiario==null||beneficiario.equalsIgnoreCase(""))&&account.equalsIgnoreCase("tutte")){
+            if (all.equalsIgnoreCase("true"))
+                return  mMovimentoDao.getAllTransactionsNoCheckedNoBeneNoAccountGroup();
             return mMovimentoDao.getAllDatesCheckedNoBeneNoAccountGroup(checked);
         }else if (account== null||account.equalsIgnoreCase("")){
+            if (all.equalsIgnoreCase("true"))
+                return  mMovimentoDao.getAllTransactionsNoCheckedBeneNoACcount(beneficiario);
+
             return mMovimentoDao.getAllDatesCheckedBeneNoACcount(checked, beneficiario);
         }else if (beneficiario==null||beneficiario.equalsIgnoreCase("")){
+
+
             if(account.equalsIgnoreCase("10")){
+                if (all.equalsIgnoreCase("true"))
+                    return  mMovimentoDao.getAllTransactionsNoCheckedNoBeneNoAccountGroup();
+
                 return mMovimentoDao.getAllDatesCheckedNoBeneAllAccount(checked);
 
             }else {
+                if (all.equalsIgnoreCase("true"))
+                    return  mMovimentoDao.getAllTransactionsNoCheckedNoBeneAccount(Integer.valueOf(account));
+
                 return mMovimentoDao.getAllDatesCheckedNoBeneAccount(checked,Integer.valueOf(account));
 
             }
+
+
+
+
+
         }else {
             if (account.equalsIgnoreCase("10")){
                 return mMovimentoDao.getAllDatesCheckedBeneAllAccount(checked,beneficiario);
@@ -97,7 +117,7 @@ public class MovimentoRepo {
     }
 
 
-    LiveData<List<EntityMovimento>> getTransactionInDay(String account, String checked, String beneficiario, String upTo) {
+    LiveData<List<EntityMovimento>> getTransactionInDay(String account, String checked, String beneficiario, String upTo, String all) {
         SimpleDateFormat format = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy",Locale.ENGLISH);
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
 
@@ -114,20 +134,48 @@ public class MovimentoRepo {
 
 
         if((beneficiario==null||beneficiario.equalsIgnoreCase(""))&&(account== null||account.equalsIgnoreCase(""))){
-            return mMovimentoDao.getDailyCheckedNoBeneNoAccountGroup(checked, date);
+            if (all.equalsIgnoreCase("true")){
+                return  mMovimentoDao.getDailyNoCheckedNoBeneAllAccount(date);
+
+            }else {
+                return mMovimentoDao.getDailyCheckedNoBeneAllAccount(checked, date);
+
+            }
+
         }else if (account== null||account.equalsIgnoreCase("")){
-            return mMovimentoDao.getDailyCheckedBeneNoACcount(checked, beneficiario, date);
+            if (all.equalsIgnoreCase("true")) {
+                return mMovimentoDao.getDailyNoCheckedBeneNoACcount(beneficiario, date);
+            }else {
+                return mMovimentoDao.getDailyCheckedBeneNoACcount(checked, beneficiario, date);
+            }
         }else if (beneficiario==null||beneficiario.equalsIgnoreCase("")){
             if(account.equalsIgnoreCase("10")){
-                return mMovimentoDao.getDailyCheckedNoBeneAllAccount(checked, date);
+                if (all.equalsIgnoreCase("true")) {
+                    return mMovimentoDao.getDailyNoCheckedNoBeneAllAccount(date);
+                }else {
+                    return mMovimentoDao.getDailyCheckedNoBeneAllAccount(checked, date);
+                }
             }else {
-                return mMovimentoDao.getDailyCheckedNoBeneAccount(checked,Integer.valueOf(account), date);
+                if (all.equalsIgnoreCase("true")) {
+                    return mMovimentoDao.getDailyNoCheckedNoBeneAccount(Integer.valueOf(account), date);
+                }else {
+
+                    return mMovimentoDao.getDailyCheckedNoBeneAccount(checked, Integer.valueOf(account), date);
+                }
             }
         }else {
             if (account.equalsIgnoreCase("10")){
-                return mMovimentoDao.getDailyCheckedBeneAllAccount(checked,beneficiario, date);
+                if (all.equalsIgnoreCase("true")) {
+                    return mMovimentoDao.getDailyNoCheckedBeneNoACcount(beneficiario, date);
+                }else {
+                    return mMovimentoDao.getDailyCheckedBeneAllAccount(checked, beneficiario, date);
+                }
             }else {
-                return mMovimentoDao.getDailyCheckedBeneAccount(Integer.valueOf(account),checked,beneficiario, date);
+                if (all.equalsIgnoreCase("true")) {
+                    return mMovimentoDao.getDailyNoCheckedBeneAccount(Integer.valueOf(account), beneficiario, date);
+                }else {
+                    return mMovimentoDao.getDailyCheckedBeneAccount(Integer.valueOf(account), checked, beneficiario, date);
+                }
             }
         }
     }

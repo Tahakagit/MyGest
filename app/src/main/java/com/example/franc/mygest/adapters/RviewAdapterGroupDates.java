@@ -8,9 +8,14 @@ package com.example.franc.mygest.adapters;
 import android.app.Application;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
+import android.content.ClipData;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -148,6 +153,63 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
         // SET UP SWIPE
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT|ItemTouchHelper.LEFT) {
 
+            /**
+             * Called by ItemTouchHelper on RecyclerView's onDraw callback.
+             * <p>
+             * If you would like to customize how your View's respond to user interactions, this is
+             * a good place to override.
+             * <p>
+             * Default implementation translates the child by the given <code>dX</code>,
+             * <code>dY</code>.
+             * ItemTouchHelper also takes care of drawing the child after other children if it is being
+             * dragged. This is done using child re-ordering mechanism. On platforms prior to L, this
+             * is
+             * achieved via {@link ViewGroup#getChildDrawingOrder(int, int)} and on L
+             * and after, it changes View's elevation value to be greater than all other children.)
+             *
+             * @param c                 The canvas which RecyclerView is drawing its children
+             * @param recyclerView      The RecyclerView to which ItemTouchHelper is attached to
+             * @param viewHolder        The ViewHolder which is being interacted by the User or it was
+             *                          interacted and simply animating to its original position
+             * @param dX                The amount of horizontal displacement caused by user's action
+             * @param dY                The amount of vertical displacement caused by user's action
+             * @param actionState       The type of interaction on the View. Is either {@link
+             * @param isCurrentlyActive True if this view is currently being controlled by the user or
+             *                          false it is simply animating back to its original state.
+             */
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                View view = viewHolder.itemView;
+                Paint textPaintDelete = new Paint();
+                Paint textPaintArchive = new Paint();
+
+                textPaintArchive.setARGB((2*(int)dX)/5,70,175,74);
+                textPaintArchive.setTextAlign(Paint.Align.LEFT);
+                textPaintDelete.setARGB(((2*(int)dX)/5)*-1,254,0,0);
+                textPaintDelete.setTextAlign(Paint.Align.LEFT);
+                Typeface typeface = ResourcesCompat.getFont(context, R.font.hindvadodara_semibold);
+
+                textPaintArchive.setTypeface(typeface);
+                textPaintArchive.setTextSize(50);
+                textPaintDelete.setTypeface(typeface);
+                textPaintDelete.setTextSize(50);
+
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+                    if (dX>0){
+                        c.drawText("ARCHIVIA", (view.getWidth()/16)*1, (view.getHeight()/4)*3, textPaintArchive);
+
+                    }else {
+                        c.drawText("CANCELLA", (view.getWidth()/16)*10, (view.getHeight()/4)*3, textPaintDelete);
+
+                    }
+
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+                }
+
+            }
+
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -155,10 +217,10 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int transactionPosition = viewHolder.getAdapterPosition();
 
                 if (direction == ItemTouchHelper.LEFT) {
                     try {
-                        int transactionPosition = viewHolder.getAdapterPosition();
                         int id = (int)adapterMovimenti.getItemId(transactionPosition);
                         movsVM.deleteTransactionById(id);
                     } catch (ArrayIndexOutOfBoundsException e) {
@@ -166,13 +228,11 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
                     }
                 }else {
                     try {
-                        int transactionPosition = viewHolder.getAdapterPosition();
                         int id = (int)adapterMovimenti.getItemId(transactionPosition);
 
                         Log.d("swipe", "rimuovo transazione alla posizione " + transactionPosition + " del conto " + mResults.get(dateViewholder.getAdapterPosition()).getNomeConto());
 
                         movsVM.checkTransaction(id);
-                        adapterMovimenti.notifyItemRemoved(transactionPosition);
 
 
                     } catch (ArrayIndexOutOfBoundsException e) {
@@ -180,7 +240,13 @@ public class RviewAdapterGroupDates extends RecyclerView.Adapter<RviewAdapterGro
                     }
 
                 }
+/*
+                adapterMovimenti.notifyItemRemoved(transactionPosition);
+*/
+
             }
+
+
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(rviewMovimenti);

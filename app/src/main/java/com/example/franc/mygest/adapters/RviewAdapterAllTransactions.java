@@ -9,7 +9,11 @@ import android.app.Application;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -112,7 +116,7 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
             SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.ITALY);
             dateViewholder.setData(dayFormat.format(current.getScadenza()), monthFormat.format(current.getScadenza()).toUpperCase(), current.getBeneficiario());
         }
-        startTransactionRecyclerView(dateViewholder);
+        startDatesReyclerView(dateViewholder);
 
     }
 
@@ -122,7 +126,7 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
      * @param dateViewholder viewholder
      *
      * */
-    private void startTransactionRecyclerView(DateDashboardViewHolder dateViewholder){
+    private void startDatesReyclerView(DateDashboardViewHolder dateViewholder){
         RecyclerView rviewMovimenti = dateViewholder.itemView.findViewById(R.id.rv_mainactivity_transactions);
         RviewAdapterMovimenti adapterMovimenti;
 
@@ -130,11 +134,12 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
         String account = activity.getAccount();
         String dateStr = mResults.get(dateViewholder.getAdapterPosition()).getScadenza().toString();
         String checked = activity.getChecked();
+        String all = activity.getAll();
 
         adapterMovimenti = new RviewAdapterMovimenti(app);
         adapterMovimenti.setHasStableIds(true);
 
-        movsVM.getAllTransactionsDates(dateStr, Integer.valueOf(account), checked, bene)
+        movsVM.getAllTransactionsDates(dateStr, Integer.valueOf(account), checked, bene, all)
                 .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
                     @Override
                     public void onChanged(@Nullable List<EntityMovimento> entityMovimentos) {
@@ -145,6 +150,38 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
         rviewMovimenti.setAdapter(adapterMovimenti);
         // SET UP SWIPE
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT|ItemTouchHelper.LEFT) {
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                View view = viewHolder.itemView;
+                Paint textPaintDelete = new Paint();
+                Paint textPaintArchive = new Paint();
+
+                textPaintArchive.setARGB((2*(int)dX)/5,70,175,74);
+                textPaintArchive.setTextAlign(Paint.Align.LEFT);
+                textPaintDelete.setARGB(((2*(int)dX)/5)*-1,254,0,0);
+                textPaintDelete.setTextAlign(Paint.Align.LEFT);
+                Typeface typeface = ResourcesCompat.getFont(context, R.font.hindvadodara_semibold);
+
+                textPaintArchive.setTypeface(typeface);
+                textPaintArchive.setTextSize(50);
+                textPaintDelete.setTypeface(typeface);
+                textPaintDelete.setTextSize(50);
+
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+                    if (dX>0){
+                        c.drawText("ARCHIVIA", (view.getWidth()/16)*1, (view.getHeight()/4)*3, textPaintArchive);
+
+                    }else {
+                        c.drawText("CANCELLA", (view.getWidth()/16)*10, (view.getHeight()/4)*3, textPaintDelete);
+
+                    }
+
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+                }
+
+            }
 
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {

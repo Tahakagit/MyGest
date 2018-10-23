@@ -18,11 +18,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:fontFamily="@font/kodchasan_extralight"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/kodchasan_extralight"
+        android:text="42453"
         android:textAlignment="center"
-        android:textColor="@color/green"
+        android:textColor="@color/grey_bg_black_text"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,6 +35,7 @@
 
 
         android:layout_marginStart="8dp"
+        android:text="fhghfhg"
         android:textColor="@color/almost_black"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@id/tv_card_all_tipo"
@@ -84,7 +86,7 @@
         android:padding="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_trans_in"
+        app:srcCompat="@drawable/ic_arrow_back_grey_24dp"
         tools:layout_conversion_absoluteHeight="54dp"
         tools:layout_conversion_absoluteWidth="28dp" />
 
@@ -116,14 +118,15 @@
 
     <TextView
         android:id="@id/tv_card_all_beneficiario"
-        android:fontFamily="@font/hindvadodara_semibold"
-
         style="@style/text_style_beneficiario"
+
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_marginStart="8dp"
+        android:fontFamily="@font/hindvadodara_semibold"
+        android:text="fgfdgdf"
         android:textAlignment="center"
-        android:textColor="@color/almost_black"
+        android:textColor="@color/grey_bg_black_text"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_card_all_importo"
@@ -135,7 +138,7 @@
         android:id="@+id/hidden_transaction_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         app:constraint_referenced_ids="tv_card_all_tipo, tv_card_all_saldato, tv_card_all_saldatoday, tv_card_all_saldatomonth, tv_card_all_account, tv_all_dot" />
 
 </android.support.constraint.ConstraintLayout>
