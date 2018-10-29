@@ -6,7 +6,7 @@ android {
 
     compileSdkVersion 26
     def versionMajor = 0
-    def versionMinor = 5
+    def versionMinor = 8
     def versionPatch = 1
     defaultConfig {
         applicationId "com.example.franc.mygest"
