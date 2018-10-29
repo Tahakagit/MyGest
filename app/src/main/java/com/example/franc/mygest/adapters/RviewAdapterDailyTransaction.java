@@ -9,12 +9,12 @@ import android.app.Application;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +27,8 @@ import com.example.franc.mygest.activities.MainActivity;
 import com.example.franc.mygest.persistence.EntityConto;
 import com.example.franc.mygest.persistence.EntityMovimento;
 import com.example.franc.mygest.persistence.MovimentoViewModel;
+
+import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -62,7 +64,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     public long getItemId(int position){ return  0;}
     @Override
     public AccountDashboardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dashboard_accounts, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_mainactivity_account, parent, false);
 
         return new AccountDashboardViewHolder(view);
     }
@@ -75,29 +77,31 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
      * */
     private void startDatesRecyclerView(AccountDashboardViewHolder accountViewHolder){
         RecyclerView rviewDates;
-        DividerItemDecoration mDividerItemDecoration;
         RviewAdapterGroupDates adapterDates;
-        String nomeConto = mResults.get(accountViewHolder.getAdapterPosition()).getNomeConto();//DEBUG
 
-        rviewDates = accountViewHolder.itemView.findViewById(R.id.rv_dates);
-        mDividerItemDecoration = new DividerItemDecoration(rviewDates.getContext(),
-                RecyclerView.VERTICAL);
+        rviewDates = accountViewHolder.itemView.findViewById(R.id.rv_mainactivity_dates);
         adapterDates = new RviewAdapterGroupDates(context, app);
         adapterDates.setHasStableIds(true);
-        rviewDates.addItemDecoration(mDividerItemDecoration);
         rviewDates.setLayoutManager(new LinearLayoutManager(context));
         rviewDates.setAdapter(adapterDates);
+        int accountId = mResults.get(accountViewHolder.getAdapterPosition()).getId();
         // OBSERVE DB FOR RESULTS
-        movsVM.getAllDates(MainActivity.getDateToSend().getTime(),
-                mResults.get(accountViewHolder.getAdapterPosition()).getId())
+        movsVM.getAllDatesByAccount(MainActivity.getDateToSend().getTime(),
+                accountId)
                 .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
                     @Override
                     public void onChanged(@Nullable List<EntityMovimento> dates) {
                         adapterDates.setResults(dates);
-                        Log.d("on change movimenti", " trovate  " + dates.size() + "  date per il conto  " + nomeConto);
                     }
                 });
     }
+
+    private int getTotalTransactions(int account){
+
+        return  movsVM.getTotalTransaction(account, MainActivity.getDateToSend().getTime());
+
+    }
+
 
     /**
      * Subtract all transactions to current balance up to the selected date
@@ -107,9 +111,16 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
     private BigDecimal calculateNewBalance(EntityConto account){
         BigDecimal oldBalance = new BigDecimal(String.valueOf(account.getSaldoConto()));
         BigDecimal totExpences = new BigDecimal("0");
-        totExpences = totExpences.add(new BigDecimal(String.valueOf(movsVM.getAllTransactionAmount(account.getId(),
-                    MainActivity.getDateToSend().getTime()))));
+        BigDecimal totIncomes = new BigDecimal("0");
+
+        totExpences = totExpences.add(new BigDecimal(String.valueOf(movsVM.getTransactionsAmount(account.getId(),
+                MainActivity.getDateToSend().getTime(), "out"))));
+        totIncomes = totIncomes.add(new BigDecimal(String.valueOf(movsVM.getTransactionsAmount(account.getId(),
+                MainActivity.getDateToSend().getTime(), "in"))));
+
         BigDecimal newBalance = oldBalance.subtract(totExpences);
+        newBalance = newBalance.add(totIncomes);
+
         return newBalance;
     }
 
@@ -120,14 +131,27 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
             // CALCULATE BALANCES
             BigDecimal currentBalanceBigD = new BigDecimal(String.valueOf(mResults.get(position).getSaldoConto()));
             BigDecimal futureBalanceBigD = calculateNewBalance(mResults.get(position));
+
             String currentBalance = NumberFormat.getCurrencyInstance(Locale.ITALY).format(currentBalanceBigD);
             String futureBalance = NumberFormat.getCurrencyInstance(Locale.ITALY).format(futureBalanceBigD);
+            String accountName = mResults.get(position).getNomeConto();
+            String totalTransactions = String.valueOf(getTotalTransactions(mResults.get(position).getId()) + " movimenti in attesa");
+
+            int accountColor = mResults.get(position).getColoreConto();
+
             // FILL CARD WITH DATA
-            accountViewHolder.setData(mResults.get(position).getNomeConto(),
+            accountViewHolder.setData(accountName,
                     currentBalance,
-                    futureBalance
-            );
-            accountViewHolder.cv.setCardBackgroundColor(mResults.get(position).getColoreConto());
+                    futureBalance,
+                    totalTransactions,
+                    accountColor
+                    );
+
+
+            accountViewHolder.cv.setCardBackgroundColor(adjustBrightness(accountColor, 0.40f));
+            accountViewHolder.bg1.setBackgroundColor(Color.WHITE);
+            accountViewHolder.bg2.setBackgroundColor(Color.WHITE);
+
             // STARTS DATES GROUPING RV
             startDatesRecyclerView(accountViewHolder);
             // STARTING EXPAND COLLAPSE ACCOUNT CARDS
@@ -137,11 +161,15 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                 public void onClick(View v) {
                     if(accountViewHolder.hiddenRv.getVisibility()==View.GONE){
                         accountViewHolder.hiddenRv.setVisibility(View.VISIBLE);
+/*
                         accountViewHolder.cv.setCardElevation(15f);
+*/
                     }
                     else {
                         accountViewHolder.hiddenRv.setVisibility(View.GONE);
+/*
                         accountViewHolder.cv.setCardElevation(1f);
+*/
                     }
                 }
             });
@@ -150,7 +178,7 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
                 @Override
                 public void onClick(View view) {
                     UIController uiController = new UIController(context);
-                    uiController.displaySaveAccountDialog(mResults.get(accountViewHolder.getAdapterPosition()));
+                    uiController.displayAccountManageDialog(mResults.get(accountViewHolder.getAdapterPosition()));
                 }
             });
 
@@ -159,6 +187,17 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
 
 
     }
+    public int adjustBrightness( int color, float factor) {
+        float[] hsv = new float[3];
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        Color.RGBToHSV(r, g, b, hsv);
+
+        hsv[1] *= factor;
+        return Color.HSVToColor(hsv);
+    }
+
 
     /**
      * Updates mAdapterConti items list
@@ -173,26 +212,46 @@ public class RviewAdapterDailyTransaction extends RecyclerView.Adapter<RviewAdap
         TextView accountFutureBalance;
         TextView accountCurrentBalance;
         TextView accountName;
+        TextView totalTransactions;
         ImageView moreIc;
         RecyclerView hiddenRv;
-
+        ConstraintLayout bg1;
+        ConstraintLayout bg2;
         CardView cv;
+        TextView currentLabel;
+        TextView futureLabel;
 
         AccountDashboardViewHolder(View itemView) {
             super(itemView);
-            cv = itemView.findViewById(R.id.cv_account_dashboard);
-            accountName = itemView.findViewById(R.id.id_account_name);
-            accountFutureBalance = itemView.findViewById(R.id.id_account_future_balance);
-            accountCurrentBalance = itemView.findViewById(R.id.id_account_current_balance);
+            bg1 = itemView.findViewById(R.id.constraintlayout_mainactivity_bgtop);
+            bg2 = itemView.findViewById(R.id.constraintlayout_mainactivity_bgbottom);
+            cv = itemView.findViewById(R.id.cv_mainactivity_account);
+            accountName = itemView.findViewById(R.id.tv_card_all_account);
+            accountFutureBalance = itemView.findViewById(R.id.tv_mainactivity_estimated_label);
+            accountCurrentBalance = itemView.findViewById(R.id.tv_mainactivity_current_label);
             moreIc = itemView.findViewById(R.id.ic_more);
-            hiddenRv = itemView.findViewById(R.id.rv_dates);
+            hiddenRv = itemView.findViewById(R.id.rv_mainactivity_dates);
+            totalTransactions = itemView.findViewById(R.id.tv_mainactivity_totaltrans);
+            currentLabel = itemView.findViewById(R.id.tv_mainactivity_current);
+            futureLabel = itemView.findViewById(R.id.tv_mainactivity_estimated);
+
 
         }
 
-        void setData(String textscadenza, String currentBalance, String futureBalance){
+        void setData(String textscadenza, String currentBalance, String futureBalance, String total, int color){
             accountName.setText(textscadenza);
             accountFutureBalance.setText(futureBalance);
             accountCurrentBalance.setText(currentBalance);
+            totalTransactions.setText(total);
+            accountName.setTextColor(color);
+            accountCurrentBalance.setTextColor(color);
+            accountFutureBalance.setTextColor(color);
+            moreIc.setColorFilter(color);
+            currentLabel.setTextColor(color);
+            futureLabel.setTextColor(color);
+            totalTransactions.setTextColor(color);
+
+
 
 
 

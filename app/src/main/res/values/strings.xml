@@ -16,11 +16,36 @@
     <string name="insert">Inserisci</string>
     <string name="cancel">Cancella</string>
     <string name="title_activity_dialog">DialogActivity</string>
+    <string name="title_filter_activity">Tutte le transazioni</string>
 
-    <string name="title_activity_crea_conto">CreaContoActivity</string>
+    <string name="title_activity_crea_conto">Gestisci i conti</string>
     <string name="title_dialog_select_colors">Seleziona colore conto</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="balances_up_to">VEDI CONTI FINO AL</string>
+    <string name="drag_to_insert">Trascina per inserire una scadenza...</string>
+
+
+
+    <string name="img_del_description">Cancella</string>
+    <string name="img_edit_description">Modifica</string>
+    <string name="img_more_description">Altro</string>
+
+    <!--card_mainactivity_account-->
+    <string name="current_balance">SALDO ATTUALE</string>
+    <string name="estimated_balance">SALDO PREVISTO</string>
+
+    <!--card_mainactivity_transaction-->
+    <string name="payed_upto">pagato fino</string>
+    <string name="img_outgoing_description">Uscita</string>
+    <string name="all_dot">•</string>
+
+<!--
+    BOTTOSHEET MAINACTIVITY
+-->
+    <string name="btn_mainactivity_income_label">ENTRATA</string>
+    <string name="btn_mainactivity_outcome_label">USCITA</string>
+
+
 
 
 </resources>

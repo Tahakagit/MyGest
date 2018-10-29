@@ -4,7 +4,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.Nullable;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 
@@ -20,25 +19,28 @@ public class EntityMovimento{
     private String importo;
     private String direction;
     private Date scadenza;
+    private Date saldato;
     private Date endscadenza;
     private int idConto;
+
     private String nomeConto;
     private String tipo;
     @android.arch.persistence.room.PrimaryKey(autoGenerate = true)
     private int id;
     private String checked = "unchecked";
 
-    public EntityMovimento(final String beneficiario, final String importo, final Date scadenza, final int idConto, final String nomeConto, @Nullable final Date endscadenza, final String tipo){
+    public EntityMovimento(final String beneficiario, final String importo, final Date scadenza, final Date saldato, final int idConto, final String nomeConto, @Nullable final Date endscadenza, final String tipo, String direction){
         this.beneficiario = beneficiario;
         setImporto(importo);
         this.scadenza = scadenza;
+        this.saldato = saldato;
         this.idConto = idConto;
         this.nomeConto = nomeConto;
         this.tipo = tipo;
 
+        this.direction = direction;
         this.endscadenza = endscadenza;
     }
-    //todo attrs checked, direzione
 
 
     public String getChecked() {
@@ -120,13 +122,11 @@ public class EntityMovimento{
         this.beneficiario = beneficiario;
     }
 
-/*
-    public long getTimestamp() {
-        return timestamp;
+    public Date getSaldato() {
+        return saldato;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setSaldato(Date saldato) {
+        this.saldato = saldato;
     }
-*/
 }

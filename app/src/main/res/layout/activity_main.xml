@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    android:backgroundTint="@color/grey"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.MainActivity">
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <android.support.v7.widget.Toolbar
+            android:id="@id/toolbar_mainactivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/white"
+            android:elevation="4dp"
+            android:padding="5dp"
+            android:scrollbars="none"
+            android:theme="@style/Base.ThemeOverlay.AppCompat.ActionBar"
+            app:layout_constraintBottom_toTopOf="@id/rv_mainactivity_dates"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".9"
+                    android:fontFamily="@font/hindvadodara_semibold"
+                    android:gravity="center_vertical"
+                    android:text="@string/balances_up_to"
+                    android:textAlignment="center"
+                    android:textColor="@color/almost_black"
+                    android:textSize="18sp" />
+
+                <Button
+
+                    android:id="@id/btn_mainactivity_toolbar_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".1"
+                    android:background="@android:color/transparent"
+                    android:textAlignment="center"
+                    android:textColor="@color/almost_black"
+                    android:textSize="24sp" />
+
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.Toolbar>
+
+        <View
+            android:id="@id/view_mainactivity_scrim"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#99000000"
+            android:elevation="1dp"
+            android:visibility="gone" />
+
+        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@id/rv_mainactivity_account"
+
+
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="49dp"
+            android:scrollbars="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_mainactivity"
+            tools:context=".activities.MainActivity"
+            tools:layout_conversion_absoluteHeight="511dp"
+            tools:layout_conversion_absoluteWidth="384dp">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </android.support.constraint.ConstraintLayout>
+
+
+
+    <include layout="@layout/fragment_mainactivity_insert"/>
+
+
+</android.support.design.widget.CoordinatorLayout>

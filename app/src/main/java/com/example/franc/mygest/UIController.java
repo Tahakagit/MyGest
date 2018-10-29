@@ -65,7 +65,7 @@ public class UIController {
     public void initUi(){
 
         Toolbar toolbar = mActivity.findViewById(R.id.toolbar_creacontoactivity);
-        RecyclerView rv = mActivity.findViewById(R.id.rv_account_manage);
+        RecyclerView rv = mActivity.findViewById(R.id.rv_accountmanage_content);
         FloatingActionButton fab = mActivity.findViewById(R.id.fab_account_create);
         mAdapterConti = new RviewAdapterConto(mActivity);
 
@@ -75,7 +75,7 @@ public class UIController {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                displaySaveAccountDialog(null);
+                displayAccountManageDialog(null);
             }
         });
         rv.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -83,17 +83,13 @@ public class UIController {
     }
 
     //DISPLAY INPUT DIALOG AND SAVE ACCOUNT
-    public void displaySaveAccountDialog(@Nullable EntityConto conto )    {
+    public void displayAccountManageDialog(@Nullable EntityConto conto )    {
         final Dialog d = new Dialog(mContext);
 
         final Boolean exists;
-        if (conto == null){
-            exists = false;
-        }else {
-            exists = true;
-        }
+        exists = conto != null;
         d.setTitle("Save to Realm");
-        d.setContentView(R.layout.input_dialog_creaconto);
+        d.setContentView(R.layout.dialog_insert_account);
 
         Button saveBtn= d.findViewById(R.id.saveconto);
 
@@ -169,7 +165,7 @@ public class UIController {
         if(cleanstring.matches("")) {
             Log.w(this.getClass().getName(), "WARNING:: saldo null");
 /*
-            displayErrorAlert(mContext, nomeConto, "Inserisci il saldo!");
+            DisplayAnchoredPopup(mContext, nomeConto, "Inserisci il saldo!");
 */
             saldoConto.setError("Inserisci il saldo!");
             return false;
@@ -179,7 +175,7 @@ public class UIController {
 /*
             nomeConto.setHintTextColor(ContextCompat.getColor(mContext, R.color.red));
 */
-            /*displayErrorAlert(mContext, nomeConto, "Inserisci il nome del EntityConto!");*/
+            /*DisplayAnchoredPopup(mContext, nomeConto, "Inserisci il nome del EntityConto!");*/
             nomeConto.setError("Inserisci il nome!");
             return false;
         }else{
@@ -228,7 +224,7 @@ public class UIController {
      * @param anchorView Anchor view
      * @param helpText Custom Message
      */
-    private void displayErrorAlert(Context context, View anchorView, String helpText) {
+    private void DisplayAnchoredPopup(Context context, View anchorView, String helpText) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View layout = inflater.inflate(R.layout.popup_content, null);
 

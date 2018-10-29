@@ -1,36 +1,54 @@
 package com.example.franc.mygest.adapters;
 
-/**
+/*
  * Created by franc on 28/10/2017.
+ *
+ * Creates account overview card, each one displaying his own transactions up to the chosen date
  */
-
+import android.app.Application;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.support.constraint.Group;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.franc.mygest.R;
+import com.example.franc.mygest.activities.AllTransactionActivity;
 import com.example.franc.mygest.persistence.EntityMovimento;
+import com.example.franc.mygest.persistence.MovimentoViewModel;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-//questo diventa il recycler view dei giorni con transazioni all'interno del quale ogni viewholer
-//avra la sua recycler view popolata dai singoli movimenti
+public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapterAllTransactions.DateDashboardViewHolder> {
 
-public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapterAllTransactions.TransactionViewHolder> {
-
-    List<EntityMovimento> mResults;
+    private List<EntityMovimento> mResults;
     private Context context;
-    static RviewAdapterMovimenti adapterMovimenti;
-    public RviewAdapterAllTransactions(Context context) {
+    private MovimentoViewModel movsVM;
+    private Application app;
+    AllTransactionActivity activity;
+
+    public RviewAdapterAllTransactions(AppCompatActivity activit, Context context, Application app) {
+        setResults(mResults);
+        this.activity = (AllTransactionActivity)activit;
+        this.app = app;
         this.context = context;
+        movsVM = new MovimentoViewModel(app);
+
+
     }
 
 
@@ -43,67 +61,164 @@ public class RviewAdapterAllTransactions extends RecyclerView.Adapter<RviewAdapt
     @Override
     public long getItemId(int position){ return  0;}
     @Override
-    public TransactionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_transaction, parent, false);
-        return new TransactionViewHolder(view);
-    }
-    @Override
-    public void onBindViewHolder(final TransactionViewHolder transactionHolder, final int position) {
+    public DateDashboardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_all_dates, parent, false);
 
-        EntityMovimento current = mResults.get(position);
-
-        if(current != null) {
-            SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.ITALY);
-            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.ITALY);
-            BigDecimal raw = new BigDecimal(String.valueOf(current.getImporto()));
-            String importoFormatted = NumberFormat.getCurrencyInstance().format(raw);
-
-            transactionHolder.setData(current.getBeneficiario(), importoFormatted, dayFormat.format(current.getScadenza()), monthFormat.format(current.getScadenza()).toUpperCase());
-            transactionHolder.itemView.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    if(transactionHolder.hiddenlayout.getVisibility()==View.GONE){
-                        transactionHolder.hiddenlayout.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        transactionHolder.hiddenlayout.setVisibility(View.GONE);
-                    }
-                }
-            });
-
-        }
-
+        return new DateDashboardViewHolder(view);
     }
 
+
+
+    /**
+     * Updates mAdapterConti items list
+     * @param results ArrayList to show
+     */
     public void setResults(List<EntityMovimento> results){
         mResults = results;
         notifyDataSetChanged();
     }
 
-    public static class TransactionViewHolder extends RecyclerView.ViewHolder{
-        TextView textBeneficiario;
-        TextView textImporto;
+    static class DateDashboardViewHolder extends RecyclerView.ViewHolder{
         TextView dayScadenzaText;
         TextView monthScadenzaText;
-        Group hiddenlayout;
+        String beneficiario = null;
 
-        TransactionViewHolder(View itemView) {
+        DateDashboardViewHolder(View itemView) {
             super(itemView);
-            textImporto = itemView.findViewById(R.id.id_card_importo);
-            textBeneficiario = itemView.findViewById(R.id.id_card_beneficiario);
-            dayScadenzaText = itemView.findViewById(R.id.id_card_scadenza_day);
-            monthScadenzaText = itemView.findViewById(R.id.id_card_scadenza_month);
 
-            hiddenlayout = itemView.findViewById(R.id.hidden_transaction_group);
+            dayScadenzaText = itemView.findViewById(R.id.tv_mainactivity_dates_day);
+            monthScadenzaText = itemView.findViewById(R.id.tv_mainactivity_dates_month);
+/*
+            yearScadenzaText = itemView.findViewById(R.id.id_card_scadenza_year);
+*/
 
         }
 
-        void setData(String textbeneficiario, String textimporto, String dayScadenza, String monthScadenza){
-            textImporto.setText(textimporto);
+        void setData(String dayScadenza, String monthScadenza, String bene){
             dayScadenzaText.setText(dayScadenza);
             monthScadenzaText.setText(monthScadenza);
-            textBeneficiario.setText(textbeneficiario);
+            beneficiario = bene;
+/*
+            yearScadenzaText.setText(yearScadenza);
+*/
+
         }
     }
+
+
+    @Override
+    public void onBindViewHolder(final DateDashboardViewHolder dateViewholder, int position) {
+        position = dateViewholder.getAdapterPosition();
+
+        EntityMovimento current = mResults.get(position);
+        if(current != null) {
+            SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.ITALY);
+            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.ITALY);
+            dateViewholder.setData(dayFormat.format(current.getScadenza()), monthFormat.format(current.getScadenza()).toUpperCase(), current.getBeneficiario());
+        }
+        startDatesReyclerView(dateViewholder);
+
+    }
+
+
+    /**
+     *
+     * @param dateViewholder viewholder
+     *
+     * */
+    private void startDatesReyclerView(DateDashboardViewHolder dateViewholder){
+        RecyclerView rviewMovimenti = dateViewholder.itemView.findViewById(R.id.rv_mainactivity_transactions);
+        RviewAdapterMovimenti adapterMovimenti;
+
+        String bene = activity.getBeneficiario();
+        String account = activity.getAccount();
+        String dateStr = mResults.get(dateViewholder.getAdapterPosition()).getScadenza().toString();
+        String checked = activity.getChecked();
+        String all = activity.getAll();
+
+        adapterMovimenti = new RviewAdapterMovimenti(app);
+        adapterMovimenti.setHasStableIds(true);
+
+        movsVM.getAllTransactionsDates(dateStr, Integer.valueOf(account), checked, bene, all)
+                .observe((LifecycleOwner)context, new Observer<List<EntityMovimento>>() {
+                    @Override
+                    public void onChanged(@Nullable List<EntityMovimento> entityMovimentos) {
+                        adapterMovimenti.setResults(entityMovimentos);
+                    }
+                });
+        rviewMovimenti.setLayoutManager(new LinearLayoutManager(context));
+        rviewMovimenti.setAdapter(adapterMovimenti);
+        // SET UP SWIPE
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT|ItemTouchHelper.LEFT) {
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                View view = viewHolder.itemView;
+                Paint textPaintDelete = new Paint();
+                Paint textPaintArchive = new Paint();
+
+                textPaintArchive.setARGB((2*(int)dX)/5,70,175,74);
+                textPaintArchive.setTextAlign(Paint.Align.LEFT);
+                textPaintDelete.setARGB(((2*(int)dX)/5)*-1,254,0,0);
+                textPaintDelete.setTextAlign(Paint.Align.LEFT);
+                Typeface typeface = ResourcesCompat.getFont(context, R.font.hindvadodara_semibold);
+
+                textPaintArchive.setTypeface(typeface);
+                textPaintArchive.setTextSize(50);
+                textPaintDelete.setTypeface(typeface);
+                textPaintDelete.setTextSize(50);
+
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+                    if (dX>0){
+                        c.drawText("ARCHIVIA", (view.getWidth()/16)*1, (view.getHeight()/4)*3, textPaintArchive);
+
+                    }else {
+                        c.drawText("CANCELLA", (view.getWidth()/16)*10, (view.getHeight()/4)*3, textPaintDelete);
+
+                    }
+
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+                }
+
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+                if (direction == ItemTouchHelper.LEFT) {
+                    try {
+                        movsVM.deleteTransactionById((int)viewHolder.getItemId());
+                        notifyItemRemoved(viewHolder.getAdapterPosition());
+
+
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        Log.w("swipe", "Skip timestamp cause ther's no result");
+                    }
+                }else {
+                    try {
+                        int transactionPosition = viewHolder.getAdapterPosition();
+                        int id = (int)adapterMovimenti.getItemId(transactionPosition);
+                        movsVM.checkTransaction(id);
+                        notifyItemRemoved(transactionPosition);
+
+
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        Log.w("swipe", "Skip timestamp cause ther's no result");
+                    }
+
+                }
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(rviewMovimenti);
+
+
+    }
+
 }

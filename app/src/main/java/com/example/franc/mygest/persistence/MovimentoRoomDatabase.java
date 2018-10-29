@@ -1,15 +1,17 @@
 package com.example.franc.mygest.persistence;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 
 /**
  * Created by franc on 23/04/2018.
  */
 
-@Database(entities = {EntityMovimento.class, EntityConto.class}, version = 1, exportSchema = false)
+@Database(entities = {EntityMovimento.class, EntityConto.class}, version = 3, exportSchema = false)
 public abstract class MovimentoRoomDatabase extends RoomDatabase {
 
     public abstract MovimentoDao movimentoDao();
@@ -32,5 +34,23 @@ public abstract class MovimentoRoomDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
+
+/*
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE movimento_table "
+                    + " ADD COLUMN saldato INTEGER");
+        }
+    };
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE movimento_table "
+                    + " ADD COLUMN vType INTEGER");
+        }
+    };
+*/
+
 
 }

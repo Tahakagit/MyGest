@@ -27,11 +27,20 @@ public class ContoViewModel extends AndroidViewModel {
         mAllAccounts = mRepository.getAllAccounts();
     }
     public void setDate(Date date){
-        this.mDate.setValue(date); ;
+        this.mDate.setValue(date);
     }
 
+    /**
+     *
+     * @return all account in AccountsManageActivity
+     */
     public LiveData<List<EntityConto>> getAllAccounts() { return mAllAccounts; }
 
+    /**
+     *
+     * @return account with expected transactions in MainActivity
+     */
+    public LiveData<List<EntityConto>> getActiveAccounts() { return mActiveAccounts; }
 
 
     public EntityConto getAccountIdByName(String accountName) { return mRepository.getAccountIdByName(accountName); }
@@ -40,7 +49,7 @@ public class ContoViewModel extends AndroidViewModel {
         return mRepository.getAllAccountsNames();
     }
 
-    public LiveData<List<EntityConto>> getActiveAccounts() { return mActiveAccounts; }
+    public List<EntityConto> getActiveAccountsSync(Date date) { return mRepository.getAllAccountsSync(date); }
 
     public void insert(EntityConto conto) { mRepository.insert(conto); }
 

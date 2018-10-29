@@ -4,10 +4,10 @@ import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.franc.mygest.R;
@@ -28,26 +28,11 @@ public class AccountsManageActivity extends AppCompatActivity implements UIContr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.creaconto_activity_view);
+        setContentView(R.layout.activity_accountmanage);
 
         contoVM = new ContoViewModel(getApplication());
 
-        final UIController uiController = new UIController(this);
-        Toolbar toolbar = findViewById(R.id.toolbar_creacontoactivity);
-        RecyclerView rv = findViewById(R.id.rv_account_manage);
-        FloatingActionButton fab = findViewById(R.id.fab_account_create);
-        mAdapterConti = new RviewAdapterConto(this);
-
-        setSupportActionBar(toolbar);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                uiController.displaySaveAccountDialog(null);
-            }
-        });
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(mAdapterConti);
+        startUi();
 
 
         contoVM.getAllAccounts().observe(this, new Observer<List<EntityConto>>() {
@@ -56,6 +41,30 @@ public class AccountsManageActivity extends AppCompatActivity implements UIContr
                 mAdapterConti.setResults(entityContos);
             }
         });
+    }
+
+    private void startUi() {
+        final UIController uiController = new UIController(this);
+        RecyclerView rv = findViewById(R.id.rv_accountmanage_content);
+        FloatingActionButton fab = findViewById(R.id.fab_account_create);
+        mAdapterConti = new RviewAdapterConto(this);
+
+        ActionBar myToolbar = getSupportActionBar();
+
+        try {
+            myToolbar.setDisplayHomeAsUpEnabled(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                uiController.displayAccountManageDialog(null);
+            }
+        });
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setAdapter(mAdapterConti);
     }
 
     @Override
