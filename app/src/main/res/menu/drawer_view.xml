@@ -3,22 +3,19 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_messages"
-            android:title="Chi siamo" />
+            android:id="@+id/action_category_3"
+            android:icon="@drawable/ic_predict_balances"
+            android:title="Proiezione saldi" />
+
         <item
-            android:id="@+id/nav_friends"
-            android:title="Contatti" />
+            android:id="@+id/action_category_1"
+            android:icon="@drawable/ic_manage_accounts"
+            android:title="Gestisci conti" />
+        <item
+            android:id="@+id/action_category_2"
+            android:icon="@drawable/ic_all_transactions"
+            android:title="Tutti i movimenti" />
     </group>
 
-    <item android:title="Categorie">
-        <menu>
-            <item
-                android:id="@+id/action_category_1"
-                android:title="Gestisci conti" />
-            <item
-                android:title="Tutti i movimenti"
-                android:id="@+id/action_category_2"/>
-        </menu>
-    </item>
 
 </menu>

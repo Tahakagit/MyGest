@@ -700,6 +700,8 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
     private void startNavDrawer(){
         final Intent creaConto = new Intent(this, AccountsManageActivity.class);
         final Intent allTransaction = new Intent(this, AllTransactionActivity.class);
+        final Intent predictBalances = new Intent(this, MainActivity.class);
+
         NavigationView navigationView = findViewById(R.id.navigationview_main);
 
         mDrawerLayout = findViewById(R.id.drawer_main);
@@ -717,6 +719,10 @@ public class MainActivity extends AppCompatActivity implements UIController.onAc
                                 case R.id.action_category_2:
                                     startActivity(allTransaction);
                                     break;
+                                case R.id.action_category_3:
+                                    startActivity(predictBalances);
+                                    break;
+
                             }
 
                             mDrawerLayout.closeDrawers();
